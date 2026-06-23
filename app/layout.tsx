@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const icielGotham = localFont({
   variable: "--font-body",
   display: "swap",
@@ -25,7 +27,9 @@ const icielGotham = localFont({
 });
 
 export const metadata: Metadata = {
-  icons: "/tch_logo.ico",
+  icons: {
+    icon: `${basePath}/tch_logo.ico`,
+  },
   title: "Tech-Convergence Hub",
   description: "Trang giới thiệu mô hình Tech-Convergence Hub của UEH",
 };

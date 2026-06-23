@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function Header() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -16,7 +17,7 @@ export function Header() {
       <div className="container nav">
         <Link className="logo" href="/">
           <span className="logo-mark">
-            <Image src="/tch_logo.ico" width={32} height={32} alt="tch" />
+            <Image src={`${basePath}/tch_logo.ico`} width={32} height={32} alt="tch" />
           </span>
           <span>
             Tech-Convergence Hub<small>UEH Technology Platform</small>
