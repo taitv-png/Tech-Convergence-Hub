@@ -45,7 +45,7 @@ export default async function LabDetailPage({ params }: Props) {
 		<>
 			<Header />
 			<main>
-				<section className="container page-hero">
+				<section className="container page-hero lab-page-hero">
 					<Link className="back-link" href="/labs#lab-directory">
 						← Quay lại
 					</Link>
@@ -62,7 +62,6 @@ export default async function LabDetailPage({ params }: Props) {
 				<section className="container section-sm">
 					<div className="lab-detail-shell">
 						<aside className="panel lab-detail-side">
-							<span className="lab-code">{lab.code}</span>
 							<h3 style={{ marginTop: 16 }}>
 								{lab.room} · Tầng {lab.floor}
 							</h3>
@@ -143,8 +142,8 @@ export default async function LabDetailPage({ params }: Props) {
 								</div>
 							</article>
 							<section>
-								<div className="section-head left">
-									<span className="kicker">Liên quan</span>
+								<div className="section-head left related-head">
+									<span className="kicker">Lab liên quan</span>
 								</div>
 								<div className="lab-directory-grid related-labs-grid">
 									{related.map((x) => (
