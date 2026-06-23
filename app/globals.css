@@ -71,6 +71,14 @@ a {
   text-decoration: none;
 }
 
+a:not(.logo):not(.btn):not(.nav-cta):not(.lab-frame):not(.news-card):not(.lab-directory-card):not(.mini-lab) {
+  color: var(--accent);
+}
+
+a:not(.logo):not(.btn):not(.nav-cta):not(.lab-frame):not(.news-card):not(.lab-directory-card):not(.mini-lab):hover {
+  color: #c56a24;
+}
+
 button,
 input,
 textarea,
@@ -112,6 +120,14 @@ select {
   letter-spacing: 0.01em;
 }
 
+.logo > span:last-child {
+  color: var(--accent);
+}
+
+.logo:hover > span:last-child {
+  color: #c56a24;
+}
+
 .logo-mark {
   width: 44px;
   height: 44px;
@@ -147,14 +163,14 @@ select {
 
 .nav-links a:hover {
   background: transparent;
-  color: var(--text);
+  color: var(--accent);
 }
 
 .nav-links a.active,
 .nav-links a[aria-current="page"] {
   background: transparent;
   box-shadow: none;
-  color: var(--text);
+  color: var(--accent);
 }
 
 .nav-cta,
