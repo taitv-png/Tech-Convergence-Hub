@@ -7,7 +7,7 @@ export default function NewsPage() {
     <>
       <Header />
       <main>
-        <section className="container page-title-wrap news-title-grid">
+        <section className="container page-title-wrap news-title-grid news-title-wrap">
           <div>
             <h1 className="page-title">Tin tức</h1>
             <p className="lead news-lead">

@@ -819,6 +819,11 @@ h1 {
   align-items: stretch;
 }
 
+.labs-title-wrap > div:first-child,
+.news-title-wrap > div:first-child {
+  padding-left: clamp(10px, 1.8vw, 22px);
+}
+
 .page-title-media {
   min-height: 170px;
   border-radius: 0;
