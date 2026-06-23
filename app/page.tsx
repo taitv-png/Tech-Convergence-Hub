@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main>
+      <main className="home-main">
         <Hero />
         <OrbitMap />
         <SystemPathway />

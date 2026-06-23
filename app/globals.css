@@ -109,7 +109,7 @@ select {
   grid-template-columns: minmax(220px, 1fr) auto;
   align-items: center;
   gap: 24px;
-  padding: 0 var(--edge);
+  padding: 0 clamp(12px, 2.2vw, 28px);
 }
 
 .logo {
@@ -218,6 +218,14 @@ select {
 .hero {
   padding: 0 var(--edge) var(--edge);
   margin-top: calc(var(--header-height) * -1);
+}
+
+.home-main .section {
+  padding-inline: clamp(12px, 2.2vw, 28px);
+}
+
+.home-main #orbit-section {
+  padding-inline: clamp(16px, 3vw, 36px);
 }
 
 .hero-grid {
@@ -841,7 +849,7 @@ h1 {
 
 .labs-gallery {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
 }
 
