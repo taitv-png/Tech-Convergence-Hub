@@ -73,7 +73,7 @@ export function OrbitMap() {
           </div>
           <span className="linked-count">{relatedLabs.length} lab liên kết</span>
           <div className="mini-labs">
-            {relatedLabs.slice(0, 3).map((l) => (
+            {relatedLabs.map((l) => (
               <Link className="mini-lab" href={`/labs/${l.id}`} key={l.id}>
                 <div>
                   <b>{l.code}</b>
