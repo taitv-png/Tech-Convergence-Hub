@@ -714,6 +714,15 @@ h1 {
   gap: 14px;
 }
 
+.system-pathway-section {
+  padding-top: clamp(40px, 5vw, 72px);
+  padding-bottom: clamp(12px, 2vw, 24px);
+}
+
+.system-pathway-section .section-head {
+  margin-bottom: 5px;
+}
+
 .path-step {
   min-height: 190px;
 }
@@ -1493,6 +1502,11 @@ h1 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .system-pathway-section {
+    padding-top: clamp(28px, 4vw, 48px);
+    padding-bottom: 14px;
+  }
+
   .footer-inner {
     grid-template-columns: 1fr;
   }
@@ -1555,6 +1569,11 @@ h1 {
 
   .related-labs-grid {
     grid-template-columns: 1fr;
+  }
+
+  .system-pathway-section {
+    padding-top: 22px;
+    padding-bottom: 10px;
   }
 
   .orbit-quick-stats {

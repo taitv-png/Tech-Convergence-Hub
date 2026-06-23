@@ -8,10 +8,9 @@ const steps = [
 
 export function SystemPathway() {
 	return (
-		<section className="container section">
+		<section className="container section system-pathway-section">
 			<div className="section-head">
-				<span className="kicker">Chu trình triển khai</span>
-				<h2>Chu trình 5 bước từ dữ liệu đến ứng dụng.</h2>
+				<h2>Chu trình triển khai</h2>
 			</div>
 			<div className="pathway">
 				{steps.map(([n, t, d]) => (
