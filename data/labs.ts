@@ -14,6 +14,7 @@ export type Lab = {
   outcomes?: string[];
   intro?: string;
   heroLine?: string;
+  sourceQuote?: string;
 };
 
 export type Cluster = {
@@ -45,6 +46,9 @@ const dauRaMacDinh = [
   "Dự án chuyển giao công nghệ",
 ];
 
+const trichDanTongHopNguyenVan =
+  "Trung tâm đóng vai trò cầu nối giữa học thuật và thành phố, giữa nghiên cứu hàn lâm và triển khai chính sách, giữa đổi mới công nghệ và tác động xã hội. Trung tâm không chỉ phục vụ nhu cầu nghiên cứu và đào tạo nội bộ, mà còn là nền tảng dùng chung cho chính quyền, doanh nghiệp và cộng đồng trong quá trình đồng thiết kế, thử nghiệm và nhân rộng các giải pháp cho đô thị thông minh, kinh tế số và phát triển bền vững. Đây đồng thời là không gian học tập mở trong mô hình nền tảng hợp tác giá trị: Value Co-Creation Platform, nơi sinh viên, giảng viên, nhà nghiên cứu và các đối tác xã hội cùng tham gia kiến tạo tri thức và trải nghiệm đổi mới trong bối cảnh thực. Thông qua đó, Trung tâm góp phần hiện thực hóa tầm nhìn UEH trở thành đại học thế hệ mới, vận hành như một “đô thị học tập bền vững”, một nền tảng đổi mới mở và một trung tâm hội tụ tri thức , công nghệ, chính sách vì tương lai xanh, sáng tạo và công bằng.";
+
 const nangLucTheoCum = (tenCum: string) => [
   `Phát triển và kiểm thử giải pháp trong cụm ${tenCum}`,
   "Tích hợp dữ liệu, thiết bị và nền tảng mô phỏng dùng chung",
@@ -61,6 +65,7 @@ const taoLab = (
   capabilities: nangLucTheoCum(item.cluster),
   intro: item.desc,
   heroLine: "Nút hội tụ công nghệ",
+  sourceQuote: item.sourceQuote ?? trichDanTongHopNguyenVan,
 });
 
 export const clusters: Cluster[] = [
@@ -166,6 +171,8 @@ export const labs: Lab[] = [
     desc: "Nghiên cứu hành vi, cảm xúc và hiệu suất người dùng bằng dữ liệu sinh lý, chuyển động và tương tác người máy.",
     tech: ["Eye Tracker", "GSR/EDA", "HRV", "EEG/EMG"],
     apps: ["Đánh giá trải nghiệm", "Nghiên cứu HCI", "Thiết kế lấy con người làm trung tâm"],
+    sourceQuote:
+      "Trung tâm đóng vai trò cầu nối giữa học thuật và thành phố, giữa nghiên cứu hàn lâm và triển khai chính sách, giữa đổi mới công nghệ và tác động xã hội. Trung tâm không chỉ phục vụ nhu cầu nghiên cứu và đào tạo nội bộ, mà còn là nền tảng dùng chung cho chính quyền, doanh nghiệp và cộng đồng trong quá trình đồng thiết kế, thử nghiệm và nhân rộng các giải pháp cho đô thị thông minh, kinh tế số và phát triển bền vững. Đây đồng thời là không gian học tập mở trong mô hình nền tảng hợp tác giá trị: Value Co-Creation Platform, nơi sinh viên, giảng viên, nhà nghiên cứu và các đối tác xã hội cùng tham gia kiến tạo tri thức và trải nghiệm đổi mới trong bối cảnh thực. Thông qua đó, Trung tâm góp phần hiện thực hóa tầm nhìn UEH trở thành đại học thế hệ mới, vận hành như một “đô thị học tập bền vững”, một nền tảng đổi mới mở và một trung tâm hội tụ tri thức , công nghệ, chính sách vì tương lai xanh, sáng tạo và công bằng.",
   }),
   taoLab({
     id: "human-centered-ai-lab",

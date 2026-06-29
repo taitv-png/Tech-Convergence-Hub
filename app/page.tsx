@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { OrbitMap } from "@/components/OrbitMap";
 import { PartnerMarquee } from "@/components/PartnerMarquee";
 import { SystemPathway } from "@/components/SystemPathway";
+import { VisionSection } from "@/components/VisionSection";
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <Header />
       <main className="home-main">
         <Hero />
+        <VisionSection />
         <OrbitMap />
         <SystemPathway />
         <PartnerMarquee />

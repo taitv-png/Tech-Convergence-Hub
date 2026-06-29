@@ -4,11 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type NavItem = {
+  href: string;
+  label: string;
+};
+
 const navItems = [
-  { href: "/", label: "Tổng quan" },
-  { href: "/labs", label: "Phòng thí nghiệm" },
-  { href: "/news", label: "Tin tức" },
-];
+  { href: "/news", label: "Tin tức + Cập nhật" },
+  { href: "/labs", label: "Nghiên cứu" },
+  { href: "/", label: "Giới thiệu" },
+  { href: "/labs", label: "Cơ hội hợp tác" },
+  { href: "/", label: "Chương trình sau đại học" },
+  { href: "/", label: "Con người" },
+  { href: "/news", label: "Sự kiện" },
+  { href: "/", label: "Cổng thông tin thành viên" },
+  { href: "/news", label: "Báo chí + Truyền thông" },
+] satisfies NavItem[];
 
 export function Header() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -41,7 +52,8 @@ export function Header() {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  const isActive = (href: string) => {
+  const isActive = (item: NavItem) => {
+    const href = item.href;
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
@@ -74,11 +86,11 @@ export function Header() {
           </button>
 
           {navItems.map((item) => {
-            const active = isActive(item.href);
+            const active = isActive(item);
 
             return (
               <Link
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 className={active ? "active" : undefined}
                 aria-current={active ? "page" : undefined}

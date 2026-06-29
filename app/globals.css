@@ -221,6 +221,8 @@ select {
   border-radius: var(--radius-sm);
   color: var(--accent);
   font-weight: 600;
+  font-size: 1.08rem;
+  line-height: 1.35;
   transition: background-color 160ms ease, color 160ms ease;
 }
 
@@ -291,6 +293,30 @@ select {
   padding-inline: clamp(16px, 3vw, 36px);
 }
 
+.home-vision-section {
+  padding-top: clamp(36px, 5vw, 64px);
+  padding-bottom: clamp(24px, 3.4vw, 44px);
+}
+
+.home-vision-head {
+  margin-bottom: 14px;
+}
+
+.home-vision-copy {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-inline: clamp(12px, 2.2vw, 28px);
+  display: grid;
+  gap: 14px;
+}
+
+.home-vision-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+}
+
 .hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -322,7 +348,7 @@ select {
 
 .hero-overlay {
   width: 100%;
-  padding: clamp(18px, 2.5vw, 30px);
+  padding: clamp(18px, 2.5vw, 30px) clamp(18px, 2.5vw, 30px) clamp(52px, 8vw, 110px);
   display: grid;
   gap: 12px;
   background: linear-gradient(
@@ -628,6 +654,12 @@ h1 {
   letter-spacing: 0.1em;
   color: var(--muted);
   text-transform: uppercase;
+}
+
+.lab-tech-card .cluster-code,
+.lab-app-card .cluster-code {
+  color: #111111;
+  font-weight: 800;
 }
 
 .orbit-cluster-wrap {
@@ -1428,6 +1460,16 @@ h1 {
   gap: 16px;
   align-items: start;
   padding-inline: clamp(12px, 2.2vw, 28px);
+  max-width: 1460px;
+  margin-inline: auto;
+}
+
+@media (min-width: 1280px) {
+  .lab-detail-shell {
+    grid-template-columns: 300px minmax(0, 900px);
+    max-width: 1260px;
+    justify-content: center;
+  }
 }
 
 .lab-detail-side {
@@ -1445,6 +1487,9 @@ h1 {
 .lab-detail-main {
   display: grid;
   gap: 16px;
+  width: 100%;
+  max-width: 860px;
+  margin-inline: auto;
 }
 
 .lab-detail-hero h1 {
@@ -1458,7 +1503,8 @@ h1 {
 .lab-detail-media {
   min-height: 64vh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   border-radius: 0;
   background:
     linear-gradient(0deg, rgba(255, 106, 0, 0.06), rgba(255, 106, 0, 0.06)),
@@ -1469,30 +1515,39 @@ h1 {
   width: 100%;
   padding: clamp(16px, 2.4vw, 28px);
   display: grid;
-  gap: 10px;
-  background: linear-gradient(
-    180deg,
-    rgba(17, 17, 17, 0) 0%,
-    rgba(17, 17, 17, 0.72) 64%,
-    rgba(17, 17, 17, 0.9) 100%
-  );
+  justify-items: center;
+  gap: 0;
+  background: linear-gradient(180deg, rgba(17, 17, 17, 0.36), rgba(17, 17, 17, 0.46));
 }
 
-.lab-detail-hero-copy .lead {
-  margin-top: 2px;
-  color: rgba(248, 245, 240, 0.92);
-  max-width: 62ch;
+.lab-detail-hero-copy > h1 {
+  width: min(100%, 1260px);
 }
 
-.lab-detail-hero-copy .kicker {
-  margin-bottom: 0;
-  color: rgba(248, 245, 240, 0.9);
+@media (min-width: 1280px) {
+  .lab-detail-hero-copy > h1 {
+    width: 900px;
+  }
 }
 
 .lab-detail-hero-copy h1 {
   color: #ffffff;
   max-width: 24ch;
   font-size: clamp(1.8rem, 4.3vw, 3.6rem);
+  text-align: center;
+}
+
+.lab-content-intro-wrap {
+  padding-top: 10px;
+}
+
+.lab-content-intro {
+  margin: 0;
+  width: 100%;
+  color: var(--muted);
+  text-align: left;
+  line-height: 1.82;
+  font-size: clamp(1.04rem, 1.35vw, 1.22rem);
 }
 
 .lab-detail-gallery {
@@ -1587,7 +1642,7 @@ h1 {
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr) minmax(0, 1.3fr);
   gap: clamp(38px, 5.2vw, 120px);
-  padding: 0;
+  padding: 0 clamp(12px, 2.2vw, 28px);
 }
 
 .footer-column {
@@ -1599,6 +1654,11 @@ h1 {
 .footer-column-main {
   grid-template-columns: minmax(112px, 160px) minmax(0, 1fr);
   gap: clamp(20px, 2.8vw, 36px);
+}
+
+.footer-column-main.no-symbol {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
 }
 
 .footer-symbol {
@@ -1730,6 +1790,10 @@ h1 {
     position: static;
   }
 
+  .lab-detail-main {
+    max-width: none;
+  }
+
   .labs-gallery,
   .news-grid,
   .lab-directory-grid {
@@ -1803,6 +1867,7 @@ h1 {
   .nav-links a {
     width: 100%;
     padding: 10px 0;
+    font-size: 1.12rem;
   }
 
   .nav-cta {

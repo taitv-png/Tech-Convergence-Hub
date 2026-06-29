@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 const primaryLinks = [
@@ -34,21 +33,10 @@ const legalLinks = [
 ];
 
 export function Footer() {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
   return (
     <footer className="footer">
       <div className="container footer-inner">
-        <div className="footer-column footer-column-main">
-          <div className="footer-symbol" aria-hidden="true">
-            <Image
-              src={`${basePath}/tch_logo.ico`}
-              width={160}
-              height={90}
-              alt="Tech-Convergence Hub logo"
-              className="footer-symbol-image"
-            />
-          </div>
+        <div className="footer-column footer-column-main no-symbol">
           <nav className="footer-link-list footer-link-list-main" aria-label="Điều hướng chính">
             {primaryLinks.map((item) => (
               <Link key={item.label} href={item.href}>

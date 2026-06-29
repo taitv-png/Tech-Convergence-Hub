@@ -52,9 +52,7 @@ export default async function LabDetailPage({ params }: Props) {
 					<div className="page-box lab-detail-hero">
 						<article className="lab-detail-media">
 							<div className="lab-detail-hero-copy">
-								<span className="kicker">{lab.cluster}</span>
 								<h1>{lab.name}</h1>
-								<p className="lead">{lab.desc}</p>
 							</div>
 						</article>
 					</div>
@@ -93,7 +91,12 @@ export default async function LabDetailPage({ params }: Props) {
 							</p>
 						</aside>
 						<main className="lab-detail-main">
-							<article className="card">
+							{lab.sourceQuote ? (
+								<article className="card lab-content-intro-wrap">
+									<p className="lab-content-intro">{lab.sourceQuote}</p>
+								</article>
+							) : null}
+							<article className="card lab-tech-card">
 								<span className="cluster-code">Công nghệ cốt lõi</span>
 								<div className="chip-row">
 									{lab.tech.map((x) => (
@@ -103,7 +106,7 @@ export default async function LabDetailPage({ params }: Props) {
 									))}
 								</div>
 							</article>
-							<article className="card">
+							<article className="card lab-app-card">
 								<span className="cluster-code">Lĩnh vực ứng dụng</span>
 								<div className="chip-row">
 									{lab.apps.map((x) => (

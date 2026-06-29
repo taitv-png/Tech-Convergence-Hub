@@ -19,7 +19,7 @@ export function OrbitMap() {
   return (
     <section className="container section" id="orbit-section">
       <div className="section-head">
-        <h2>Cụm năng lực</h2>
+        <h2 style={{ display: "none" }}>Cụm năng lực</h2>
       </div>
       <div className="orbit-cluster-wrap">
         <div className="panel cluster-orbit-panel">
