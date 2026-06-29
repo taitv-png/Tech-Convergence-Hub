@@ -23,10 +23,6 @@ export function OrbitMap() {
       </div>
       <div className="orbit-cluster-wrap">
         <div className="panel cluster-orbit-panel">
-          <div
-            className={`orbit-panel-media orbit-panel-media-${((activeIndex < 0 ? 0 : activeIndex) % 3) + 1}`}
-            aria-hidden="true"
-          />
           <div className="orbit-map">
             {clusters.map((c) => {
               const count = labs.filter((l) => l.cluster === c.name).length;

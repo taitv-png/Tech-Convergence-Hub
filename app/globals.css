@@ -290,7 +290,9 @@ select {
 }
 
 .home-main #orbit-section {
-  padding-inline: clamp(16px, 3vw, 36px);
+  max-width: 980px;
+  margin: 0 auto;
+  padding-inline: clamp(12px, 2.2vw, 28px);
 }
 
 .home-vision-section {
@@ -519,6 +521,9 @@ h1 {
   padding-top: clamp(26px, 3.6vw, 44px);
   padding-bottom: clamp(24px, 3.2vw, 38px);
   background: #ffffff;
+  max-width: 980px;
+  margin: 0 auto;
+  padding-inline: clamp(12px, 2.2vw, 28px);
 }
 
 .partner-head {
@@ -532,6 +537,11 @@ h1 {
   letter-spacing: 0.03em;
 }
 
+.partner-stack {
+  display: grid;
+  gap: clamp(14px, 1.8vw, 20px);
+}
+
 .partner-marquee {
   overflow: hidden;
   width: 100%;
@@ -539,23 +549,35 @@ h1 {
   -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
 
+.partner-marquee-reverse {
+  margin-left: clamp(20px, 3vw, 44px);
+}
+
+.partner-marquee:hover .partner-track,
+.partner-marquee:hover .partner-track-reverse {
+  animation-play-state: paused;
+}
+
 .partner-track {
   width: max-content;
   display: flex;
   align-items: center;
-  gap: clamp(36px, 5vw, 90px);
+  gap: clamp(28px, 4vw, 70px);
   animation: partner-scroll 24s linear infinite;
   will-change: transform;
 }
 
+.partner-track-reverse {
+  animation-direction: reverse;
+}
+
 .partner-logo {
-  width: clamp(160px, 17vw, 250px);
-  height: clamp(56px, 6vw, 84px);
+  width: clamp(140px, 15vw, 220px);
+  height: clamp(50px, 5.5vw, 76px);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0.84;
-  filter: grayscale(100%);
 }
 
 .partner-logo img {
@@ -659,13 +681,19 @@ h1 {
 .lab-tech-card .cluster-code,
 .lab-app-card .cluster-code {
   color: #111111;
+  display: block;
   font-weight: 800;
+  font-size: clamp(1.45rem, 1.8vw, 1.7rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  margin-bottom: 6px;
 }
 
 .orbit-cluster-wrap {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(18px, 2.2vw, 28px);
 }
 
 #orbit-section {
@@ -1477,6 +1505,13 @@ h1 {
   top: 92px;
 }
 
+.lab-detail-side h3 {
+  margin: 16px 0 0;
+  font-size: clamp(1rem, 1.05vw, 1.08rem);
+  line-height: 1.28;
+  font-weight: 700;
+}
+
 .lab-detail-side > h3,
 .lab-detail-side > .chip-row,
 .lab-detail-side > .spec-table,
@@ -1490,6 +1525,15 @@ h1 {
   width: 100%;
   max-width: 860px;
   margin-inline: auto;
+}
+
+.lab-detail-main .card h3 {
+  margin: 6px 0 0;
+  font-size: clamp(1.45rem, 1.8vw, 1.7rem);
+  line-height: 1.14;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111111;
 }
 
 .lab-detail-hero h1 {
@@ -1533,7 +1577,7 @@ h1 {
 .lab-detail-hero-copy h1 {
   color: #ffffff;
   max-width: 24ch;
-  font-size: clamp(1.8rem, 4.3vw, 3.6rem);
+  font-size: clamp(1.9rem, 4vw, 3.35rem);
   text-align: center;
 }
 
@@ -1546,8 +1590,8 @@ h1 {
   width: 100%;
   color: var(--muted);
   text-align: left;
-  line-height: 1.82;
-  font-size: clamp(1.04rem, 1.35vw, 1.22rem);
+  line-height: 1.8;
+  font-size: clamp(1rem, 1.18vw, 1.1rem);
 }
 
 .lab-detail-gallery {
@@ -1589,12 +1633,31 @@ h1 {
 
 .spec-row b {
   color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .spec-row span {
   color: var(--text);
   font-weight: 600;
   line-height: 1.35;
+  font-size: 0.96rem;
+}
+
+.lab-tech-card .cluster-code,
+.lab-app-card .cluster-code {
+  color: #111111;
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 800;
+  font-size: clamp(1.45rem, 1.8vw, 1.7rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+.lab-tech-card .chip,
+.lab-app-card .chip {
+  font-size: 0.78rem;
 }
 
 .list {
@@ -1841,6 +1904,10 @@ h1 {
   .footer-column-main {
     grid-column: 1 / -1;
   }
+
+  .partner-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 740px) {
@@ -1978,15 +2045,15 @@ h1 {
     font-size: 1.45rem;
   }
 
-  .partner-track {
-    animation-duration: 16s;
-    gap: 26px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .partner-track {
     animation-duration: 42s;
+  }
+
+  .partner-track-reverse {
+    animation-direction: reverse;
   }
 
   .lab-frame,
