@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { labs } from "@/data/labs";
+import { labs } from "../../../data/labs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,16 +29,16 @@ export default async function LabDetailPage({ params }: Props) {
 	const capabilities =
 		lab.capabilities ?? [
 			`Phát triển và kiểm thử giải pháp trong cụm ${lab.cluster}`,
-			"Hỗ trợ đào tạo thực hành, workshop và project-based learning",
+			"Hỗ trợ đào tạo thực hành và nghiên cứu theo dự án",
 			"Kết nối dữ liệu, thiết bị và nền tảng mô phỏng dùng chung",
-			"Tạo điều kiện cho prototype, pilot testing và chuyển giao công nghệ",
+			"Tạo điều kiện tạo nguyên mẫu, thử nghiệm hiện trường và chuyển giao công nghệ",
 		];
 	const outcomes =
 		lab.outcomes ?? [
 			"Dự án nghiên cứu ứng dụng",
 			"Nguyên mẫu công nghệ",
-			"Workshop / short course",
-			"Demo / showcase",
+			"Chương trình đào tạo ngắn hạn",
+			"Mô hình trình diễn",
 		];
 
 	return (
@@ -152,7 +152,7 @@ export default async function LabDetailPage({ params }: Props) {
 											<h3>{x.name}</h3>
 											<p>{x.desc}</p>
 											<div className="meta">
-												<span>F{x.floor} · {x.room}</span>
+												<span>Tầng {x.floor} · {x.room}</span>
 												<span>→</span>
 											</div>
 										</Link>

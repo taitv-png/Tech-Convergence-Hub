@@ -1,9 +1,9 @@
 const steps = [
-	["01", "Thu thập", "Lấy dữ liệu từ thiết bị và cảm biến."],
-	["02", "Phân tích", "Dùng AI để lọc tín hiệu chính."],
-	["03", "Mô phỏng", "Kiểm thử kịch bản bằng Digital Twin."],
-	["04", "Trình bày", "Hiển thị trên dashboard và báo cáo."],
-	["05", "Triển khai", "Thử nghiệm pilot và chuyển giao."],
+	["01", "Hội tụ", "Kết nối dữ liệu, thiết bị và hạ tầng tính toán dùng chung."],
+	["02", "Phân tích", "Ứng dụng AI và dữ liệu lớn để nhận diện vấn đề cốt lõi."],
+	["03", "Mô phỏng", "Kiểm thử kịch bản trên nền tảng bản sao số và hệ mô phỏng."],
+	["04", "Thử nghiệm", "Triển khai phòng thí nghiệm sống ngoài thực địa với chính quyền và doanh nghiệp."],
+	["05", "Chuyển giao", "Chuẩn hóa giải pháp, đào tạo và thương mại hóa sản phẩm công nghệ."],
 ];
 
 export function SystemPathway() {

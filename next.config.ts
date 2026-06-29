@@ -4,6 +4,9 @@ const repoName = "Tech-Convergence-Hub";
 const isGithubPagesBuild = process.env.GITHUB_ACTIONS === "true";
 const basePath = isGithubPagesBuild ? `/${repoName}` : "";
 
+const watchIgnoredPattern =
+	/node_modules|^[a-z]:[\\/](?:dumpstack\.log\.tmp|pagefile\.sys|swapfile\.sys|hiberfil\.sys)(?:$|[\\/])|^[a-z]:[\\/]system volume information(?:$|[\\/])/i;
+
 const nextConfig: NextConfig = {
 	output: "export",
 	images: {
@@ -17,17 +20,7 @@ const nextConfig: NextConfig = {
 	webpack(config) {
 		config.watchOptions = {
 			...(config.watchOptions ?? {}),
-			ignored: [
-				...(Array.isArray(config.watchOptions?.ignored)
-					? config.watchOptions.ignored.filter(
-							(item: unknown): item is string =>
-								typeof item === "string" && item.length > 0,
-						)
-					: []),
-				"**/pagefile.sys",
-				"**/swapfile.sys",
-				"**/hiberfil.sys",
-			],
+			ignored: watchIgnoredPattern,
 		};
 
 		return config;

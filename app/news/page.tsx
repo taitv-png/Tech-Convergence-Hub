@@ -11,8 +11,8 @@ export default function NewsPage() {
           <div>
             <h1 className="page-title">Tin tức</h1>
             <p className="lead news-lead">
-              Bố cục ưu tiên hình ảnh để tận dụng khoảng trống và giữ nhịp đọc
-              gọn.
+              Cập nhật định hướng, cơ chế vận hành và danh mục đầu tư của
+              Tech-Convergence Hub theo hồ sơ đề xuất mới nhất.
             </p>
           </div>
           <div className="news-title-media" aria-hidden="true" />

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { news } from "@/data/labs";
+import { news } from "../data/labs";
 
 type NewsSectionProps = {
   showHeader?: boolean;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { labs } from "@/data/labs";
+import { labs } from "../data/labs";
 
 type LabDirectoryProps = {
 	showHeader?: boolean;
@@ -10,7 +10,7 @@ export function LabDirectory({ showHeader = true }: LabDirectoryProps) {
 		<section className="container section" id="lab-directory">
 			{showHeader ? (
 				<div className="section-head">
-					<h2>Danh mục Lab</h2>
+					<h2>Danh mục phòng thí nghiệm</h2>
 				</div>
 			) : null}
 			<div className="labs-gallery">
@@ -20,10 +20,6 @@ export function LabDirectory({ showHeader = true }: LabDirectoryProps) {
 							<div className="lab-frame-visual">
 								<div className="lab-frame-media" aria-hidden="true" />
 								<div className="lab-frame-overlay">
-									<div className="lab-frame-top">
-										<strong>{l.room}</strong>
-										<small>F{l.floor}</small>
-									</div>
 									<h3>{l.name}</h3>
 									<p>{l.desc}</p>
 									<div className="chip-row">

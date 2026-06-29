@@ -7,11 +7,14 @@ export function Hero() {
 				<aside className="hero-visual" aria-hidden="true">
 					<article className="hero-media hero-media-main">
 						<div className="hero-overlay">
-							<h1>Không gian công nghệ cho nghiên cứu.</h1>
-							<p className="lead">Tìm cụm lab phù hợp và bắt đầu nhanh.</p>
+							<h1>Tech-Convergence Hub</h1>
+							<p className="lead">
+								Tech-Convergence Hub kết nối AI, robot, dữ liệu, mô phỏng và công nghệ nhập vai để giải các bài toán đô thị,
+								biển, năng lượng và hạ tầng thông minh.
+							</p>
 							<div className="hero-actions">
 								<Link className="btn btn-primary" href="/labs#lab-directory">
-									Xem danh mục lab
+									Xem danh mục phòng thí nghiệm
 								</Link>
 							</div>
 						</div>

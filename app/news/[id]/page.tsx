@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { news } from "@/data/labs";
+import { news } from "../../../data/labs";
 
 type Props = { params: Promise<{ id: string }> };
 

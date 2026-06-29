@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { clusters, labs } from "@/data/labs";
+import { clusters, labs } from "../data/labs";
 
 export function OrbitMap() {
   const [activeName, setActiveName] = useState(clusters[0].name);
@@ -39,7 +39,7 @@ export function OrbitMap() {
                 >
                   <b>{c.name}</b>
                   <span>
-                    {count} labs
+                    {count} phòng
                   </span>
                 </button>
               );
@@ -50,9 +50,9 @@ export function OrbitMap() {
           <div className="big-code">{activeCluster.code}</div>
           <h3>{activeCluster.name}</h3>
           <p>{activeCluster.desc}</p>
-          <div className="orbit-quick-stats" aria-label="Thông tin nhanh cụm lab">
+          <div className="orbit-quick-stats" aria-label="Thông tin nhanh cụm phòng thí nghiệm">
             <div className="orbit-stat">
-              <span>Labs</span>
+              <span>Số phòng</span>
               <strong>{relatedLabs.length}</strong>
             </div>
             <div className="orbit-stat">
@@ -60,7 +60,7 @@ export function OrbitMap() {
               <strong>{activeFloors}</strong>
             </div>
             <div className="orbit-stat">
-              <span>Tags</span>
+              <span>Thẻ</span>
               <strong>{activeCluster.tags.length}</strong>
             </div>
           </div>
@@ -71,7 +71,7 @@ export function OrbitMap() {
               </span>
             ))}
           </div>
-          <span className="linked-count">{relatedLabs.length} lab liên kết</span>
+          <span className="linked-count">{relatedLabs.length} phòng liên kết</span>
           <div className="mini-labs">
             {relatedLabs.map((l) => (
               <Link className="mini-lab" href={`/labs/${l.id}`} key={l.id}>
@@ -85,7 +85,7 @@ export function OrbitMap() {
             ))}
           </div>
           <Link className="btn btn-primary" href="/labs#lab-directory">
-            Xem tất cả lab
+            Xem tất cả phòng thí nghiệm
           </Link>
         </aside>
       </div>
