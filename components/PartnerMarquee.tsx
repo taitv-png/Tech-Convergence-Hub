@@ -13,6 +13,7 @@ const partners = [
 ];
 
 export function PartnerMarquee() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const firstRow = partners.slice(0, 5);
   const secondRow = partners.slice(5);
 
@@ -31,7 +32,7 @@ export function PartnerMarquee() {
             {repeatedFirstRow.map((partner, index) => (
               <div className="partner-logo" key={`${partner.name}-row1-${index}`}>
                 <Image
-                  src={partner.src}
+                  src={`${basePath}${partner.src}`}
                   alt={`Logo ${partner.name}`}
                   width={partner.width}
                   height={partner.height}
@@ -46,7 +47,7 @@ export function PartnerMarquee() {
             {repeatedSecondRow.map((partner, index) => (
               <div className="partner-logo" key={`${partner.name}-row2-${index}`}>
                 <Image
-                  src={partner.src}
+                  src={`${basePath}${partner.src}`}
                   alt={`Logo ${partner.name}`}
                   width={partner.width}
                   height={partner.height}
