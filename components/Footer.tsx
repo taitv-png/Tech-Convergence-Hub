@@ -1,21 +1,17 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const primaryLinks = [
-  { label: "Tin tức + Cập nhật", href: "/news" },
-  { label: "Nghiên cứu", href: "/labs" },
-  { label: "Giới thiệu", href: "/" },
-  { label: "Cơ hội hợp tác", href: "/labs" },
-  { label: "Chương trình sau đại học", href: "/" },
-  { label: "Con người", href: "/" },
-  { label: "Sự kiện", href: "/news" },
-  { label: "Cổng thông tin thành viên", href: "/" },
-  { label: "Báo chí + Truyền thông", href: "/news" },
+  { label: "Về TCH", href: "/" },
+  { label: "Tin & sự kiện", href: "/news" },
+  { label: "Giáo dục", href: "/" },
+  { label: "Danh mục labs", href: "/labs" },
+  { label: "Nhân sự", href: "/" },
 ];
 
 const exploreLinks = [
   { label: "Video", href: "/news" },
   { label: "Ấn phẩm", href: "/news" },
-  { label: "Cơ hội nghề nghiệp", href: "/" },
   { label: "Liên hệ", href: "/" },
 ];
 
@@ -27,12 +23,9 @@ const socialLinks = [
   { label: "YouTube", href: "https://youtube.com" },
 ];
 
-const legalLinks = [
-  { label: "Chính sách truy cập", href: "/" },
-  { label: "Hỗ trợ UEH", href: "/" },
-];
-
 export function Footer() {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
   return (
     <footer className="footer">
       <div className="container footer-inner">
@@ -67,17 +60,22 @@ export function Footer() {
           </div>
 
           <div className="footer-signature">
-            <strong>UEH</strong>
+            <a className="footer-ueh-logo-link" href="https://ueh.edu.vn/" target="_blank" rel="noreferrer">
+              <Image
+                className="footer-ueh-logo"
+                src={`${basePath}/logos/ueh.png`}
+                alt="UEH"
+                width={240}
+                height={90}
+              />
+            </a>
             <p>Đại học Kinh tế Thành phố Hồ Chí Minh</p>
           </div>
 
-          <nav className="footer-link-list footer-link-list-side" aria-label="Thông tin bổ sung">
-            {legalLinks.map((item) => (
-              <Link key={item.label} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="footer-contact" aria-label="Thông tin liên hệ TCH">
+            <a href="mailto:tch@ueh.edu.vn">tch@ueh.edu.vn</a>
+            <p>54 Nguyễn Văn Thủ, Tân Định, Hồ Chí Minh</p>
+          </div>
         </div>
       </div>
     </footer>

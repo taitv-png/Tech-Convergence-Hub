@@ -44,15 +44,14 @@ function UserIcon() {
 }
 
 const navItems = [
-  { href: "/news", label: "Tin tức + Cập nhật" },
-  { href: "/labs", label: "Nghiên cứu" },
-  { href: "/", label: "Giới thiệu" },
-  { href: "/labs", label: "Cơ hội hợp tác" },
-  { href: "/", label: "Chương trình sau đại học" },
-  { href: "/", label: "Con người" },
-  { href: "/news", label: "Sự kiện" },
-  { href: "/", label: "Cổng thông tin thành viên" },
-  { href: "/news", label: "Báo chí + Truyền thông" },
+  { href: "/", label: "Về TCH" },
+  { href: "/news", label: "Tin & sự kiện" },
+  { href: "/", label: "Giáo dục" },
+  { href: "/labs", label: "Danh mục labs" },
+  { href: "/", label: "Nhân sự" },
+  { href: "/news", label: "Video" },
+  { href: "/news", label: "Ấn phẩm" },
+  { href: "/", label: "Liên hệ" },
 ] satisfies NavItem[];
 
 export function Header() {

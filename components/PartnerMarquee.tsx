@@ -30,7 +30,10 @@ export function PartnerMarquee() {
         <div className="partner-marquee" role="region" aria-label="Logo đối tác đang chạy ngang dòng 1">
           <div className="partner-track">
             {repeatedFirstRow.map((partner, index) => (
-              <div className="partner-logo" key={`${partner.name}-row1-${index}`}>
+              <div
+                className={`partner-logo ${partner.name === "3I" ? "partner-logo-3i" : ""} ${partner.name === "Kamisoft" ? "partner-logo-kamisoft" : ""}`}
+                key={`${partner.name}-row1-${index}`}
+              >
                 <Image
                   src={`${basePath}${partner.src}`}
                   alt={`Logo ${partner.name}`}
@@ -45,7 +48,10 @@ export function PartnerMarquee() {
         <div className="partner-marquee partner-marquee-reverse" role="region" aria-label="Logo đối tác đang chạy ngang dòng 2">
           <div className="partner-track partner-track-reverse">
             {repeatedSecondRow.map((partner, index) => (
-              <div className="partner-logo" key={`${partner.name}-row2-${index}`}>
+              <div
+                className={`partner-logo ${partner.name === "3I" ? "partner-logo-3i" : ""} ${partner.name === "Kamisoft" ? "partner-logo-kamisoft" : ""}`}
+                key={`${partner.name}-row2-${index}`}
+              >
                 <Image
                   src={`${basePath}${partner.src}`}
                   alt={`Logo ${partner.name}`}
