@@ -9,6 +9,40 @@ type NavItem = {
   label: string;
 };
 
+function MenuIcon() {
+  return (
+    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="11" cy="11" r="6" />
+      <path d="M20 20l-4.2-4.2" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" />
+    </svg>
+  );
+}
+
 const navItems = [
   { href: "/news", label: "Tin tức + Cập nhật" },
   { href: "/labs", label: "Nghiên cứu" },
@@ -29,7 +63,27 @@ export function Header() {
 
   useEffect(() => {
     const isHeroRoute =
-      pathname === "/" || /^\/labs\/[^/]+$/.test(pathname) || /^\/news\/[^/]+$/.test(pathname);
+      pathname === "/" ||
+      pathname === "/labs" ||
+      pathname === "/news" ||
+      /^\/labs\/[^/]+$/.test(pathname) ||
+      /^\/news\/[^/]+$/.test(pathname);
+
+    const getHeroTransitionPoint = () => {
+      const heroMedia = document.querySelector<HTMLElement>(
+        ".hero-media-main, .page-title-media, .news-title-media, .lab-detail-media, .news-detail-media"
+      );
+
+      if (!heroMedia) {
+        return 56;
+      }
+
+      const heroBottom = heroMedia.getBoundingClientRect().bottom + window.scrollY;
+      const headerHeight = 76;
+      const earlyOffset = 32;
+
+      return Math.max(56, heroBottom - headerHeight - earlyOffset);
+    };
 
     const updateHeaderMode = () => {
       if (!isHeroRoute) {
@@ -37,14 +91,17 @@ export function Header() {
         return;
       }
 
-      setIsOverlay(window.scrollY <= 56);
+      const transitionPoint = getHeroTransitionPoint();
+      setIsOverlay(window.scrollY <= transitionPoint);
     };
 
     updateHeaderMode();
     window.addEventListener("scroll", updateHeaderMode, { passive: true });
+    window.addEventListener("resize", updateHeaderMode);
 
     return () => {
       window.removeEventListener("scroll", updateHeaderMode);
+      window.removeEventListener("resize", updateHeaderMode);
     };
   }, [pathname]);
 
@@ -70,19 +127,39 @@ export function Header() {
           </span>
         </Link>
 
-        <button
-          className="mobile-toggle"
-          type="button"
-          aria-expanded={isMenuOpen}
-          aria-controls="primary-nav"
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-        >
-          {isMenuOpen ? "Đóng" : "Menu"}
-        </button>
+        <div className="nav-tools" aria-label="Công cụ điều hướng">
+          <button className="nav-icon-btn" type="button" aria-label="Tìm kiếm" title="Tìm kiếm">
+            <SearchIcon />
+          </button>
+
+          <button className="nav-icon-btn" type="button" aria-label="Đăng nhập" title="Đăng nhập">
+            <UserIcon />
+          </button>
+
+          <button
+            className="mobile-toggle nav-icon-btn"
+            type="button"
+            aria-expanded={isMenuOpen}
+            aria-controls="primary-nav"
+            aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
+            title={isMenuOpen ? "Đóng menu" : "Mở menu"}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+          >
+            {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+            <span className="sr-only">{isMenuOpen ? "Đóng" : "Menu"}</span>
+          </button>
+        </div>
 
         <nav id="primary-nav" className={`nav-links ${isMenuOpen ? "is-open" : ""}`}>
-          <button className="nav-close" type="button" onClick={() => setIsMenuOpen(false)}>
-            Đóng
+          <button
+            className="nav-close nav-icon-btn"
+            type="button"
+            aria-label="Đóng menu"
+            title="Đóng menu"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <CloseIcon />
+            <span className="sr-only">Đóng</span>
           </button>
 
           {navItems.map((item) => {
