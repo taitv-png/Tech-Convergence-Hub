@@ -21,7 +21,7 @@ export function PartnerMarquee() {
   const repeatedSecondRow = [...secondRow, ...secondRow, ...secondRow];
 
   return (
-    <section className="container section partner-section" aria-label="Mạng lưới đối tác quốc tế">
+    <section className="container section partner-section" id="partner-section" aria-label="Mạng lưới đối tác quốc tế">
       <div className="section-head partner-head">
         <h2>Mạng lưới đối tác quốc tế</h2>
       </div>

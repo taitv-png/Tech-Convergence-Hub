@@ -1,39 +1,51 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { clusters, labs } from "../data/labs";
+import { labs } from "../data/labs";
+
+const formatFloorLabel = (floor: string) =>
+  floor === "0" ? "Tầng trệt" : `Lầu ${floor}`;
 
 export function OrbitMap() {
-  const [activeName, setActiveName] = useState(clusters[0].name);
-  const activeIndex = clusters.findIndex((c) => c.name === activeName);
-  const activeCluster =
-    clusters.find((c) => c.name === activeName) ?? clusters[0];
-  const relatedLabs = useMemo(
-    () => labs.filter((l) => l.cluster === activeCluster.name),
-    [activeCluster.name],
+  const floors = useMemo(
+    () => [...new Set(labs.map((l) => l.floor))].sort((a, b) => Number(a) - Number(b)),
+    [],
   );
-  const activeFloors = useMemo(
-    () => new Set(relatedLabs.map((l) => l.floor)).size,
+  const [activeFloor, setActiveFloor] = useState(floors[0] ?? "0");
+  const relatedLabs = useMemo(
+    () =>
+      labs
+        .filter((l) => l.floor === activeFloor)
+        .sort((a, b) => a.room.localeCompare(b.room, "vi")),
+    [activeFloor],
+  );
+  const activeClusters = useMemo(
+    () => [...new Set(relatedLabs.map((l) => l.cluster))],
     [relatedLabs],
   );
+  const activeFunctions = useMemo(
+    () => [...new Set(relatedLabs.flatMap((l) => l.apps))].length,
+    [relatedLabs],
+  );
+
   return (
     <section className="container section" id="orbit-section">
       <div className="section-head">
-        <h2 style={{ display: "none" }}>Cụm năng lực</h2>
+        <h2 style={{ display: "none" }}>Sơ đồ phòng theo tầng</h2>
       </div>
       <div className="orbit-cluster-wrap">
         <div className="panel cluster-orbit-panel">
           <div className="orbit-map">
-            {clusters.map((c) => {
-              const count = labs.filter((l) => l.cluster === c.name).length;
+            {floors.map((floor) => {
+              const count = labs.filter((l) => l.floor === floor).length;
               return (
                 <button
-                  key={c.code}
-                  className={`orbit-cluster-node ${c.name === activeName ? "active" : ""}`}
+                  key={floor}
+                  className={`orbit-cluster-node ${floor === activeFloor ? "active" : ""}`}
                   type="button"
-                  onClick={() => setActiveName(c.name)}
+                  onClick={() => setActiveFloor(floor)}
                 >
-                  <b>{c.name}</b>
+                  <b>{formatFloorLabel(floor)}</b>
                   <span>
                     {count} phòng
                   </span>
@@ -43,31 +55,34 @@ export function OrbitMap() {
           </div>
         </div>
         <aside className="panel orbit-detail">
-          <div className="big-code">{activeCluster.code}</div>
-          <h3>{activeCluster.name}</h3>
-          <p>{activeCluster.desc}</p>
+          <div className="big-code">{activeFloor === "0" ? "G" : `F${activeFloor}`}</div>
+          <h3>{formatFloorLabel(activeFloor)}</h3>
+          <p>
+            Tầng này có {relatedLabs.length} phòng thuộc {activeClusters.length} cụm năng lực,
+            phục vụ đào tạo, nghiên cứu và chuyển giao công nghệ.
+          </p>
           <div className="orbit-quick-stats" aria-label="Thông tin nhanh cụm phòng thí nghiệm">
             <div className="orbit-stat">
               <span>Số phòng</span>
               <strong>{relatedLabs.length}</strong>
             </div>
             <div className="orbit-stat">
-              <span>Tầng</span>
-              <strong>{activeFloors}</strong>
+              <span>Cụm năng lực</span>
+              <strong>{activeClusters.length}</strong>
             </div>
             <div className="orbit-stat">
-              <span>Thẻ</span>
-              <strong>{activeCluster.tags.length}</strong>
+              <span>Chức năng</span>
+              <strong>{activeFunctions}</strong>
             </div>
           </div>
           <div className="chip-row">
-            {activeCluster.tags.map((t) => (
-              <span className="chip" key={t}>
-                {t}
+            {activeClusters.map((cluster) => (
+              <span className="chip" key={cluster}>
+                {cluster}
               </span>
             ))}
           </div>
-          <span className="linked-count">{relatedLabs.length} phòng liên kết</span>
+          <span className="linked-count">{relatedLabs.length} không gian theo tầng</span>
           <div className="mini-labs">
             {relatedLabs.map((l) => (
               <Link className="mini-lab" href={`/labs/${l.id}`} key={l.id}>

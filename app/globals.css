@@ -334,11 +334,126 @@ select {
   max-width: 980px;
   margin: 0 auto;
   padding-inline: clamp(12px, 2.2vw, 28px);
+  padding-inline-start: clamp(24px, 3vw, 44px);
 }
 
 .home-vision-section {
   padding-top: clamp(36px, 5vw, 64px);
   padding-bottom: clamp(24px, 3.4vw, 44px);
+}
+
+.home-vision-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  gap: clamp(40px, 5vw, 72px);
+  align-items: start;
+  max-width: 1460px;
+  margin: 0 auto;
+  padding-inline: clamp(12px, 2.2vw, 28px);
+}
+
+.project-page-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  gap: clamp(40px, 5vw, 72px);
+  align-items: start;
+  max-width: 1460px;
+  margin: 0 auto;
+  padding-inline: clamp(12px, 2.2vw, 28px);
+}
+
+.project-page-layout .home-vision-nav {
+  margin-top: calc(-1 * clamp(24px, 3vw, 40px));
+}
+
+.project-page-content {
+  display: grid;
+  gap: clamp(16px, 2vw, 24px);
+  width: 100%;
+  min-width: 0;
+}
+
+.home-vision-nav {
+  position: sticky;
+  top: 84px;
+  min-height: 100%;
+  width: calc(min(100%, 240px) + clamp(12px, 2.2vw, 28px));
+  padding: 0;
+  margin-left: calc(-1 * clamp(12px, 2.2vw, 28px));
+  transform: translateY(-60px);
+  z-index: 2;
+}
+
+.home-vision-nav-card {
+  width: calc(100% + clamp(12px, 2.2vw, 28px));
+  margin-left: calc(-1 * clamp(12px, 2.2vw, 28px));
+  background: #ffffff;
+  padding: 24px clamp(24px, 4vw, 48px) 28px clamp(24px, 4vw, 48px);
+  display: grid;
+  justify-items: stretch;
+}
+
+.home-vision-nav .home-vision-back {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0;
+  gap: 8px;
+  color: #111111;
+  font-weight: 800;
+  font-size: 1.12rem;
+  line-height: 1.15;
+  padding: 0;
+}
+
+.home-vision-nav .home-vision-back:hover {
+  color: var(--accent) !important;
+}
+
+.home-vision-rule {
+  width: 100%;
+  height: 1px;
+  margin: 44px 0 32px;
+  background: rgba(17, 17, 17, 0.09);
+}
+
+.home-vision-rule-bottom {
+  margin: 24px 0 0;
+}
+
+.home-vision-kicker {
+  margin: 0 0 16px;
+  color: rgba(17, 17, 17, 0.4);
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 800;
+  width: 100%;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.home-vision-links {
+  display: grid;
+  gap: 12px;
+  justify-items: stretch;
+}
+
+.home-vision-nav .home-vision-links a {
+  display: block;
+  width: 100%;
+  text-align: justify;
+  text-justify: inter-word;
+  color: #111111;
+  font-size: 1.08rem;
+  line-height: 1.18;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  transition: color 160ms ease;
+}
+
+.home-vision-nav .home-vision-links a:hover,
+.home-vision-nav .home-vision-links a.active,
+.home-vision-nav .home-vision-links a[aria-current="location"] {
+  color: var(--accent) !important;
 }
 
 .home-vision-head {
@@ -347,8 +462,6 @@ select {
 
 .home-vision-copy {
   max-width: 980px;
-  margin: 0 auto;
-  padding-inline: clamp(12px, 2.2vw, 28px);
   display: grid;
   gap: 14px;
 }
@@ -359,6 +472,10 @@ select {
   font-weight: 700;
   line-height: 1.75;
   font-size: clamp(1rem, 1.2vw, 1.1rem);
+}
+
+.vision-copy-wide {
+  letter-spacing: 0.015em;
 }
 
 .hero-grid {
@@ -1542,6 +1659,10 @@ h1 {
 }
 
 .related-head .kicker {
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #111111;
   margin-bottom: 0;
 }
 
@@ -1815,7 +1936,6 @@ h1 {
   border: 0;
   font: inherit;
   font-size: 100%;
-  vertical-align: baseline;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: #201f20;
@@ -2000,7 +2120,9 @@ h1 {
   }
 
   .orbit-cluster-wrap,
-  .lab-detail-shell {
+  .lab-detail-shell,
+  .home-vision-layout,
+  .project-page-layout {
     grid-template-columns: 1fr;
   }
 
@@ -2012,11 +2134,25 @@ h1 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .lab-detail-side {
+  .lab-detail-side,
+  .home-vision-nav {
     position: static;
   }
 
+  .home-vision-nav {
+    transform: none;
+    z-index: auto;
+  }
+
+  .home-vision-nav-card {
+    padding-top: 12px;
+  }
+
   .lab-detail-main {
+    max-width: none;
+  }
+
+  .home-vision-copy {
     max-width: none;
   }
 
