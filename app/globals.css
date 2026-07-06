@@ -163,7 +163,7 @@ select {
 .nav-links {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  color: var(--accent);
+  color: #111111;
   margin: 0;
   border: 0;
   font: inherit;
@@ -198,10 +198,15 @@ select {
   margin-bottom: 0;
   border: 0;
   background: transparent;
-  color: var(--accent);
+  color: #111111;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+.nav-links .nav-close,
+.nav-links .nav-icon-btn {
+  color: var(--accent) !important;
 }
 
 .mobile-toggle {
@@ -217,12 +222,16 @@ select {
   justify-self: end;
 }
 
+.nav-tools .nav-icon-btn {
+  color: var(--accent) !important;
+}
+
 .nav-icon-btn {
   width: 38px;
   height: 38px;
   border: 0;
   background: transparent;
-  color: var(--accent);
+  color: #111111;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -238,6 +247,10 @@ select {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.nav-links .nav-icon {
+  stroke: currentColor;
 }
 
 .sr-only {
@@ -260,7 +273,7 @@ select {
 .nav-links a {
   padding: 10px 0;
   border-radius: var(--radius-sm);
-  color: var(--accent);
+  color: #111111 !important;
   font-weight: 600;
   font-size: 1.08rem;
   line-height: 1.35;
@@ -269,14 +282,14 @@ select {
 
 .nav-links a:hover {
   background: transparent;
-  color: var(--accent);
+  color: #111111 !important;
 }
 
 .nav-links a.active,
 .nav-links a[aria-current="page"] {
   background: transparent;
   box-shadow: none;
-  color: var(--accent);
+  color: var(--accent) !important;
 }
 
 .nav-cta,
@@ -442,7 +455,7 @@ select {
   width: 100%;
   text-align: justify;
   text-justify: inter-word;
-  color: #111111;
+  color: #111111 !important;
   font-size: 1.08rem;
   line-height: 1.18;
   font-weight: 800;
