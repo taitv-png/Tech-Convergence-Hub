@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { CSSProperties } from "react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { floorLabels, labs } from "../../../data/labs";
@@ -51,7 +52,10 @@ export default async function LabDetailPage({ params }: Props) {
 						← Quay lại
 					</Link>
 					<div className="page-box lab-detail-hero">
-						<article className="lab-detail-media">
+						<article
+							className="lab-detail-media"
+							style={{ "--lab-detail-image": `url("${lab.visual.realImage ?? lab.visual.detailImage}")` } as CSSProperties}
+						>
 							<div className="lab-detail-hero-copy">
 								<h1>{lab.name}</h1>
 							</div>

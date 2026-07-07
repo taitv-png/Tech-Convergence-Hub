@@ -1,3 +1,9 @@
+export type LabVisual = {
+  cardImage: string;
+  detailImage: string;
+  realImage?: string;
+};
+
 export type Lab = {
   id: string;
   code: string;
@@ -15,6 +21,8 @@ export type Lab = {
   intro?: string;
   heroLine?: string;
   sourceQuote?: string;
+  visual: LabVisual;
+  realImagePath?: string;
 };
 
 export type Cluster = {
@@ -65,8 +73,74 @@ const nangLucTheoCum = (tenCum: string) => [
   "Thử nghiệm thực địa theo mô hình phòng thí nghiệm sống và kết nối chuyển giao",
 ];
 
+const realLabImages: Record<string, string> = {
+  "precision-mechanics-lab": "/lab-images/1.jpg",
+  "hologram-printing-lab": "/lab-images/2.jpg",
+  "classroom-e103": "/lab-images/3.jpg",
+  "hologram-exhibition-room": "/lab-images/4.jpg",
+  "immersive-technology-center": "/lab-images/5.jpg",
+  "human-centered-ai-lab": "/lab-images/6.jpg",
+  "urban-physics-lab": "/lab-images/7.jpg",
+  "research-lab": "/lab-images/8.jpg",
+  "smart-city-lab": "/lab-images/9.jpg",
+  "digital-twin-lab": "/lab-images/10.jpg",
+  "automated-vehicles-lab": "/lab-images/11.jpg",
+  "space-ocean-robotics-lab": "/lab-images/12.jpg",
+  "ocean-robotics-lab": "/lab-images/13.jpg",
+  "industrial-production-line-lab": "/lab-images/14.jpg",
+  "embedded-iot-process-lab": "/lab-images/15.jpg",
+  "process-control-industrial-network-lab": "/lab-images/16.jpg",
+  "edge-physical-ai-lab": "/lab-images/17.jpg",
+  "ai-big-data-lab": "/lab-images/18.jpg",
+  "ocean-monitoring-planning-energy-lab": "/lab-images/19.jpg",
+  "ocean-physics-lab": "/lab-images/20.jpg",
+  "ocean-renewable-energy-lab": "/lab-images/21.jpg",
+  "smart-port-mobility-rail-lab": "/lab-images/22.jpg",
+  "smart-mobility-lab": "/lab-images/23.jpg",
+  "rail-systems-lab": "/lab-images/24.jpg",
+  "classroom-e503": "/lab-images/25.jpg",
+  "classroom-e502": "/lab-images/26.jpg",
+  "classroom-e504": "/lab-images/27.jpg",
+  "classroom-e501": "/lab-images/28.jpg",
+  "security-lab": "/lab-images/29.jpg",
+  "security-lab-extra": "/lab-images/30.jpg",
+  "circular-economy-lab": "/lab-images/31.jpg",
+  "isc-open-lab": "/lab-images/32.jpg",
+  "open-lab-prototyping-library": "/lab-images/33.jpg",
+  "meeting-station-cafe": "/lab-images/34.jpg",
+  "innovation-lounge": "/lab-images/35.jpg",
+};
+
+const buildLabVisual = (item: Pick<Lab, "id" | "code" | "room" | "floor" | "cluster">): LabVisual => {
+  const cardImage = `/lab-images/lab-card-${item.id}.jpg`;
+  const detailImage = `/lab-images/lab-detail-${item.id}.jpg`;
+  const realImage = realLabImages[item.id];
+  return {
+    cardImage,
+    detailImage,
+    realImage,
+  };
+};
+
+const assertUniqueLabVisuals = (labList: Lab[]) => {
+  const cardImages = new Set<string>();
+  const detailImages = new Set<string>();
+
+  for (const lab of labList) {
+    if (cardImages.has(lab.visual.cardImage)) {
+      throw new Error(`Duplicate lab card image: ${lab.visual.cardImage}`);
+    }
+    if (detailImages.has(lab.visual.detailImage)) {
+      throw new Error(`Duplicate lab detail image: ${lab.visual.detailImage}`);
+    }
+
+    cardImages.add(lab.visual.cardImage);
+    detailImages.add(lab.visual.detailImage);
+  }
+};
+
 const taoLab = (
-  item: Omit<Lab, "audiences" | "outcomes" | "capabilities">,
+  item: Omit<Lab, "audiences" | "outcomes" | "capabilities" | "visual">,
 ): Lab => ({
   ...item,
   audiences: doiTuongMacDinh,
@@ -75,6 +149,7 @@ const taoLab = (
   intro: item.desc,
   heroLine: "Nút hội tụ công nghệ",
   sourceQuote: item.sourceQuote ?? item.desc,
+  visual: buildLabVisual(item),
 });
 
 export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
@@ -580,6 +655,8 @@ export const labs: Lab[] = [
     apps: ["Không gian làm việc", "Hội thảo"],
   }),
 ];
+
+assertUniqueLabVisuals(labs);
 
 export const news: NewsItem[] = [
   {

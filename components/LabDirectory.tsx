@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { floorLabels, labs } from "../data/labs";
 
 type LabDirectoryProps = {
@@ -15,10 +16,14 @@ export function LabDirectory({ showHeader = true }: LabDirectoryProps) {
 			) : null}
 			<div className="labs-gallery">
 				{labs.map((l) => {
+					const cardStyle = {
+						"--lab-media-image": `url("${l.visual.realImage || l.visual.cardImage}")`,
+					} as CSSProperties;
+
 					return (
 						<Link className="lab-frame" href={`/labs/${l.id}`} key={l.id}>
 							<div className="lab-frame-visual">
-								<div className="lab-frame-media" aria-hidden="true" />
+								<div className="lab-frame-media" aria-hidden="true" style={cardStyle} />
 								<div className="lab-frame-overlay">
 									<h3>{l.name}</h3>
 									<p className="lab-floor-label">{floorLabels[l.floor] ?? `Lầu ${l.floor}`}</p>

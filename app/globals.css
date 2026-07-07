@@ -15,8 +15,8 @@
   --edge: 0px;
   --header-height: 76px;
   --img-hero: url("https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=1920&q=80");
-  --img-labs-title: url("/logos/vien-doi-moi-sang-tao-ueh-uii.jpg");
-  --img-news-title: url("/logos/vien-doi-moi-sang-tao-ueh-uii.jpg");
+  --img-labs-title: var(--img-lab-detail);
+  --img-news-title: var(--img-news-detail);
   --img-lab-a: url("https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80");
   --img-lab-b: url("https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80");
   --img-lab-c: url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80");
@@ -1325,7 +1325,7 @@ h1 {
   border-radius: inherit;
   background:
     linear-gradient(0deg, rgba(255, 106, 0, 0.05), rgba(255, 106, 0, 0.05)),
-    var(--img-lab-a) center / cover no-repeat;
+    var(--lab-media-image, var(--img-lab-a)) center / cover no-repeat;
   overflow: hidden;
 }
 
@@ -1340,24 +1340,6 @@ h1 {
   opacity: 0;
   transition: opacity 180ms ease;
   pointer-events: none;
-}
-
-.lab-frame:nth-child(3n + 1) .lab-frame-media {
-  background:
-    linear-gradient(0deg, rgba(255, 106, 0, 0.05), rgba(255, 106, 0, 0.05)),
-    var(--img-lab-a) center / cover no-repeat;
-}
-
-.lab-frame:nth-child(3n + 2) .lab-frame-media {
-  background:
-    linear-gradient(0deg, rgba(255, 106, 0, 0.05), rgba(255, 106, 0, 0.05)),
-    var(--img-lab-b) center / cover no-repeat;
-}
-
-.lab-frame:nth-child(3n + 3) .lab-frame-media {
-  background:
-    linear-gradient(0deg, rgba(255, 106, 0, 0.05), rgba(255, 106, 0, 0.05)),
-    var(--img-lab-c) center / cover no-repeat;
 }
 
 .lab-frame:hover .lab-frame-media::after {
@@ -1806,7 +1788,7 @@ h1 {
   border-radius: 0;
   background:
     linear-gradient(0deg, rgba(255, 106, 0, 0.06), rgba(255, 106, 0, 0.06)),
-    var(--img-lab-detail) center / cover no-repeat;
+    var(--lab-detail-image, var(--img-lab-detail)) center / cover no-repeat;
 }
 
 .lab-detail-hero-copy {
