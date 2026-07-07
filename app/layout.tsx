@@ -4,8 +4,8 @@ import "./globals.css";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const cssVars = {
-  ["--img-labs-title" as string]: `url("${basePath}/lab-images/5.jpg")`,
-  ["--img-news-title" as string]: `url("${basePath}/logos/vien-doi-moi-sang-tao-ueh-uii.jpg")`,
+  ["--img-labs-title" as string]: `url(${basePath}/lab-images/5.jpg)`,
+  ["--img-news-title" as string]: `url(${basePath}/logos/vien-doi-moi-sang-tao-ueh-uii.jpg)`,
 } as React.CSSProperties;
 
 const icielGotham = localFont({
