@@ -3,6 +3,11 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const cssVars = {
+  ["--img-labs-title" as string]: `url("${basePath}/lab-images/5.jpg")`,
+  ["--img-news-title" as string]: `url("${basePath}/logos/vien-doi-moi-sang-tao-ueh-uii.jpg")`,
+} as React.CSSProperties;
+
 const icielGotham = localFont({
   variable: "--font-body",
   display: "swap",
@@ -37,7 +42,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi">
-      <body className={icielGotham.variable}>
+      <body className={icielGotham.variable} style={cssVars}>
         {children}
       </body>
     </html>
