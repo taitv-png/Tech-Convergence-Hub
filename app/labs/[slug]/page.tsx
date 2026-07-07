@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { labs } from "../../../data/labs";
+import { floorLabels, labs } from "../../../data/labs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -26,6 +26,7 @@ export default async function LabDetailPage({ params }: Props) {
 	if (!lab) notFound();
 
 	const related = labs.filter((x) => x.cluster === lab.cluster && x.id !== lab.id);
+	const floorLabel = floorLabels[lab.floor] ?? `Lầu ${lab.floor}`;
 	const capabilities =
 		lab.capabilities ?? [
 			`Phát triển và kiểm thử giải pháp trong cụm ${lab.cluster}`,
@@ -61,7 +62,7 @@ export default async function LabDetailPage({ params }: Props) {
 					<div className="lab-detail-shell">
 						<aside className="panel lab-detail-side">
 							<h3 style={{ marginTop: 16 }}>
-								{lab.room} · Tầng {lab.floor}
+								{lab.room} · {floorLabel}
 							</h3>
 							<div className="chip-row">
 								<span className="chip">{lab.cluster}</span>
@@ -151,11 +152,10 @@ export default async function LabDetailPage({ params }: Props) {
 								<div className="lab-directory-grid related-labs-grid">
 									{related.map((x) => (
 										<Link className="lab-directory-card" href={`/labs/${x.id}`} key={x.id}>
-											<span className="code">{x.code}</span>
 											<h3>{x.name}</h3>
 											<p>{x.desc}</p>
 											<div className="meta">
-												<span>Tầng {x.floor} · {x.room}</span>
+												<span>{floorLabels[x.floor] ?? `Lầu ${x.floor}`} · {x.room}</span>
 												<span>→</span>
 											</div>
 										</Link>

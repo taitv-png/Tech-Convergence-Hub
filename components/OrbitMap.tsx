@@ -1,10 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { labs } from "../data/labs";
+import { floorLabels, labs } from "../data/labs";
 
 const formatFloorLabel = (floor: string) =>
-  floor === "0" ? "Tầng trệt" : `Lầu ${floor}`;
+  floorLabels[floor] ?? (floor === "0" ? "Tầng trệt" : `Lầu ${floor}`);
 
 export function OrbitMap() {
   const floors = useMemo(
@@ -87,9 +87,7 @@ export function OrbitMap() {
             {relatedLabs.map((l) => (
               <Link className="mini-lab" href={`/labs/${l.id}`} key={l.id}>
                 <div>
-                  <b>{l.code}</b>
-                  <br />
-                  <span>{l.name}</span>
+                  <b>{l.name}</b>
                 </div>
                 <span>{l.room}</span>
               </Link>

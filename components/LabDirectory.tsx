@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { labs } from "../data/labs";
+import { floorLabels, labs } from "../data/labs";
 
 type LabDirectoryProps = {
 	showHeader?: boolean;
@@ -21,6 +21,7 @@ export function LabDirectory({ showHeader = true }: LabDirectoryProps) {
 								<div className="lab-frame-media" aria-hidden="true" />
 								<div className="lab-frame-overlay">
 									<h3>{l.name}</h3>
+									<p className="lab-floor-label">{floorLabels[l.floor] ?? `Lầu ${l.floor}`}</p>
 									<p>{l.desc}</p>
 									<div className="chip-row">
 										{l.tech.slice(0, 3).map((tech) => (
