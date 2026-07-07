@@ -2255,12 +2255,15 @@ h1 {
 
   .hero-media-main,
   .hero-media-sub,
-  .page-title-media,
-  .lab-detail-media,
   .lab-slot,
   .lab-slot-wide {
     min-height: 180px;
     grid-column: span 1;
+  }
+
+  .page-title-media,
+  .lab-detail-media {
+    min-height: 180px;
   }
 
   .hero-media-grid,
@@ -2296,12 +2299,15 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .news-title-media,
-  .news-detail-media,
   .news-slot,
   .news-slot-wide {
     min-height: 180px;
     grid-column: span 1;
+  }
+
+  .news-title-media,
+  .news-detail-media {
+    min-height: 180px;
   }
 
   .lab-frame-visual,
@@ -2356,4 +2362,38 @@ h1 {
     transition: none;
     transform: none;
   }
+}
+
+/* Scroll To Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: clamp(20px, 3vw, 40px);
+  right: clamp(20px, 3vw, 40px);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  box-shadow: 0 4px 12px rgba(255, 106, 0, 0.3);
+  transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.scroll-to-top:hover {
+  background: #e65c00;
+  transform: translateY(-2px);
+}
+
+.scroll-to-top:active {
+  transform: translateY(0);
+}
+
+.scroll-to-top svg {
+  width: 22px;
+  height: 22px;
 }

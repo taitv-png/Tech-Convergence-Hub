@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const cssVars = {
@@ -44,6 +45,7 @@ export default function RootLayout({
     <html lang="vi">
       <body className={icielGotham.variable} style={cssVars}>
         {children}
+        <ScrollToTop />
       </body>
     </html>
   );
