@@ -7,6 +7,7 @@ type LabDirectoryProps = {
 };
 
 export function LabDirectory({ showHeader = true }: LabDirectoryProps) {
+	const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 	return (
 		<section className="container section" id="lab-directory">
 			{showHeader ? (
@@ -17,7 +18,7 @@ export function LabDirectory({ showHeader = true }: LabDirectoryProps) {
 			<div className="labs-gallery">
 				{labs.map((l) => {
 					const cardStyle = {
-						"--lab-media-image": `url("${l.visual.realImage || l.visual.cardImage}")`,
+						"--lab-media-image": `url("${basePath}${l.visual.realImage || l.visual.cardImage}")`,
 					} as CSSProperties;
 
 					return (
