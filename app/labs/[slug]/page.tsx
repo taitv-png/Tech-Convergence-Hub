@@ -26,6 +26,8 @@ export default async function LabDetailPage({ params }: Props) {
 
 	if (!lab) notFound();
 
+	const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 	const related = labs.filter((x) => x.cluster === lab.cluster && x.id !== lab.id);
 	const floorLabel = floorLabels[lab.floor] ?? `Lầu ${lab.floor}`;
 	const capabilities =
@@ -54,7 +56,7 @@ export default async function LabDetailPage({ params }: Props) {
 					<div className="page-box lab-detail-hero">
 						<article
 							className="lab-detail-media"
-							style={{ "--lab-detail-image": `url("${lab.visual.realImage ?? lab.visual.detailImage}")` } as CSSProperties}
+							style={{ "--lab-detail-image": `url("${basePath}${lab.visual.realImage ?? lab.visual.detailImage}")` } as CSSProperties}
 						>
 							<div className="lab-detail-hero-copy">
 								<h1>{lab.name}</h1>
