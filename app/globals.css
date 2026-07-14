@@ -398,10 +398,20 @@ select {
 }
 
 .home-vision-nav-card {
-  width: calc(100% + clamp(12px, 2.2vw, 28px));
-  margin-left: calc(-1 * clamp(12px, 2.2vw, 28px));
+  width: calc(
+    100% + clamp(12px, 2.2vw, 28px) +
+      max(0px, (100vw - 1460px) / 2 - clamp(12px, 2.2vw, 28px))
+  );
+  margin-left: calc(
+    -1 * (clamp(12px, 2.2vw, 28px) +
+      max(0px, (100vw - 1460px) / 2 - clamp(12px, 2.2vw, 28px)))
+  );
   background: #ffffff;
-  padding: 24px clamp(24px, 4vw, 48px) 28px clamp(24px, 4vw, 48px);
+  padding: 24px clamp(24px, 4vw, 48px) 28px
+    calc(
+      clamp(24px, 4vw, 48px) +
+        max(0px, (100vw - 1460px) / 2 - clamp(12px, 2.2vw, 28px))
+    );
   display: grid;
   justify-items: stretch;
 }
@@ -2209,6 +2219,71 @@ h1 {
     width: 100%;
   }
 
+  .home-vision-nav {
+    display: none;
+  }
+
+  .home-main .hero-overlay h1 {
+    font-size: clamp(1.45rem, 2.8vw, 2.65rem);
+  }
+
+  .home-main .hero-overlay .lead {
+    font-size: clamp(1rem, 1vw, 1.08rem);
+  }
+
+  .home-main .home-vision-copy p {
+    font-size: 0.9rem;
+  }
+
+  .home-main .orbit-detail h3 {
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+  }
+
+  .home-main .orbit-detail p {
+    font-size: 0.92rem;
+  }
+
+  .home-main {
+    font-size: 0.9rem;
+  }
+
+  .home-main .kicker {
+    font-size: 10px;
+  }
+
+  .home-main .hero-actions .btn {
+    font-size: 0.86rem;
+  }
+
+  .home-main .partner-head h2 {
+    font-size: 1.25rem;
+  }
+
+  .home-main .metric strong {
+    font-size: 1.25rem;
+  }
+
+  .home-main .metric span,
+  .home-main .orbit-cluster-node span,
+  .home-main .orbit-stat span,
+  .home-main .linked-count {
+    font-size: 0.78rem;
+  }
+
+  .home-main .orbit-cluster-node b {
+    font-size: 0.88rem;
+  }
+
+  .home-main .orbit-stat strong {
+    font-size: 1rem;
+  }
+
+  .home-main .chip,
+  .home-main .mini-lab b,
+  .home-main .mini-lab span {
+    font-size: 0.76rem;
+  }
+
   .nav {
     grid-template-columns: 1fr auto;
     gap: 10px;
@@ -2329,21 +2404,48 @@ h1 {
   }
 
   .footer {
-    padding-inline: clamp(14px, 4vw, 22px);
+    padding: 28px 0 36px;
+    padding-inline: clamp(18px, 5vw, 24px);
   }
 
   .footer-inner {
-    grid-template-columns: 1fr;
-    gap: 22px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 28px 18px;
   }
 
   .footer-column-main {
+    grid-column: auto;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 0;
+  }
+
+  .footer-column-side {
+    grid-column: 1 / -1;
+    padding-top: 22px;
+    border-top: 1px solid rgba(32, 31, 32, 0.14);
+    gap: 16px;
+  }
+
+  .footer-social {
+    gap: 8px 12px;
+  }
+
+  .footer-social a {
+    font-size: 0.88rem;
+  }
+
+  .footer-link-list a {
+    font-size: 0.86rem;
   }
 
   .footer-heading {
-    font-size: 1.45rem;
+    font-size: 1.15rem;
+  }
+
+  .footer-signature p,
+  .footer-contact a,
+  .footer-contact p {
+    font-size: 0.86rem;
   }
 
 }
