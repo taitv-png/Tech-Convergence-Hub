@@ -13,9 +13,15 @@ Mở `http://localhost:3000`.
 
 ## Flow
 
-- Trang chủ `/`: Hero, Orbit Map, Lab Directory, News & Signals, System Pathway.
+- Trang chủ `/`: Hero, Vision Section, Orbit Map và Partner Marquee.
+- Trang danh mục lab: `/labs`.
 - Trang lab detail: `/labs/[slug]`.
+- Trang tin tức: `/news` và `/news/[id]`.
 - Data: `data/labs.ts`.
+
+## Tài liệu kỹ thuật
+
+Xem [docs/TECHNICAL.md](docs/TECHNICAL.md) để đọc kiến trúc, route, mô hình dữ liệu, cấu hình deploy, quy trình cập nhật nội dung và checklist phát hành.
 
 ## Dùng Codex
 
