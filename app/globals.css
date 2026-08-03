@@ -707,7 +707,7 @@ h1 {
   padding-top: clamp(26px, 3.6vw, 44px);
   padding-bottom: clamp(24px, 3.2vw, 38px);
   background: #ffffff;
-  max-width: 980px;
+  max-width: 1280px;
   margin: 0 auto;
   padding-inline: clamp(12px, 2.2vw, 28px);
 }
@@ -738,7 +738,7 @@ h1 {
 }
 
 .partner-marquee-reverse {
-  margin-left: clamp(20px, 3vw, 44px);
+  margin-left: clamp(8px, 1.5vw, 20px);
 }
 
 .partner-marquee:hover .partner-track,
@@ -750,8 +750,8 @@ h1 {
   width: max-content;
   display: flex;
   align-items: center;
-  gap: clamp(28px, 4vw, 70px);
-  animation: partner-scroll 24s linear infinite;
+  gap: clamp(22px, 3vw, 52px);
+  animation: partner-scroll 30s linear infinite;
   will-change: transform;
 }
 
@@ -760,8 +760,8 @@ h1 {
 }
 
 .partner-logo {
-  width: clamp(84px, 9.5vw, 132px);
-  height: clamp(32px, 3.6vw, 48px);
+  width: clamp(68px, 7.2vw, 104px);
+  height: clamp(26px, 3vw, 40px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -770,7 +770,7 @@ h1 {
 
 .partner-logo-3i {
   background: #0f172a;
-  padding: 4px 8px;
+  padding: 3px 6px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
 }
@@ -780,8 +780,8 @@ h1 {
 }
 
 .partner-logo-kamisoft {
-  width: clamp(96px, 10.5vw, 146px);
-  height: clamp(36px, 4vw, 54px);
+  width: clamp(78px, 8vw, 116px);
+  height: clamp(30px, 3.4vw, 44px);
 }
 
 .partner-logo img {
