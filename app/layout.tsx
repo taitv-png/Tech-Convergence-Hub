@@ -14,6 +14,11 @@ const icielGotham = localFont({
   display: "swap",
   src: [
     {
+      path: "../public/fonts/Gotham-Thin.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
       path: "../public/fonts/icielgothammediumregular.otf",
       weight: "400",
       style: "normal",
@@ -32,11 +37,25 @@ const icielGotham = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://taitv-png.github.io"),
   icons: {
-    icon: `${basePath}/tch_logo.ico`,
+    icon: `${basePath}/tch-logo-lockup.png`,
   },
   title: "Tech-Convergence Hub",
-  description: "Trang giới thiệu mô hình Tech-Convergence Hub của UEH",
+  description: "Nơi công nghệ hội tụ tại Campus E, Đại học Kinh tế Thành phố Hồ Chí Minh.",
+  openGraph: {
+    title: "Tech-Convergence Hub | Nơi công nghệ hội tụ",
+    description: "Khám phá hệ sinh thái 36 không gian công nghệ tại Campus E, UEH.",
+    images: ["/Tech-Convergence-Hub/og-preview.png"],
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tech-Convergence Hub | Nơi công nghệ hội tụ",
+    description: "Khám phá hệ sinh thái 36 không gian công nghệ tại Campus E, UEH.",
+    images: ["/Tech-Convergence-Hub/og-preview.png"],
+  },
 };
 export default function RootLayout({
   children,

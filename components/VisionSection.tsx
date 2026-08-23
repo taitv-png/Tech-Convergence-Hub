@@ -1,18 +1,33 @@
-import { HomeVisionNav } from "./HomeVisionNav";
-
 export function VisionSection() {
   return (
-    <section className="section home-vision-section" id="vision">
-      <div className="container home-vision-layout">
-        <HomeVisionNav />
+    <section className="tch-intro" id="vision">
+      <div className="tch-section-index">
+        <span>01</span>
+        <p>Tầm nhìn</p>
+      </div>
 
-        <div className="home-vision-copy">
-          <p className="vision-copy-wide">
-            Tech-Convergence Hub được định vị là hạt nhân chiến lược của hệ sinh thái UniverCity Innovation Hub UEH, nơi hội tụ công nghệ mũi nhọn, tri thức liên ngành và thực tiễn đô thị nhằm giải quyết các thách thức phát triển của Việt Nam và khu vực. Trung tâm hướng tới hình thành một hệ sinh thái đổi mới sáng tạo đa ngành tiêu chuẩn quốc tế, dựa trên các nền tảng công nghệ cốt lõi như trí tuệ nhân tạo, robotics, khoa học dữ liệu, công nghệ mô phỏng, vả nhập vai. Các nền tảng này được tích hợp trong các mô hình phòng thí nghiệm truyền thống, phòng thí nghiệm sống (Living Labs) và không gian thử nghiệm công nghệ mở, cho phép nghiên cứu, đào tạo, ứng dụng, chuyển giao được triển khai song song, liên tục và gắn chặt với thực tiễn.
+      <div className="tch-intro-main">
+        <p className="tch-section-kicker">A shared platform for open innovation</p>
+        <h2>
+          Một hệ sinh thái được thiết kế để{" "}
+          <em>công nghệ gặp nhau.</em>
+        </h2>
+
+        <div className="tch-intro-columns">
+          <p>
+            Tech-Convergence Hub là hạt nhân của hệ sinh thái UniverCity Innovation Hub UEH — nơi tri thức
+            liên ngành, công nghệ mũi nhọn và những bài toán thực tế cùng hiện diện trong một không gian mở.
           </p>
           <p>
-            Trung tâm đóng vai trò cầu nối giữa học thuật và thành phố, giữa nghiên cứu hàn lâm và triển khai chính sách, giữa đổi mới công nghệ và tác động xã hội. Trung tâm không chỉ phục vụ nhu cầu nghiên cứu và đào tạo nội bộ, mà còn là nền tảng dùng chung cho chính quyền, doanh nghiệp và cộng đồng trong quá trình đồng thiết kế, thử nghiệm và nhân rộng các giải pháp cho đô thị thông minh, kinh tế số và phát triển bền vững. Đây đồng thời là không gian học tập mở trong mô hình nền tảng hợp tác giá trị: Value Co-Creation Platform, nơi sinh viên, giảng viên, nhà nghiên cứu và các đối tác xã hội cùng tham gia kiến tạo tri thức và trải nghiệm đổi mới trong bối cảnh thực. Thông qua đó, Trung tâm góp phần hiện thực hóa tầm nhìn UEH trở thành đại học thế hệ mới, vận hành như một “đô thị học tập bền vững”, một nền tảng đổi mới mở và một trung tâm hội tụ tri thức , công nghệ, chính sách vì tương lai xanh, sáng tạo và công bằng.
+            Tại đây, nghiên cứu, đào tạo, thử nghiệm và chuyển giao không tách rời. Sinh viên, giảng viên,
+            doanh nghiệp, chính quyền và cộng đồng cùng đồng thiết kế những giải pháp có thể được kiểm chứng trong đời sống.
           </p>
+        </div>
+
+        <div className="tch-metrics" aria-label="Quy mô Tech-Convergence Hub">
+          <div><strong>36</strong><span>không gian công nghệ</span></div>
+          <div><strong>07</strong><span>cụm năng lực liên ngành</span></div>
+          <div><strong>01</strong><span>nền tảng đổi mới mở</span></div>
         </div>
       </div>
     </section>

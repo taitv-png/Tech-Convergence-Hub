@@ -44,7 +44,7 @@ function UserIcon() {
 }
 
 const navItems = [
-  { href: "/", label: "Về TCH" },
+  { href: "/", label: "Về Technology Convergence Hub" },
   { href: "/news", label: "Tin & sự kiện" },
   { href: "/", label: "Giáo dục" },
   { href: "/labs", label: "Danh mục labs" },
@@ -118,12 +118,14 @@ export function Header() {
     <header className={`header ${isOverlay ? "header-overlay" : "header-solid"}`}>
       <div className="container nav">
         <Link className="logo" href="/">
-          <span className="logo-mark">
-            <Image src={`${basePath}/tch_logo.ico`} width={32} height={32} alt="tch" />
-          </span>
-          <span>
-            Tech-Convergence Hub
-          </span>
+          <Image
+            className="logo-lockup"
+            src={`${basePath}/tch-logo-lockup.png`}
+            width={307}
+            height={107}
+            alt="Tech Convergence Hub"
+            priority
+          />
         </Link>
 
         <div className="nav-tools" aria-label="Công cụ điều hướng">

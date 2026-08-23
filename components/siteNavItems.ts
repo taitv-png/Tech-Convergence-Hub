@@ -5,7 +5,7 @@ active?: boolean;
 };
 
 export const siteNavItems = [
-	{ href: "/", label: "Về TCH" },
+	{ href: "/", label: "Về Technology Convergence Hub" },
 	{ href: "/news", label: "Tin & sự kiện" },
 	{ href: "/", label: "Giáo dục" },
 	{ href: "/labs", label: "Danh mục labs" },

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const primaryLinks = [
-  { label: "Về TCH", href: "/" },
+  { label: "Về Technology Convergence Hub", href: "/" },
   { label: "Tin & sự kiện", href: "/news" },
   { label: "Giáo dục", href: "/" },
   { label: "Danh mục labs", href: "/labs" },
@@ -72,7 +72,7 @@ export function Footer() {
             <p>Đại học Kinh tế Thành phố Hồ Chí Minh</p>
           </div>
 
-          <div className="footer-contact" aria-label="Thông tin liên hệ TCH">
+          <div className="footer-contact" aria-label="Thông tin liên hệ Technology Convergence Hub">
             <a href="mailto:tch@ueh.edu.vn">tch@ueh.edu.vn</a>
             <p>54 Nguyễn Văn Thủ, Tân Định, Hồ Chí Minh</p>
           </div>

@@ -11,7 +11,7 @@ export function HomeVisionNav() {
       links={siteNavItems.map((item) => ({
         href: item.href,
         label: item.label,
-        current: item.label === "Về TCH",
+        current: item.label === "Về Technology Convergence Hub",
       }))}
     />
   );

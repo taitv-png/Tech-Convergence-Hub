@@ -1,101 +1,466 @@
 "use client";
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import { floorLabels, labs } from "../data/labs";
 
-const formatFloorLabel = (floor: string) =>
-  floorLabels[floor] ?? (floor === "0" ? "Tầng trệt" : `Lầu ${floor}`);
+import Link from "next/link";
+import { CSSProperties, PointerEvent, useMemo, useRef, useState } from "react";
+import { floorLabels, labs } from "@/data/labs";
+
+type ExplorerMode = "building" | "floors";
+type PlanPoint = { x: number; y: number };
+type DoorSide = "top" | "right" | "bottom" | "left";
+type StairId = "CT1" | "CT2";
+type ConnectionId = StairId | "LIFT";
+type RouteLocation = { id: string; label: string; floor: string; room: string; point: PlanPoint };
+type PlanRoom = {
+  rooms: string[];
+  label: string;
+  style: CSSProperties;
+  door: { side: DoorSide; position: number; double?: boolean };
+  point: PlanPoint;
+  kind?: "room" | "lounge";
+};
+type StairSpec = {
+  id: StairId;
+  point: PlanPoint;
+  style: CSSProperties;
+  direction: "up" | "down" | "both";
+  orientation: "horizontal" | "vertical";
+};
+type FloorPlanSpec = {
+  rooms: PlanRoom[];
+  stairs: StairSpec[];
+  columns: PlanPoint[];
+  variant: "ground" | "typical" | "combined" | "top";
+};
+
+const FLOORS = ["7", "6", "5", "4", "3", "2", "1", "0"];
+const FLOOR_DEPTH = 54;
+
+const rect = (left: string, top: string, width: string, height: string, clipPath?: string): CSSProperties => ({
+  left, top, width, height, ...(clipPath ? { clipPath } : {}),
+});
+
+const typicalPlan = (floor: string): FloorPlanSpec => ({
+  variant: "typical",
+  rooms: [
+    {
+      rooms: [`E${floor}03`], label: `E${floor}03`,
+      style: rect("7%", "35%", "22%", "48%", "polygon(2% 0,100% 0,100% 100%,0 94%)"),
+      door: { side: "top", position: 18, double: true }, point: { x: 11, y: 35 },
+    },
+    {
+      rooms: [`E${floor}02`], label: `E${floor}02`,
+      style: rect("30%", "35%", "29%", "50%", "polygon(0 0,91% 0,100% 8%,100% 100%,0 91%)"),
+      door: { side: "top", position: 48, double: true }, point: { x: 44, y: 35 },
+    },
+    {
+      rooms: [`E${floor}04`], label: `E${floor}04`, style: rect("60%", "8%", "31%", "29%"),
+      door: { side: "left", position: 22, double: true }, point: { x: 60, y: 14 },
+    },
+    {
+      rooms: [`E${floor}01`], label: `E${floor}01`,
+      style: rect("74%", "39%", "18%", "48%", "polygon(0 0,100% 0,100% 100%,0 94%)"),
+      door: { side: "left", position: 36 }, point: { x: 74, y: 56 },
+    },
+  ],
+  stairs: [
+    { id: "CT2", point: { x: 31, y: 31 }, style: rect("12%", "10%", "19%", "22%"), direction: "both", orientation: "horizontal" },
+    { id: "CT1", point: { x: 66, y: 62 }, style: rect("60%", "39%", "13%", "23%"), direction: "both", orientation: "vertical" },
+  ],
+  columns: [
+    { x: 8, y: 12 }, { x: 29, y: 12 }, { x: 59, y: 12 }, { x: 74, y: 12 }, { x: 91, y: 12 },
+    { x: 8, y: 35 }, { x: 29, y: 35 }, { x: 59, y: 35 }, { x: 74, y: 38 }, { x: 91, y: 38 },
+    { x: 8, y: 82 }, { x: 29, y: 83 }, { x: 59, y: 85 }, { x: 74, y: 87 }, { x: 91, y: 89 },
+  ],
+});
+
+const floorFour = typicalPlan("4");
+floorFour.variant = "combined";
+floorFour.rooms = [
+  {
+    rooms: ["E402", "E403"], label: "E402 · E403",
+    style: rect("7%", "35%", "52%", "50%", "polygon(1% 0,95% 0,100% 8%,100% 100%,0 92%)"),
+    door: { side: "top", position: 48, double: true }, point: { x: 32, y: 35 },
+  },
+  ...floorFour.rooms.filter((room) => room.label === "E404" || room.label === "E401"),
+];
+
+const floorSix = typicalPlan("6");
+floorSix.variant = "combined";
+floorSix.rooms = [
+  {
+    rooms: ["E602", "E603"], label: "E602 · E603",
+    style: rect("7%", "35%", "52%", "50%", "polygon(1% 0,95% 0,100% 8%,100% 100%,0 92%)"),
+    door: { side: "top", position: 48, double: true }, point: { x: 32, y: 35 },
+  },
+  ...floorSix.rooms.filter((room) => room.label === "E604" || room.label === "E601"),
+];
+
+const FLOOR_PLANS: Record<string, FloorPlanSpec> = {
+  "0": {
+    variant: "ground",
+    rooms: [
+      {
+        rooms: ["E002"], label: "E002",
+        style: rect("6%", "38%", "23%", "45%", "polygon(5% 0,100% 0,100% 100%,0 94%)"),
+        door: { side: "right", position: 20 }, point: { x: 29, y: 47 },
+      },
+      {
+        rooms: ["E001"], label: "E001",
+        style: rect("30%", "62%", "18%", "22%", "polygon(0 0,100% 0,100% 100%,0 88%)"),
+        door: { side: "left", position: 14 }, point: { x: 30, y: 65 },
+      },
+    ],
+    stairs: [
+      { id: "CT2", point: { x: 29, y: 33 }, style: rect("12%", "12%", "17%", "22%"), direction: "up", orientation: "horizontal" },
+      { id: "CT1", point: { x: 52, y: 62 }, style: rect("45%", "40%", "14%", "23%"), direction: "up", orientation: "vertical" },
+    ],
+    columns: [
+      { x: 7, y: 13 }, { x: 29, y: 13 }, { x: 47, y: 13 }, { x: 60, y: 13 }, { x: 75, y: 13 }, { x: 92, y: 13 },
+      { x: 7, y: 37 }, { x: 29, y: 37 }, { x: 47, y: 37 }, { x: 60, y: 37 }, { x: 75, y: 37 }, { x: 92, y: 37 },
+      { x: 7, y: 82 }, { x: 29, y: 83 }, { x: 48, y: 85 }, { x: 61, y: 87 }, { x: 75, y: 89 }, { x: 92, y: 91 },
+    ],
+  },
+  "1": typicalPlan("1"), "2": typicalPlan("2"), "3": typicalPlan("3"), "4": floorFour,
+  "5": typicalPlan("5"), "6": floorSix,
+  "7": {
+    variant: "top",
+    rooms: [
+      {
+        rooms: ["E702"], label: "E702",
+        style: rect("8%", "35%", "30%", "35%", "polygon(2% 0,100% 0,100% 100%,0 94%)"),
+        door: { side: "right", position: 42 }, point: { x: 38, y: 50 },
+      },
+      {
+        rooms: ["E701"], label: "E701", style: rect("64%", "33%", "18%", "37%"),
+        door: { side: "left", position: 42 }, point: { x: 64, y: 49 },
+      },
+      {
+        rooms: ["E7 Hall"], label: "SẢNH / LOUNGE", style: rect("39%", "8%", "51%", "21%"),
+        door: { side: "bottom", position: 62 }, point: { x: 71, y: 29 }, kind: "lounge",
+      },
+    ],
+    stairs: [{ id: "CT1", point: { x: 62, y: 51 }, style: rect("48%", "36%", "15%", "22%"), direction: "down", orientation: "vertical" }],
+    columns: [
+      { x: 8, y: 12 }, { x: 38, y: 12 }, { x: 63, y: 12 }, { x: 82, y: 12 }, { x: 91, y: 12 },
+      { x: 8, y: 35 }, { x: 38, y: 35 }, { x: 63, y: 35 }, { x: 82, y: 35 }, { x: 91, y: 35 },
+      { x: 8, y: 70 }, { x: 38, y: 72 }, { x: 63, y: 75 }, { x: 82, y: 78 }, { x: 91, y: 80 },
+    ],
+  },
+};
+
+function floorName(floor: string) { return floor === "0" ? "Tầng trệt" : `Tầng ${floor}`; }
+function floorCode(floor: string) { return floor === "0" ? "GF" : `F${floor}`; }
+function planRoomFor(room: string, floor: string) { return FLOOR_PLANS[floor]?.rooms.find((spec) => spec.rooms.includes(room)); }
+function doorPointForRoom(room: string, floor: string): PlanPoint { return planRoomFor(room, floor)?.point ?? { x: 50, y: 50 }; }
+function stairSpec(floor: string, stair: StairId) { return FLOOR_PLANS[floor].stairs.find((item) => item.id === stair); }
+const LIFT_STOPS = new Set(["0", "4", "5", "6", "7"]);
+const liftPoint = (floor: string): PlanPoint => floor === "0" ? { x: 54, y: 72 } : floor === "7" ? { x: 56, y: 69 } : { x: 54, y: 70 };
+const hasLiftStop = (floor: string) => LIFT_STOPS.has(floor);
+const canUseLift = (startFloor: string, destinationFloor: string) => hasLiftStop(startFloor) && hasLiftStop(destinationFloor) && startFloor !== destinationFloor;
+
+type CorridorNode = { id: string; point: PlanPoint; links: string[] };
+const TYPICAL_CORRIDOR: CorridorNode[] = [
+  { id: "west", point: { x: 30, y: 33 }, links: ["middle", "ct2"] },
+  { id: "middle", point: { x: 47, y: 33 }, links: ["west", "east"] },
+  { id: "east", point: { x: 58, y: 33 }, links: ["middle", "coreWest", "e104"] },
+  { id: "e104", point: { x: 58, y: 14 }, links: ["east"] },
+  { id: "coreWest", point: { x: 58, y: 65 }, links: ["east", "coreSouth", "liftGate"] },
+  { id: "coreSouth", point: { x: 66, y: 65 }, links: ["coreWest", "s5", "ct1"] },
+  { id: "s5", point: { x: 72, y: 65 }, links: ["coreSouth", "e101"] },
+  { id: "e101", point: { x: 72, y: 56 }, links: ["s5"] },
+  { id: "liftGate", point: { x: 58, y: 70 }, links: ["coreWest", "lift"] },
+  { id: "lift", point: { x: 54, y: 70 }, links: ["liftGate"] },
+  { id: "ct1", point: { x: 66, y: 62 }, links: ["coreSouth"] },
+  { id: "ct2", point: { x: 31, y: 31 }, links: ["west"] },
+];
+
+function shortestCorridorPath(fromId: string, toId: string): PlanPoint[] {
+  if (fromId === toId) return [];
+  const byId = new Map(TYPICAL_CORRIDOR.map((node) => [node.id, node]));
+  const queue = [fromId];
+  const previous = new Map<string, string>();
+  const visited = new Set([fromId]);
+  while (queue.length) {
+    const current = queue.shift()!;
+    if (current === toId) break;
+    for (const next of byId.get(current)?.links ?? []) {
+      if (visited.has(next)) continue;
+      visited.add(next); previous.set(next, current); queue.push(next);
+    }
+  }
+  const ids: string[] = [];
+  let cursor = toId;
+  while (cursor !== fromId && previous.has(cursor)) { ids.unshift(cursor); cursor = previous.get(cursor)!; }
+  return ids.map((id) => byId.get(id)!.point);
+}
+
+function roomCorridorEntry(location: RouteLocation): { points: PlanPoint[]; node: string } {
+  if (location.floor === "0") {
+    if (location.id === "entrance") return { points: [location.point, { x: 78, y: 58 }], node: "groundEast" };
+    if (location.room === "E002") return { points: [location.point, { x: 37, y: 47 }, { x: 37, y: 58 }], node: "groundMid" };
+    return { points: [location.point, { x: 38, y: 65 }, { x: 38, y: 58 }], node: "groundMid" };
+  }
+  if (location.floor === "7") {
+    if (location.room === "E702") return { points: [location.point, { x: 47, y: 50 }], node: "topWest" };
+    if (location.room === "E701") return { points: [location.point, { x: 62, y: 49 }], node: "topEast" };
+    return { points: [location.point, { x: 71, y: 32 }], node: "topEast" };
+  }
+  const digit = location.room.match(/(\d)$/)?.[1];
+  if (digit === "3") return { points: [location.point, { x: location.point.x, y: 33 }, { x: 30, y: 33 }], node: "west" };
+  if (digit === "2") return { points: [location.point, { x: location.point.x, y: 33 }, { x: 47, y: 33 }], node: "middle" };
+  if (digit === "4") return { points: [location.point, { x: 58, y: location.point.y }, { x: 58, y: 14 }], node: "e104" };
+  return { points: [location.point, { x: 72, y: location.point.y }, { x: 72, y: 56 }], node: "e101" };
+}
+
+function connectionNode(connection: ConnectionId) { return connection === "LIFT" ? "lift" : connection.toLowerCase(); }
+
+function routeToConnection(location: RouteLocation, connection: ConnectionId): PlanPoint[] {
+  const target = connection === "LIFT" ? liftPoint(location.floor) : stairSpec(location.floor, connection)?.point ?? location.point;
+  const entry = roomCorridorEntry(location);
+  if (location.floor === "0") {
+    if (connection === "CT2") return [...entry.points, { x: 37, y: 58 }, { x: 37, y: 33 }, target];
+    if (connection === "LIFT") return [...entry.points, { x: 64, y: 58 }, { x: 64, y: 72 }, target];
+    return [...entry.points, { x: 58, y: 58 }, { x: 58, y: 62 }, target];
+  }
+  if (location.floor === "7") {
+    if (connection === "LIFT") return [...entry.points, { x: 62, y: 69 }, target];
+    return [...entry.points, { x: 62, y: entry.points.at(-1)!.y }, target];
+  }
+  return [...entry.points, ...shortestCorridorPath(entry.node, connectionNode(connection))];
+}
+
+function routeBetweenLocations(start: RouteLocation, destination: RouteLocation): PlanPoint[] {
+  const from = roomCorridorEntry(start);
+  const to = roomCorridorEntry(destination);
+  if (start.floor === "0") {
+    return [...from.points, { x: 58, y: 58 }, { x: 38, y: 58 }, ...to.points.slice().reverse()];
+  }
+  if (start.floor === "7") {
+    return [...from.points, { x: 62, y: 50 }, ...to.points.slice().reverse()];
+  }
+  return [...from.points, ...shortestCorridorPath(from.node, to.node), ...to.points.slice(0, -1).reverse()];
+}
+
+function reversePath(points: PlanPoint[]) { return [...points].reverse(); }
+function doorStyle(side: DoorSide, position: number): CSSProperties {
+  if (side === "top" || side === "bottom") return { left: `${position}%`, [side]: "-1px" };
+  return { top: `${position}%`, [side]: "-1px" };
+}
+
+function RouteTrace({ points }: { points?: PlanPoint[] }) {
+  if (!points || points.length < 2) return null;
+  return (
+    <div className="tch-route-trace" aria-hidden="true">
+      {points.slice(0, -1).map((point, index) => {
+        const next = points[index + 1];
+        return <span className="tch-route-leg" key={`${point.x}-${point.y}-${next.x}-${next.y}-${index}`}>
+          <i className="tch-route-segment is-horizontal" style={{ left: `${Math.min(point.x, next.x)}%`, top: `${point.y}%`, width: `${Math.abs(next.x - point.x)}%` }} />
+          <i className="tch-route-segment is-vertical" style={{ left: `${next.x}%`, top: `${Math.min(point.y, next.y)}%`, height: `${Math.abs(next.y - point.y)}%` }} />
+        </span>;
+      })}
+      <i className="tch-route-point is-start" style={{ left: `${points[0].x}%`, top: `${points[0].y}%` }} />
+      <i className="tch-route-point is-end" style={{ left: `${points.at(-1)!.x}%`, top: `${points.at(-1)!.y}%` }} />
+    </div>
+  );
+}
+
+function FloorPlanGraphic({ floor, locations, routePoints, activeConnection, interactive = false, destinationId, onDestination, compact = false }: {
+  floor: string; locations: RouteLocation[]; routePoints?: PlanPoint[]; activeConnection?: ConnectionId;
+  interactive?: boolean; destinationId?: string; onDestination?: (id: string) => void; compact?: boolean;
+}) {
+  const plan = FLOOR_PLANS[floor];
+  return (
+    <div className={`tch-clean-plan plan-${plan.variant} floor-${floor}${compact ? " is-compact" : ""}`}>
+      <div className="tch-plan-shell" aria-hidden="true" />
+      <div className="tch-plan-hall hall-s4" aria-hidden="true"><span>S4</span></div>
+      <div className="tch-plan-hall hall-s5" aria-hidden="true"><span>{floor === "0" ? "SẢNH" : floor === "7" ? "LOUNGE" : "S5"}</span></div>
+      <div className={`tch-service-core${hasLiftStop(floor) ? " has-stop" : " is-skip-stop"}${activeConnection === "LIFT" ? " is-route-lift" : ""}`} aria-label={hasLiftStop(floor) ? `Thang máy có dừng tại ${floorName(floor)}` : `Thang máy không dừng tại ${floorName(floor)}`}>
+        <i /><span>LIFT</span><strong>{floor === "0" ? "GF ↕ F4–F7" : hasLiftStop(floor) ? "CÓ DỪNG" : "KHÔNG DỪNG"}</strong><b />
+      </div>
+      {floor !== "0" && floor !== "7" && <div className="tch-plan-toilets" aria-label={`Khu vệ sinh ${floorName(floor)}`}><span>WC NAM</span><span>WC NỮ</span></div>}
+      {plan.stairs.map((stair) => (
+        <div className={`tch-plan-stair stair-${stair.id.toLowerCase()} orientation-${stair.orientation}${activeConnection === stair.id ? " is-route-stair" : ""}`} style={stair.style} key={stair.id}>
+          <span>{stair.id}</span>
+          <div className="tch-stair-flights" aria-hidden="true">
+            <div className="tch-stair-flight flight-a">{Array.from({ length: 6 }, (_, index) => <i key={`a-${index}`} />)}</div>
+            <div className="tch-stair-landing" />
+            <div className="tch-stair-flight flight-b">{Array.from({ length: 6 }, (_, index) => <i key={`b-${index}`} />)}</div>
+          </div>
+          <b>{stair.orientation === "horizontal" ? (stair.direction === "up" ? "→" : stair.direction === "down" ? "←" : "↔") : (stair.direction === "up" ? "↑" : stair.direction === "down" ? "↓" : "↕")}</b>
+          <small>{stair.direction === "up" ? "LÊN" : stair.direction === "down" ? "XUỐNG" : "LÊN / XUỐNG"}</small>
+        </div>
+      ))}
+      {plan.columns.map((point) => <i className="tch-plan-column" key={`${point.x}-${point.y}`} style={{ left: `${point.x}%`, top: `${point.y}%` }} />)}
+      {plan.rooms.map((roomSpec) => {
+        const roomLocations = locations.filter((location) => roomSpec.rooms.includes(location.room));
+        const primary = roomLocations[0];
+        const selected = roomLocations.some((location) => location.id === destinationId);
+        const content = <><span>{roomSpec.label}</span><i className={`tch-room-door door-${roomSpec.door.side}${roomSpec.door.double ? " is-double" : ""}`} style={doorStyle(roomSpec.door.side, roomSpec.door.position)} aria-hidden="true"><b /><em /></i></>;
+        const className = `tch-plan-room${roomSpec.kind === "lounge" ? " is-lounge" : ""}${selected ? " is-selected" : ""}`;
+        return interactive && primary ? <button className={className} style={roomSpec.style} key={roomSpec.label} onClick={() => onDestination?.(primary.id)} title={primary.label}>{content}</button>
+          : <div className={className} style={roomSpec.style} key={roomSpec.label}>{content}</div>;
+      })}
+      <RouteTrace points={routePoints} />
+      <div className="tch-plan-north" aria-hidden="true"><i />N</div>
+    </div>
+  );
+}
+
+function StairFlight3D({ startFloor, destinationFloor, stair }: { startFloor: string; destinationFloor: string; stair: StairId }) {
+  const minFloor = Math.min(Number(startFloor), Number(destinationFloor));
+  const maxFloor = Math.max(Number(startFloor), Number(destinationFloor));
+  const transitions = Math.max(1, maxFloor - minFloor);
+  const count = transitions * 7 + 1;
+  const anchor = stairSpec(startFloor, stair)?.point ?? stairSpec(destinationFloor, stair)?.point ?? { x: 60, y: 50 };
+  return (
+    <div className={`tch-3d-stair-flight stair-${stair.toLowerCase()}`} style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }} aria-label={`Tuyến bậc thang ${stair} từ ${floorCode(startFloor)} đến ${floorCode(destinationFloor)}`}>
+      {Array.from({ length: count }, (_, index) => {
+        const progress = index / (count - 1);
+        const depth = minFloor * FLOOR_DEPTH + progress * transitions * FLOOR_DEPTH;
+        const stepOffset = (index % 7) * 2.4;
+        return <i key={index} style={{ transform: `translate3d(${stepOffset}px, ${-stepOffset}px, ${depth}px)` }} />;
+      })}
+      <span className="tch-3d-flight-label is-start" style={{ transform: `translate3d(12px, -8px, ${Number(startFloor) * FLOOR_DEPTH}px)` }}>{floorCode(startFloor)}</span>
+      <span className="tch-3d-flight-label is-end" style={{ transform: `translate3d(12px, -8px, ${Number(destinationFloor) * FLOOR_DEPTH}px)` }}>{floorCode(destinationFloor)}</span>
+      <strong>{stair}</strong>
+    </div>
+  );
+}
+
+function ElevatorFlight3D({ startFloor, destinationFloor }: { startFloor: string; destinationFloor: string }) {
+  const minFloor = Math.min(Number(startFloor), Number(destinationFloor));
+  const maxFloor = Math.max(Number(startFloor), Number(destinationFloor));
+  const transitions = Math.max(1, maxFloor - minFloor);
+  const count = transitions * 5 + 1;
+  const anchor = liftPoint(startFloor);
+  const routeStops = Array.from(LIFT_STOPS).filter((floor) => Number(floor) >= minFloor && Number(floor) <= maxFloor);
+  return (
+    <div className="tch-3d-elevator-flight" style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }} aria-label={`Tuyến thang máy từ ${floorCode(startFloor)} đến ${floorCode(destinationFloor)}, không dừng tầng 1 đến tầng 3`}>
+      {Array.from({ length: count }, (_, index) => {
+        const progress = index / (count - 1);
+        const depth = minFloor * FLOOR_DEPTH + progress * transitions * FLOOR_DEPTH;
+        return <i key={index} style={{ transform: `translate3d(0, 0, ${depth}px)` }} />;
+      })}
+      {routeStops.map((floor) => <span key={floor} style={{ transform: `translate3d(12px, -8px, ${Number(floor) * FLOOR_DEPTH}px)` }}>{floorCode(floor)}</span>)}
+      <strong>LIFT</strong>
+    </div>
+  );
+}
 
 export function OrbitMap() {
-  const floors = useMemo(
-    () => [...new Set(labs.map((l) => l.floor))].sort((a, b) => Number(a) - Number(b)),
-    [],
-  );
-  const [activeFloor, setActiveFloor] = useState(floors[0] ?? "0");
-  const relatedLabs = useMemo(
-    () =>
-      labs
-        .filter((l) => l.floor === activeFloor)
-        .sort((a, b) => a.room.localeCompare(b.room, "vi")),
-    [activeFloor],
-  );
-  const activeClusters = useMemo(
-    () => [...new Set(relatedLabs.map((l) => l.cluster))],
-    [relatedLabs],
-  );
-  const activeFunctions = useMemo(
-    () => [...new Set(relatedLabs.flatMap((l) => l.apps))].length,
-    [relatedLabs],
-  );
+  const locations = useMemo<RouteLocation[]>(() => {
+    const uniqueRooms = new Map<string, RouteLocation>();
+    labs.forEach((lab) => lab.room.split(",").map((room) => room.trim()).filter(Boolean).forEach((room) => {
+      const key = `${lab.floor}-${room}`;
+      if (!uniqueRooms.has(key)) uniqueRooms.set(key, {
+        id: `room-${room.toLowerCase().replace(/\s+/g, "-")}`, label: `${room} · ${lab.name}`,
+        floor: lab.floor, room, point: doorPointForRoom(room, lab.floor),
+      });
+    }));
+    return [{ id: "entrance", label: "Sảnh chính · Tầng trệt", floor: "0", room: "Sảnh chính", point: { x: 92, y: 58 } },
+      ...Array.from(uniqueRooms.values()).sort((a, b) => Number(a.floor) - Number(b.floor) || a.room.localeCompare(b.room))];
+  }, []);
+
+  const [mode, setMode] = useState<ExplorerMode>("building");
+  const [activeFloor, setActiveFloor] = useState("1");
+  const [rotation, setRotation] = useState(0);
+  const [startId, setStartId] = useState("entrance");
+  const [destinationId, setDestinationId] = useState("room-e101");
+  const dragRef = useRef({ active: false, x: 0, rotation: 0, moved: false });
+  const wasDraggedRef = useRef(false);
+  const start = locations.find((item) => item.id === startId) ?? locations[0];
+  const destination = locations.find((item) => item.id === destinationId) ?? locations[1];
+
+  const route = useMemo(() => {
+    const sameFloor = start.floor === destination.floor;
+    const useLift = !sameFloor && canUseLift(start.floor, destination.floor);
+    const commonStairs = FLOOR_PLANS[start.floor].stairs.map((item) => item.id).filter((id) => FLOOR_PLANS[destination.floor].stairs.some((item) => item.id === id));
+    const stair = (commonStairs.length ? commonStairs : ["CT1"] as StairId[]).reduce((best, candidate) => {
+      const startPoint = stairSpec(start.floor, candidate)?.point ?? start.point;
+      const endPoint = stairSpec(destination.floor, candidate)?.point ?? destination.point;
+      const candidateCost = Math.abs(start.point.x - startPoint.x) + Math.abs(start.point.y - startPoint.y) + Math.abs(destination.point.x - endPoint.x) + Math.abs(destination.point.y - endPoint.y);
+      const bestStart = stairSpec(start.floor, best)?.point ?? start.point;
+      const bestEnd = stairSpec(destination.floor, best)?.point ?? destination.point;
+      const bestCost = Math.abs(start.point.x - bestStart.x) + Math.abs(start.point.y - bestStart.y) + Math.abs(destination.point.x - bestEnd.x) + Math.abs(destination.point.y - bestEnd.y);
+      return candidateCost < bestCost ? candidate : best;
+    }, commonStairs[0] ?? "CT1") as StairId;
+    const connection: ConnectionId = useLift ? "LIFT" : stair;
+    const pathsByFloor: Record<string, PlanPoint[]> = {};
+    if (sameFloor) {
+      pathsByFloor[start.floor] = routeBetweenLocations(start, destination);
+    } else {
+      pathsByFloor[start.floor] = routeToConnection(start, connection);
+      pathsByFloor[destination.floor] = reversePath(routeToConnection(destination, connection));
+    }
+    const startLabel = start.room === "Sảnh chính" ? "sảnh chính" : `cửa ${start.room}`;
+    const direction = Number(destination.floor) > Number(start.floor) ? "lên" : "xuống";
+    const steps = sameFloor ? [`Rời ${startLabel}`, `Theo sảnh và hành lang, đi vòng lõi thang`, `Dừng ngay trước cửa ${destination.room}`]
+      : useLift
+        ? [`Từ ${startLabel}, theo tuyến cam đến thang máy`, `Vào thang máy tại ${floorCode(start.floor)}`, `Di chuyển ${direction} ${floorCode(destination.floor)} · không dừng F1–F3`, `Ra thang máy và theo hành lang`, `Dừng ngay trước cửa ${destination.room}`]
+        : [`Từ ${startLabel}, theo tuyến cam đến sảnh thang ${stair}`, `Vào ${stair} tại ${floorCode(start.floor)}`, `Đi theo các vế thang và chiếu nghỉ ${direction} ${floorCode(destination.floor)}`, `Ra khỏi ${stair} tại ${floorCode(destination.floor)} và theo hành lang`, `Dừng ngay trước cửa ${destination.room}`];
+    return { sameFloor, stair, connection, useLift, pathsByFloor, steps };
+  }, [start, destination]);
+
+  const roomsByFloor = (floor: string) => locations.filter((item) => item.floor === floor && item.id !== "entrance");
+  const normalizedRotation = ((Math.round(rotation) % 360) + 360) % 360;
+  const routeMinFloor = Math.min(Number(start.floor), Number(destination.floor));
+  const routeMaxFloor = Math.max(Number(start.floor), Number(destination.floor));
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => { event.currentTarget.setPointerCapture(event.pointerId); dragRef.current = { active: true, x: event.clientX, rotation, moved: false }; wasDraggedRef.current = false; };
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => { if (!dragRef.current.active) return; const distance = event.clientX - dragRef.current.x; if (Math.abs(distance) > 14) dragRef.current.moved = true; setRotation(dragRef.current.rotation + distance * 0.35); };
+  const handlePointerUp = () => { wasDraggedRef.current = dragRef.current.moved; dragRef.current.active = false; window.setTimeout(() => { wasDraggedRef.current = false; }, 80); };
+  const chooseFloor = (floor: string) => { if (wasDraggedRef.current) return; setActiveFloor(floor); setMode("floors"); };
+  const chooseStart = (id: string) => {
+    setStartId(id);
+    const next = locations.find((item) => item.id === id);
+    if (next) { setActiveFloor(next.floor); setMode("floors"); }
+  };
+  const chooseDestination = (id: string) => {
+    setDestinationId(id);
+    const next = locations.find((item) => item.id === id);
+    if (next) { setActiveFloor(next.floor); setMode("floors"); }
+  };
 
   return (
-    <section className="container section" id="orbit-section">
-      <div className="section-head">
-        <h2 style={{ display: "none" }}>Sơ đồ phòng theo tầng</h2>
-      </div>
-      <div className="orbit-cluster-wrap">
-        <div className="panel cluster-orbit-panel">
-          <div className="orbit-map">
-            {floors.map((floor) => {
-              const count = labs.filter((l) => l.floor === floor).length;
-              return (
-                <button
-                  key={floor}
-                  className={`orbit-cluster-node ${floor === activeFloor ? "active" : ""}`}
-                  type="button"
-                  onClick={() => setActiveFloor(floor)}
-                >
-                  <b>{formatFloorLabel(floor)}</b>
-                  <span>
-                    {count} phòng
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        <aside className="panel orbit-detail">
-          <div className="big-code">{activeFloor === "0" ? "G" : `F${activeFloor}`}</div>
-          <h3>{formatFloorLabel(activeFloor)}</h3>
-          <p>
-            Tầng này có {relatedLabs.length} phòng thuộc {activeClusters.length} cụm năng lực,
-            phục vụ đào tạo, nghiên cứu và chuyển giao công nghệ.
-          </p>
-          <div className="orbit-quick-stats" aria-label="Thông tin nhanh cụm phòng thí nghiệm">
-            <div className="orbit-stat">
-              <span>Số phòng</span>
-              <strong>{relatedLabs.length}</strong>
+    <section className="tch-campus-section" id="campus-explorer">
+      <div className="tch-section-index"><strong>02</strong><span>Campus explorer</span></div>
+      <div className="tch-campus-heading"><p>Eight connected levels · one shared infrastructure</p><h2>Khám phá hub <em>theo từng tầng.</em></h2><span>Mặt bằng được dựng lại theo đúng khối phòng, cửa, sảnh thang và hướng lên xuống của Cơ sở E.</span></div>
+      <div className="tch-explorer-toolbar" role="group" aria-label="Chế độ khám phá Campus E"><button className={mode === "building" ? "is-active" : ""} onClick={() => setMode("building")}>3D Building</button><button className={mode === "floors" ? "is-active" : ""} onClick={() => setMode("floors")}>All Floors</button></div>
+      <div className={`tch-building-explorer mode-${mode}`}>
+        {mode === "building" ? <div className="tch-building-panel">
+          <div className="tch-building-viewport" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
+            <div className="tch-building-grid" aria-hidden="true" />
+            <div className="tch-building-stack" style={{ transform: `translate(-50%, -50%) rotateX(58deg) rotateZ(${rotation}deg)` }}>
+              {FLOORS.map((floor) => {
+                const floorNumber = Number(floor), isStart = floor === start.floor, isEnd = floor === destination.floor;
+                const isBetween = !route.sameFloor && floorNumber >= routeMinFloor && floorNumber <= routeMaxFloor;
+                const routeClass = isStart || isEnd ? " is-route-focus" : isBetween ? " is-route-between" : " is-route-muted";
+                return <button className={`${activeFloor === floor ? "is-active" : ""}${routeClass}`} key={floor} onClick={() => chooseFloor(floor)} style={{ transform: `translate(-50%, -50%) translateZ(${floorNumber * FLOOR_DEPTH}px)` }} aria-label={`Mở mặt bằng ${floorName(floor)}`}>
+                  <FloorPlanGraphic floor={floor} locations={roomsByFloor(floor)} routePoints={route.pathsByFloor[floor]} activeConnection={!route.sameFloor && isBetween ? route.connection : undefined} compact /><span>{floorCode(floor)}</span>
+                </button>;
+              })}
+              {!route.sameFloor && (route.useLift
+                ? <ElevatorFlight3D startFloor={start.floor} destinationFloor={destination.floor} />
+                : <StairFlight3D startFloor={start.floor} destinationFloor={destination.floor} stair={route.stair} />)}
             </div>
-            <div className="orbit-stat">
-              <span>Cụm năng lực</span>
-              <strong>{activeClusters.length}</strong>
-            </div>
-            <div className="orbit-stat">
-              <span>Chức năng</span>
-              <strong>{activeFunctions}</strong>
-            </div>
+            <nav className="tch-building-floor-shortcuts" aria-label="Mở nhanh mặt bằng tầng">{FLOORS.map((floor) => <button key={floor} onClick={() => chooseFloor(floor)}>{floorCode(floor)}</button>)}</nav>
+            <div className="tch-rotation-readout">Mặt trước · {normalizedRotation.toString().padStart(3, "0")}°</div>
           </div>
-          <div className="chip-row">
-            {activeClusters.map((cluster) => (
-              <span className="chip" key={cluster}>
-                {cluster}
-              </span>
-            ))}
+          <div className="tch-building-controls"><button onClick={() => setRotation((value) => value - 30)} aria-label="Xoay tòa nhà sang trái">←</button><span>Kéo ngang để xoay 360° · các tầng luôn chung một trục</span><button className="is-reset" onClick={() => setRotation(0)} aria-label="Đưa tòa nhà về mặt trước">0°</button><button onClick={() => setRotation((value) => value + 30)} aria-label="Xoay tòa nhà sang phải">→</button></div>
+        </div> : <div className="tch-floor-browser">
+          <nav className="tch-floor-tabs" aria-label="Chọn tầng">{FLOORS.slice().reverse().map((floor) => <button className={activeFloor === floor ? "is-active" : ""} key={floor} onClick={() => setActiveFloor(floor)}><span>{floorCode(floor)}</span>{floorName(floor)}</button>)}</nav>
+          <div className="tch-plan-panel"><div className="tch-plan-meta"><span>Selected level</span><strong>{floorName(activeFloor)}</strong><p>{floorLabels[activeFloor]}</p></div>
+            <div className="tch-plan-canvas"><FloorPlanGraphic floor={activeFloor} locations={roomsByFloor(activeFloor)} routePoints={route.pathsByFloor[activeFloor]} activeConnection={!route.sameFloor && (activeFloor === start.floor || activeFloor === destination.floor) ? route.connection : undefined} interactive destinationId={destinationId} onDestination={setDestinationId} /></div>
+            <div className="tch-floor-room-list">{roomsByFloor(activeFloor).map((room, index) => <button key={room.id} onClick={() => setDestinationId(room.id)} className={destinationId === room.id ? "is-active" : ""}><span>{String(index + 1).padStart(2, "0")}</span><strong>{room.room}</strong><em>{room.label.split(" · ")[1]}</em></button>)}</div>
           </div>
-          <span className="linked-count">{relatedLabs.length} không gian theo tầng</span>
-          <div className="mini-labs">
-            {relatedLabs.map((l) => (
-              <Link className="mini-lab" href={`/labs/${l.id}`} key={l.id}>
-                <div>
-                  <b>{l.name}</b>
-                </div>
-                <span>{l.room}</span>
-              </Link>
-            ))}
-          </div>
-          <Link className="btn btn-primary" href="/labs#lab-directory">
-            Xem tất cả phòng thí nghiệm
-          </Link>
+        </div>}
+        <aside className="tch-wayfinding-panel">
+          <div className="tch-wayfinding-title"><span>Door-to-door wayfinding</span><strong>Đi đúng cửa · đúng thang · đúng tầng</strong></div>
+          <label>Điểm bắt đầu<select value={startId} onChange={(event) => chooseStart(event.target.value)}><option value="entrance">Sảnh chính · Tầng trệt</option>{FLOORS.slice().reverse().map((floor) => <optgroup label={floorName(floor)} key={floor}>{roomsByFloor(floor).map((room) => <option value={room.id} key={room.id}>{room.label}</option>)}</optgroup>)}</select></label>
+          <label>Điểm đến<select value={destinationId} onChange={(event) => chooseDestination(event.target.value)}>{FLOORS.slice().reverse().map((floor) => <optgroup label={floorName(floor)} key={floor}>{roomsByFloor(floor).map((room) => <option value={room.id} key={room.id}>{room.label}</option>)}</optgroup>)}</select></label>
+          <ol>{route.steps.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, "0")}</span>{step}</li>)}</ol>
+          <div className="tch-route-summary"><span>{route.sameFloor ? floorName(start.floor) : `${floorCode(start.floor)} → ${floorCode(destination.floor)}`}</span><strong>{route.sameFloor ? "Cùng tầng" : route.useLift ? "Thang máy · bỏ F1–F3" : `Bậc thang ${route.stair}`}</strong></div>
+          <p className="tch-route-note">Tuyến cam bám theo sảnh và hành lang, đi vòng lõi thang, kết thúc ngay trước cửa phòng. Thang máy chỉ dừng GF và F4–F7. Không dùng thay hướng dẫn thoát hiểm.</p>
+          <Link href="/labs">Xem toàn bộ danh mục labs <span>→</span></Link>
         </aside>
       </div>
     </section>

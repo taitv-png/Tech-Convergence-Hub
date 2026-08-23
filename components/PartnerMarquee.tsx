@@ -23,7 +23,11 @@ export function PartnerMarquee() {
   return (
     <section className="container section partner-section" id="partner-section" aria-label="Mạng lưới đối tác quốc tế">
       <div className="section-head partner-head">
-        <h2>Mạng lưới đối tác quốc tế</h2>
+        <div className="partner-index"><span>03</span><small>Network</small></div>
+        <div className="partner-title">
+          <p>Shared knowledge · global connections</p>
+          <h2>Mạng lưới đối tác <em>quốc tế.</em></h2>
+        </div>
       </div>
 
       <div className="partner-stack">
