@@ -3485,6 +3485,7 @@ html, body { overflow-x: clip; }
   align-items: start;
   margin-top: 30px;
 }
+.tch-building-explorer.mode-floors { grid-template-columns: minmax(0, 1fr); }
 .tch-building-panel,
 .tch-floor-browser { min-width: 0; }
 .tch-building-panel { position: static; padding: 0; }
@@ -3558,6 +3559,93 @@ html, body { overflow-x: clip; }
   color: rgba(255,250,245,.55);
   font-size: .62rem;
   letter-spacing: .14em;
+}
+
+/* Campus E SketchUp web model */
+.tch-building-viewport.is-webgl-viewer {
+  position: relative;
+  min-height: 760px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 48% 40%, rgba(255,145,77,.11), transparent 34%),
+    linear-gradient(160deg, #20201f 0%, #171717 58%, #111 100%);
+  cursor: grab;
+}
+.tch-building-viewport.is-webgl-viewer:active { cursor: grabbing; }
+.tch-campus-model-host { position: absolute; inset: 0; }
+.tch-campus-webgl,
+.tch-campus-label-layer { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tch-campus-webgl { z-index: 1; outline: none; }
+.tch-campus-label-layer { z-index: 2; overflow: hidden; pointer-events: none; }
+.tch-model-room-label {
+  position: relative;
+  min-width: 48px;
+  padding: 5px 8px;
+  translate: -50% -50%;
+  border: 1px solid rgba(255,145,77,.62);
+  border-radius: 2px;
+  background: rgba(23,23,23,.88);
+  color: #fffaf5;
+  box-shadow: 0 5px 16px rgba(0,0,0,.28);
+  font: inherit;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 180ms ease, background-color 180ms ease, border-color 180ms ease, scale 180ms ease;
+}
+.tch-model-room-label::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 14px;
+  background: rgba(255,145,77,.7);
+}
+.tch-model-room-label:hover,
+.tch-model-room-label.is-active-floor { border-color: #ff914d; background: rgba(100,47,18,.94); scale: 1.06; }
+.tch-model-room-label.is-muted { opacity: .18; }
+.tch-model-status {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  translate: -50% -50%;
+  color: rgba(255,250,245,.72);
+  font-size: .68rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.tch-model-status span { width: 18px; aspect-ratio: 1; border: 2px solid rgba(255,145,77,.24); border-top-color: #ff914d; border-radius: 50%; animation: tch-model-spin .8s linear infinite; }
+.tch-model-status.is-error { max-width: 330px; text-align: center; line-height: 1.7; }
+.tch-model-legend {
+  position: absolute;
+  z-index: 4;
+  left: 18px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,250,245,.58);
+  font-size: .58rem;
+  letter-spacing: .08em;
+  pointer-events: none;
+}
+.tch-model-legend i { width: 28px; height: 3px; background: #ff914d; box-shadow: 0 0 8px rgba(255,145,77,.75); }
+.tch-model-legend b { width: 12px; aspect-ratio: 1; margin-left: 8px; border: 1px solid #fffaf5; background: #e9e4dc; }
+.is-model-viewer .tch-building-controls { display: block; padding: 14px 18px 2px; }
+.is-model-viewer .tch-building-controls span { display: block; }
+@keyframes tch-model-spin { to { rotate: 360deg; } }
+
+@media (max-width: 780px) {
+  .tch-building-viewport.is-webgl-viewer { min-height: 620px; }
+  .tch-model-room-label { min-width: 40px; padding: 4px 6px; font-size: .5rem; }
+  .tch-model-legend { display: none; }
 }
 
 .tch-clean-plan {
@@ -3669,6 +3757,8 @@ button.tch-plan-room { cursor: pointer; }
 .tch-clean-plan.is-compact .tch-plan-north { display: none; }
 
 .tch-route-trace { position: absolute; z-index: 7; inset: 0; pointer-events: none; }
+.tch-route-trace svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tch-route-trace polyline { fill: none; stroke: #ff914d; stroke-width: .65; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px rgba(255,145,77,.85)); animation: tch-route-pulse 1.2s ease-in-out infinite alternate; }
 .tch-route-segment { position: absolute; display: block; background: #ff914d; box-shadow: 0 0 8px rgba(255,145,77,.85); animation: tch-route-pulse 1.2s ease-in-out infinite alternate; }
 .tch-route-segment.is-horizontal { height: 3px; translate: 0 -50%; }
 .tch-route-segment.is-vertical { width: 3px; translate: -50% 0; }
@@ -3704,6 +3794,19 @@ button.tch-plan-room { cursor: pointer; }
 .tch-floor-room-list button em { overflow: hidden; font-size: .58rem; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
 .tch-floor-room-list button.is-active { background: rgba(235,104,28,.12); }
 
+.tch-room-intro-card { display: grid; grid-template-columns: minmax(170px,.42fr) minmax(0,1.58fr); margin-top: 26px; border: 1px solid rgba(255,145,77,.28); background: linear-gradient(115deg,rgba(235,104,28,.15),rgba(23,23,23,.92) 42%); }
+.tch-room-intro-code { display: grid; align-content: center; gap: 8px; min-height: 210px; padding: clamp(22px,3vw,38px); border-right: 1px solid rgba(255,145,77,.24); }
+.tch-room-intro-code span,.tch-room-intro-copy > span { color: #ff914d; font-size: .57rem; font-weight: 650; letter-spacing: .16em; text-transform: uppercase; }
+.tch-room-intro-code strong { color: #fffaf5; font-size: clamp(2.8rem,5vw,5.4rem); font-weight: 260; letter-spacing: -.055em; line-height: .9; }
+.tch-room-intro-code em { color: rgba(255,250,245,.4); font-size: .7rem; font-style: normal; letter-spacing: .16em; }
+.tch-room-intro-copy { display: grid; align-content: center; justify-items: start; gap: 10px; padding: clamp(24px,3.5vw,48px); }
+.tch-room-intro-copy h3 { max-width: 22ch; margin: 0; color: #fffaf5; font-size: clamp(1.55rem,2.4vw,2.65rem); font-weight: 320; letter-spacing: -.035em; line-height: 1.05; }
+.tch-room-intro-copy p { max-width: 68ch; margin: 2px 0 0; color: rgba(255,250,245,.66); font-size: .76rem; line-height: 1.7; }
+.tch-room-intro-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+.tch-room-intro-tags i { padding: 6px 9px; border: 1px solid rgba(255,145,77,.2); color: rgba(255,250,245,.62); font-size: .55rem; font-style: normal; }
+.tch-room-intro-copy > a { margin-top: 5px; color: #fffaf5; font-size: .68rem; font-weight: 560; text-decoration: none; }
+.tch-room-intro-copy > a b { margin-left: 10px; color: #ff914d; }
+
 .tch-wayfinding-panel { position: sticky; top: calc(var(--header-height) + 24px); padding: clamp(22px,2.4vw,34px); border: 1px solid rgba(255,145,77,.3); background: rgba(23,23,23,.88); }
 .tch-wayfinding-title { display: grid; gap: 7px; margin-bottom: 22px; }
 .tch-wayfinding-title span { color: #ff914d; font-size: .6rem; font-weight: 650; letter-spacing: .17em; text-transform: uppercase; }
@@ -3717,8 +3820,16 @@ button.tch-plan-room { cursor: pointer; }
 .tch-route-summary span { color: #fffaf5; font-size: .76rem; font-weight: 550; }
 .tch-route-summary strong { color: #ff914d; font-size: .66rem; }
 .tch-route-note { margin: 15px 0 20px; color: rgba(255,250,245,.38); font-size: .56rem; line-height: 1.6; }
-.tch-wayfinding-panel > a { color: #fffaf5; font-size: .7rem; font-weight: 550; text-decoration: none; }
-.tch-wayfinding-panel > a span { margin-left: 12px; color: #ff914d; }
+.tch-wayfinding-route > a { color: #fffaf5; font-size: .7rem; font-weight: 550; text-decoration: none; }
+.tch-wayfinding-route > a span { margin-left: 12px; color: #ff914d; }
+.tch-building-explorer.mode-floors .tch-floor-browser { grid-template-columns: 1fr; }
+.tch-building-explorer.mode-floors .tch-floor-tabs { grid-template-columns: repeat(8,minmax(84px,1fr)); overflow-x: auto; }
+.tch-building-explorer.mode-floors .tch-floor-tabs button { grid-template-columns: auto 1fr; align-items: center; min-width: 84px; }
+.tch-building-explorer.mode-floors .tch-plan-panel { padding-left: 0; }
+.tch-building-explorer.mode-floors .tch-plan-canvas { min-height: clamp(560px,56vw,780px); }
+.tch-building-explorer.mode-floors .tch-floor-room-list { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.tch-building-explorer.mode-floors .tch-wayfinding-panel { position: static; display: grid; grid-template-columns: minmax(280px,.75fr) minmax(420px,1.25fr); gap: clamp(30px,5vw,80px); }
+.tch-building-explorer.mode-floors .tch-wayfinding-route ol { margin-top: 0; }
 
 @keyframes tch-core-ripple {
   0% { transform: scale(.85); opacity: .82; }
@@ -3745,6 +3856,8 @@ button.tch-plan-room { cursor: pointer; }
   .tch-campus-section > .tch-section-index { grid-template-columns: auto 1fr; align-items: end; margin-bottom: 34px; }
   .tch-building-explorer { grid-template-columns: 1fr; }
   .tch-wayfinding-panel { position: static; }
+  .tch-building-explorer.mode-floors .tch-wayfinding-panel { grid-template-columns: 1fr; gap: 20px; }
+  .tch-building-explorer.mode-floors .tch-floor-room-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
 @media (max-width: 720px) {
@@ -3762,6 +3875,9 @@ button.tch-plan-room { cursor: pointer; }
   .tch-plan-canvas { min-height: 360px; }
   .tch-floor-room-list { grid-template-columns: 1fr; }
   .tch-floor-room-list button:nth-child(odd) { border-right: 0; }
+  .tch-building-explorer.mode-floors .tch-floor-room-list { grid-template-columns: 1fr; }
+  .tch-room-intro-card { grid-template-columns: 1fr; }
+  .tch-room-intro-code { min-height: 150px; border-right: 0; border-bottom: 1px solid rgba(255,145,77,.24); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3881,6 +3997,38 @@ button.tch-plan-room { cursor: pointer; }
   width: 94%;
   aspect-ratio: 1.42;
 }
+.tch-plan-topview {
+  position: absolute;
+  z-index: 0;
+  inset: 2%;
+  width: 96%;
+  height: 96%;
+  object-fit: contain;
+  filter: grayscale(1) brightness(1.45) contrast(1.2);
+  opacity: .76;
+  pointer-events: none;
+}
+.tch-clean-plan.has-topview .tch-plan-shell {
+  border-color: rgba(255, 145, 77, .3);
+  opacity: .35;
+}
+.tch-clean-plan.has-topview .tch-plan-hall,
+.tch-clean-plan.has-topview .tch-plan-column,
+.tch-clean-plan.has-topview .tch-plan-toilets { display: none; }
+.tch-clean-plan.has-topview .tch-plan-room {
+  border-color: transparent;
+  background: transparent;
+}
+.tch-clean-plan.has-topview .tch-plan-room > span {
+  width: max-content;
+  max-width: 130%;
+  padding: 4px 7px;
+  border: 1px solid rgba(255, 145, 77, .3);
+  background: rgba(21, 21, 21, .82);
+  color: #fffaf5;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .2);
+}
+.tch-clean-plan.has-topview .tch-room-door { display: none; }
 .tch-plan-shell {
   inset: 5% 4%;
   border: 2px solid rgba(255, 250, 245, 0.52);
@@ -4363,4 +4511,59 @@ button.tch-plan-room { cursor: pointer; }
   .system-node span { font-size: .72rem; }
   .system-readout-labs { display: grid; }
   .system-core-wave { animation-duration: 6.2s; }
+}
+
+/* SketchUp top-view is the source of truth; overlays only label rooms and draw the route. */
+.tch-clean-plan.has-topview .tch-plan-topview {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: none;
+  opacity: .96;
+}
+.tch-clean-plan.has-topview .tch-plan-shell,
+.tch-clean-plan.has-topview .tch-plan-hall,
+.tch-clean-plan.has-topview .tch-service-core,
+.tch-clean-plan.has-topview .tch-plan-stair,
+.tch-clean-plan.has-topview .tch-plan-column,
+.tch-clean-plan.has-topview .tch-plan-toilets,
+.tch-clean-plan.has-topview .tch-room-door {
+  display: none;
+}
+.tch-clean-plan.has-topview .tch-plan-room,
+.tch-clean-plan.has-topview .tch-plan-room:hover,
+.tch-clean-plan.has-topview .tch-plan-room.is-selected {
+  display: block;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.tch-clean-plan.has-topview .tch-plan-room > span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max-content;
+  max-width: 150%;
+  padding: 3px 6px;
+  translate: -50% -50%;
+  border: 0;
+  border-left: 2px solid rgba(255, 145, 77, .78);
+  background: rgba(21, 21, 21, .7);
+  color: rgba(255, 250, 245, .94);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .22);
+  font-size: clamp(.54rem, .72vw, .72rem);
+  line-height: 1.15;
+}
+.tch-clean-plan.has-topview .tch-plan-room:hover > span,
+.tch-clean-plan.has-topview .tch-plan-room.is-selected > span {
+  border-left-color: #ff914d;
+  background: rgba(235, 104, 28, .88);
+}
+.tch-clean-plan.has-topview .tch-route-trace {
+  z-index: 12;
+}
+.tch-clean-plan.has-topview .tch-route-trace polyline {
+  stroke-width: .8;
+  filter: drop-shadow(0 0 4px rgba(255, 145, 77, .75));
 }
