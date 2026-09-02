@@ -12,6 +12,7 @@ type ConnectionId = "CT1" | "CT2" | "LIFT";
 type RoomAnchor = { id: string; label: string; point: PlanPoint };
 
 type CampusModelViewerProps = {
+  exploded: boolean;
   activeFloor: string;
   startFloor: string;
   destinationFloor: string;
@@ -29,7 +30,8 @@ type FloorRecord = {
 };
 
 const FLOORS = ["0", "1", "2", "3", "4", "5", "6", "7"];
-const FLOOR_GAP = 7.2;
+const COLLAPSED_FLOOR_GAP = 4.35;
+const EXPLODED_FLOOR_GAP = 9.2;
 const ARCHITECTURE = new THREE.Color("#e9e4dc");
 const STRUCTURE = new THREE.Color("#8f8b84");
 const ROUTE = new THREE.Color("#ff914d");
@@ -48,7 +50,7 @@ function localPoint(record: FloorRecord, point: PlanPoint, height = 0.42) {
 
 function connectionPoint(floor: string, connection: ConnectionId): PlanPoint | null {
   if (connection === "LIFT") {
-    if (!["0", "4", "5", "6"].includes(floor)) return null;
+    if (!["0", "4", "5", "6", "7"].includes(floor)) return null;
     return floor === "0" ? { x: 54, y: 72 } : { x: 54, y: 70 };
   }
   if (floor === "7") return connection === "CT1" ? { x: 62, y: 51 } : null;
@@ -68,6 +70,7 @@ function routeTube(points: THREE.Vector3[], color: THREE.Color, radius = 0.12) {
 }
 
 export function CampusModelViewer({
+  exploded,
   activeFloor,
   startFloor,
   destinationFloor,
@@ -79,10 +82,13 @@ export function CampusModelViewer({
   const hostRef = useRef<HTMLDivElement>(null);
   const floorRecordsRef = useRef(new Map<string, FloorRecord>());
   const routeLayerRef = useRef<THREE.Group | null>(null);
+  const explodedRef = useRef(exploded);
   const onFloorSelectRef = useRef(onFloorSelect);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
+  const [layoutRevision, setLayoutRevision] = useState(0);
 
   onFloorSelectRef.current = onFloorSelect;
+  explodedRef.current = exploded;
 
   useEffect(() => {
     const host = hostRef.current;
@@ -95,7 +101,7 @@ export function CampusModelViewer({
     camera.position.set(44, 38, 54);
 
     const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.1));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     renderer.setClearColor(0x171717, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.domElement.className = "tch-campus-webgl";
@@ -123,6 +129,9 @@ export function CampusModelViewer({
 
     const building = new THREE.Group();
     scene.add(building);
+    const context = new THREE.Group();
+    scene.add(context);
+    const movingCars: { object: THREE.Group; speed: number; limit: number; direction: number }[] = [];
     const routeLayer = new THREE.Group();
     routeLayerRef.current = routeLayer;
     scene.add(routeLayer);
@@ -174,7 +183,7 @@ export function CampusModelViewer({
         object.position.set(-center.x, -rawBounds.min.y, -center.z);
 
         const container = new THREE.Group();
-        container.position.y = Number(floor) * FLOOR_GAP;
+        container.position.y = Number(floor) * (explodedRef.current ? EXPLODED_FLOOR_GAP : COLLAPSED_FLOOR_GAP);
         container.userData.floor = floor;
         container.add(object);
         building.add(container);
@@ -197,6 +206,69 @@ export function CampusModelViewer({
           container.add(label);
         });
       });
+
+      building.updateMatrixWorld(true);
+      const campusBounds = new THREE.Box3().setFromObject(building);
+      const campusSize = campusBounds.getSize(new THREE.Vector3());
+      const campusCenter = campusBounds.getCenter(new THREE.Vector3());
+      const contextWidth = Math.max(52, campusSize.x * 2.5);
+      const contextDepth = Math.max(42, campusSize.z * 2.1);
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(contextWidth, contextDepth),
+        new THREE.MeshStandardMaterial({ color: 0x242422, roughness: 1, metalness: 0 }),
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.set(campusCenter.x, -0.24, campusCenter.z + campusSize.z * 0.12);
+      context.add(ground);
+
+      const roadZ = campusBounds.max.z + Math.max(7, campusSize.z * 0.3);
+      const road = new THREE.Mesh(
+        new THREE.PlaneGeometry(contextWidth, Math.max(7.5, campusSize.z * 0.22)),
+        new THREE.MeshStandardMaterial({ color: 0x101010, roughness: 0.96 }),
+      );
+      road.rotation.x = -Math.PI / 2;
+      road.position.set(campusCenter.x, -0.19, roadZ);
+      context.add(road);
+      [-1.8, 1.8].forEach((offset) => {
+        const marking = new THREE.Mesh(
+          new THREE.BoxGeometry(contextWidth * 0.92, 0.035, 0.08),
+          new THREE.MeshBasicMaterial({ color: 0x8b857d, transparent: true, opacity: 0.62 }),
+        );
+        marking.position.set(campusCenter.x, -0.14, roadZ + offset);
+        context.add(marking);
+      });
+
+      const blockMaterial = new THREE.MeshStandardMaterial({ color: 0x343432, roughness: 0.92 });
+      const blockSpecs = [
+        [-0.82, -0.7, 0.34, 0.42, 0.3], [0.86, -0.72, 0.3, 0.36, 0.23],
+        [-0.88, 0.12, 0.25, 0.3, 0.2], [0.9, 0.08, 0.28, 0.34, 0.27],
+      ];
+      blockSpecs.forEach(([x, z, w, d, h]) => {
+        const block = new THREE.Mesh(
+          new THREE.BoxGeometry(contextWidth * w, Math.max(4, campusSize.y * h), contextDepth * d),
+          blockMaterial,
+        );
+        block.position.set(campusCenter.x + contextWidth * x * 0.5, Math.max(2, campusSize.y * h * 0.5), campusCenter.z + contextDepth * z * 0.5);
+        context.add(block);
+      });
+
+      const carColors = [0xeb681c, 0xd8d3cc, 0x73706b, 0xa7332c];
+      carColors.forEach((color, index) => {
+        const car = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.62, 1.05), new THREE.MeshStandardMaterial({ color, roughness: 0.56 }));
+        const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.48, 0.88), new THREE.MeshStandardMaterial({ color: 0x282b2d, roughness: 0.35 }));
+        cabin.position.y = 0.5;
+        car.add(body, cabin);
+        const direction = index % 2 === 0 ? 1 : -1;
+        car.position.set(campusCenter.x + direction * (index * 8 - contextWidth * 0.34), 0.18, roadZ + direction * 1.8);
+        car.rotation.y = direction < 0 ? Math.PI : 0;
+        context.add(car);
+        movingCars.push({ object: car, speed: 0.0018 + index * 0.00018, limit: contextWidth * 0.46, direction });
+      });
+
+      controls.target.set(campusCenter.x, campusBounds.min.y + campusSize.y * 0.38, campusCenter.z);
+      camera.position.set(campusCenter.x + campusSize.x * 1.15, campusBounds.min.y + campusSize.y * 0.82, campusCenter.z + campusSize.z * 1.55);
+      controls.update();
 
       setLoadState("ready");
     }).catch((error) => {
@@ -238,8 +310,13 @@ export function CampusModelViewer({
     intersectionObserver.observe(host);
     const animate = (time = 0) => {
       frame = requestAnimationFrame(animate);
-      if (!isVisible || document.hidden || time - lastRender < 32) return;
+      if (!isVisible || document.hidden || time - lastRender < 42) return;
+      const frameDelta = Math.min(80, time - lastRender);
       lastRender = time;
+      movingCars.forEach((car) => {
+        car.object.position.x += car.speed * frameDelta * car.direction;
+        if (Math.abs(car.object.position.x) > car.limit) car.object.position.x = -car.limit * car.direction;
+      });
       controls.update();
       renderer.render(scene, camera);
       labelRenderer.render(scene, camera);
@@ -266,6 +343,33 @@ export function CampusModelViewer({
   }, [roomAnchors]);
 
   useEffect(() => {
+    if (loadState !== "ready") return;
+    const records = floorRecordsRef.current;
+    const routeLayer = routeLayerRef.current;
+    const starts = new Map<string, number>();
+    records.forEach((record, floor) => starts.set(floor, record.container.position.y));
+    const targetGap = exploded ? EXPLODED_FLOOR_GAP : COLLAPSED_FLOOR_GAP;
+    const startedAt = performance.now();
+    let animationFrame = 0;
+    if (routeLayer) routeLayer.visible = false;
+    const animateLayout = (now: number) => {
+      const progress = Math.min(1, (now - startedAt) / 620);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      records.forEach((record, floor) => {
+        const from = starts.get(floor) ?? 0;
+        record.container.position.y = THREE.MathUtils.lerp(from, Number(floor) * targetGap, eased);
+      });
+      if (progress < 1) animationFrame = requestAnimationFrame(animateLayout);
+      else {
+        if (routeLayer) routeLayer.visible = true;
+        setLayoutRevision((value) => value + 1);
+      }
+    };
+    animationFrame = requestAnimationFrame(animateLayout);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [exploded, loadState]);
+
+  useEffect(() => {
     const records = floorRecordsRef.current;
     const routeLayer = routeLayerRef.current;
     if (!routeLayer || loadState !== "ready") return;
@@ -280,14 +384,16 @@ export function CampusModelViewer({
 
     const routeFloors = new Set([startFloor, destinationFloor]);
     records.forEach((record, floor) => {
-      const emphasized = routeFloors.has(floor) || floor === activeFloor;
+      const routeEmphasized = routeFloors.has(floor) || floor === activeFloor;
+      const emphasized = !exploded || routeEmphasized;
       record.material.color.copy(emphasized ? ARCHITECTURE : STRUCTURE);
       record.material.opacity = emphasized ? 1 : 0.2;
       record.material.depthWrite = emphasized;
       record.container.traverse((object) => {
         if (!(object instanceof CSS2DObject)) return;
         const element = object.element as HTMLElement;
-        element.classList.toggle("is-muted", !emphasized);
+        element.classList.toggle("is-muted", !routeEmphasized);
+        element.hidden = !routeEmphasized;
         element.classList.toggle("is-active-floor", floor === activeFloor);
       });
     });
@@ -317,13 +423,14 @@ export function CampusModelViewer({
       const connector = routeTube(connectorPoints, connection === "LIFT" ? ROUTE_SECONDARY : ROUTE, connection === "LIFT" ? 0.16 : 0.12);
       if (connector) routeLayer.add(connector);
     }
-  }, [activeFloor, connection, destinationFloor, loadState, routePaths, startFloor]);
+  }, [activeFloor, connection, destinationFloor, exploded, layoutRevision, loadState, routePaths, startFloor]);
 
   return (
-    <div className="tch-campus-model-host" ref={hostRef}>
+    <div className={`tch-campus-model-host${exploded ? " is-exploded" : " is-collapsed"}`} ref={hostRef}>
       {loadState === "loading" && <div className="tch-model-status"><span />Đang tải mô hình Cơ sở E…</div>}
       {loadState === "error" && <div className="tch-model-status is-error">Mô hình đang được xuất từ SketchUp. Hãy tải lại trang sau khi xuất xong.</div>}
       <div className="tch-model-legend" aria-hidden="true"><i /> Tuyến đi <b /> Tầng đang xét</div>
     </div>
   );
 }
+

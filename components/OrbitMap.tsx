@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CSSProperties, PointerEvent, useMemo, useRef, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import { CampusModelViewer } from "@/components/CampusModelViewer";
 import { floorLabels, labs } from "@/data/labs";
 import { findCampusPath } from "@/lib/campusNavmesh";
@@ -155,7 +155,7 @@ function floorCode(floor: string) { return floor === "0" ? "GF" : `F${floor}`; }
 function planRoomFor(room: string, floor: string) { return FLOOR_PLANS[floor]?.rooms.find((spec) => spec.rooms.includes(room)); }
 function doorPointForRoom(room: string, floor: string): PlanPoint { return planRoomFor(room, floor)?.point ?? { x: 50, y: 50 }; }
 function stairSpec(floor: string, stair: StairId) { return FLOOR_PLANS[floor].stairs.find((item) => item.id === stair); }
-const LIFT_STOPS = new Set(["0", "4", "5", "6"]);
+const LIFT_STOPS = new Set(["0", "4", "5", "6", "7"]);
 const liftPoint = (floor: string): PlanPoint => floor === "0" ? { x: 54, y: 72 } : { x: 54, y: 70 };
 const hasLiftStop = (floor: string) => LIFT_STOPS.has(floor);
 const canUseLift = (startFloor: string, destinationFloor: string) => hasLiftStop(startFloor) && hasLiftStop(destinationFloor) && startFloor !== destinationFloor;
@@ -280,7 +280,7 @@ function FloorPlanGraphic({ floor, locations, routePoints, activeConnection, int
       <div className="tch-plan-hall hall-s4" aria-hidden="true"><span>S4</span></div>
       <div className="tch-plan-hall hall-s5" aria-hidden="true"><span>{floor === "0" ? "SẢNH" : floor === "7" ? "LOUNGE" : "S5"}</span></div>
       <div className={`tch-service-core${hasLiftStop(floor) ? " has-stop" : " is-skip-stop"}${activeConnection === "LIFT" ? " is-route-lift" : ""}`} aria-label={hasLiftStop(floor) ? `Thang máy có dừng tại ${floorName(floor)}` : `Thang máy không dừng tại ${floorName(floor)}`}>
-        <i /><span>LIFT</span><strong>{floor === "0" ? "GF ↕ F4–F6" : hasLiftStop(floor) ? "CÓ DỪNG" : "KHÔNG DỪNG"}</strong><b />
+        <i /><span>LIFT</span><strong>{floor === "0" ? "GF ↕ F4–F7" : hasLiftStop(floor) ? "CÓ DỪNG" : "KHÔNG DỪNG"}</strong><b />
       </div>
       {floor !== "0" && floor !== "7" && <div className="tch-plan-toilets" aria-label={`Khu vệ sinh ${floorName(floor)}`}><span>WC NAM</span><span>WC NỮ</span></div>}
       {plan.stairs.map((stair) => (
@@ -340,7 +340,7 @@ function ElevatorFlight3D({ startFloor, destinationFloor }: { startFloor: string
   const anchor = liftPoint(startFloor);
   const routeStops = Array.from(LIFT_STOPS).filter((floor) => Number(floor) >= minFloor && Number(floor) <= maxFloor);
   return (
-    <div className="tch-3d-elevator-flight" style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }} aria-label={`Tuyến thang máy từ ${floorCode(startFloor)} đến ${floorCode(destinationFloor)}, chỉ dừng GF và F4 đến F6`}>
+    <div className="tch-3d-elevator-flight" style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }} aria-label={`Tuyến thang máy từ ${floorCode(startFloor)} đến ${floorCode(destinationFloor)}, chỉ dừng GF và F4 đến F7`}>
       {Array.from({ length: count }, (_, index) => {
         const progress = index / (count - 1);
         const depth = minFloor * FLOOR_DEPTH + progress * transitions * FLOOR_DEPTH;
@@ -370,13 +370,11 @@ export function OrbitMap() {
     locations.filter((item) => item.floor === floor).map((item) => ({ id: item.room, label: item.label, point: item.point })),
   ])), [locations]);
 
-  const [mode, setMode] = useState<ExplorerMode>("floors");
+  const [mode, setMode] = useState<ExplorerMode>("building");
+  const [exploded, setExploded] = useState(false);
   const [activeFloor, setActiveFloor] = useState("1");
-  const [rotation, setRotation] = useState(0);
   const [startId, setStartId] = useState("entrance");
   const [destinationId, setDestinationId] = useState("room-e101");
-  const dragRef = useRef({ active: false, x: 0, rotation: 0, moved: false });
-  const wasDraggedRef = useRef(false);
   const start = locations.find((item) => item.id === startId) ?? locations[0];
   const destination = locations.find((item) => item.id === destinationId) ?? locations[1];
   const destinationLabs = useMemo(() => labs.filter((lab) => lab.floor === destination.floor
@@ -409,19 +407,13 @@ export function OrbitMap() {
     const direction = Number(destination.floor) > Number(start.floor) ? "lên" : "xuống";
     const steps = sameFloor ? [`Rời ${startLabel}`, `Theo sảnh và hành lang, đi vòng lõi thang`, `Dừng ngay trước cửa ${destination.room}`]
       : useLift
-        ? [`Từ ${startLabel}, theo tuyến cam đến thang máy`, `Vào thang máy tại ${floorCode(start.floor)}`, `Di chuyển ${direction} ${floorCode(destination.floor)} · chỉ dừng GF và F4–F6`, `Ra thang máy và theo hành lang`, `Dừng ngay trước cửa ${destination.room}`]
+        ? [`Từ ${startLabel}, theo tuyến cam đến thang máy`, `Vào thang máy tại ${floorCode(start.floor)}`, `Di chuyển ${direction} ${floorCode(destination.floor)} · chỉ dừng GF và F4–F7`, `Ra thang máy và theo hành lang`, `Dừng ngay trước cửa ${destination.room}`]
         : [`Từ ${startLabel}, theo tuyến cam đến sảnh thang ${stair}`, `Vào ${stair} tại ${floorCode(start.floor)}`, `Đi theo các vế thang và chiếu nghỉ ${direction} ${floorCode(destination.floor)}`, `Ra khỏi ${stair} tại ${floorCode(destination.floor)} và theo hành lang`, `Dừng ngay trước cửa ${destination.room}`];
     return { sameFloor, stair, connection, useLift, pathsByFloor, steps };
   }, [start, destination]);
 
   const roomsByFloor = (floor: string) => locations.filter((item) => item.floor === floor && item.id !== "entrance");
-  const normalizedRotation = ((Math.round(rotation) % 360) + 360) % 360;
-  const routeMinFloor = Math.min(Number(start.floor), Number(destination.floor));
-  const routeMaxFloor = Math.max(Number(start.floor), Number(destination.floor));
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => { event.currentTarget.setPointerCapture(event.pointerId); dragRef.current = { active: true, x: event.clientX, rotation, moved: false }; wasDraggedRef.current = false; };
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => { if (!dragRef.current.active) return; const distance = event.clientX - dragRef.current.x; if (Math.abs(distance) > 14) dragRef.current.moved = true; setRotation(dragRef.current.rotation + distance * 0.35); };
-  const handlePointerUp = () => { wasDraggedRef.current = dragRef.current.moved; dragRef.current.active = false; window.setTimeout(() => { wasDraggedRef.current = false; }, 80); };
-  const chooseFloor = (floor: string) => { if (wasDraggedRef.current) return; setActiveFloor(floor); setMode("floors"); };
+  const chooseFloor = (floor: string) => { setActiveFloor(floor); setMode("floors"); };
   const chooseStart = (id: string) => {
     setStartId(id);
     const next = locations.find((item) => item.id === id);
@@ -437,11 +429,12 @@ export function OrbitMap() {
     <section className="tch-campus-section" id="campus-explorer">
       <div className="tch-section-index"><strong>02</strong><span>Campus explorer</span></div>
       <div className="tch-campus-heading"><p>Eight connected levels · one shared infrastructure</p><h2>Khám phá hub <em>theo từng tầng.</em></h2><span>Mặt bằng được dựng lại theo đúng khối phòng, cửa, sảnh thang và hướng lên xuống của Cơ sở E.</span></div>
-      <div className="tch-explorer-toolbar" role="group" aria-label="Chế độ khám phá Campus E"><button className={mode === "floors" ? "is-active" : ""} onClick={() => setMode("floors")}>Mặt bằng tầng</button><button className={mode === "building" ? "is-active" : ""} onClick={() => setMode("building")}>3D Building</button></div>
+      <div className="tch-explorer-toolbar" role="group" aria-label="Chế độ khám phá Campus E"><button className={mode === "building" ? "is-active" : ""} onClick={() => setMode("building")}>3D Building</button><button className={mode === "floors" ? "is-active" : ""} onClick={() => setMode("floors")}>Mặt bằng tầng</button><span>{mode === "building" ? (exploded ? "Các tầng đang tách để quan sát" : "Toàn bộ Campus E đang ở dạng một khối") : `${floorName(activeFloor)} · chọn phòng trực tiếp trên mặt bằng`}</span></div>
       <div className={`tch-building-explorer mode-${mode}`}>
         {mode === "building" ? <div className="tch-building-panel is-model-viewer">
           <div className="tch-building-viewport is-webgl-viewer">
             <CampusModelViewer
+              exploded={exploded}
               activeFloor={activeFloor}
               startFloor={start.floor}
               destinationFloor={destination.floor}
@@ -453,33 +446,41 @@ export function OrbitMap() {
             <nav className="tch-building-floor-shortcuts" aria-label="Mở nhanh mặt bằng tầng">{FLOORS.map((floor) => <button key={floor} onClick={() => chooseFloor(floor)}>{floorCode(floor)}</button>)}</nav>
             <div className="tch-rotation-readout">Mô hình thật · SketchUp Campus E</div>
           </div>
-          <div className="tch-building-controls"><span>Kéo để xoay · cuộn để phóng to · bấm trực tiếp vào tầng để mở mặt bằng</span></div>
+          <div className="tch-building-controls"><span>Kéo để xoay · cuộn để phóng to · bấm trực tiếp vào tầng để mở mặt bằng</span><button type="button" className={exploded ? "is-active" : ""} onClick={() => setExploded((value) => !value)}>{exploded ? "Ghép lại thành một khối" : "Tách các tầng để khám phá"}</button></div>
         </div> : <div className="tch-floor-browser">
           <nav className="tch-floor-tabs" aria-label="Chọn tầng">{FLOORS.slice().reverse().map((floor) => <button className={activeFloor === floor ? "is-active" : ""} key={floor} onClick={() => setActiveFloor(floor)}><span>{floorCode(floor)}</span>{floorName(floor)}</button>)}</nav>
-          <div className="tch-plan-panel"><div className="tch-plan-meta"><span>Selected level</span><strong>{floorName(activeFloor)}</strong><p>{floorLabels[activeFloor]}</p></div>
-            <div className="tch-plan-canvas"><FloorPlanGraphic floor={activeFloor} locations={roomsByFloor(activeFloor)} routePoints={route.pathsByFloor[activeFloor]} activeConnection={!route.sameFloor && (activeFloor === start.floor || activeFloor === destination.floor) ? route.connection : undefined} interactive destinationId={destinationId} onDestination={setDestinationId} /></div>
+          <div className="tch-floor-workspace">
             <section className="tch-room-intro-card" aria-live="polite" key={destination.id}>
-              <div className="tch-room-intro-code"><span>Điểm đến đã chọn</span><strong>{destination.room}</strong><em>{floorCode(destination.floor)}</em></div>
+              <div className="tch-room-intro-code"><span>Phòng đã chọn</span><strong>{destination.room}</strong><em>{floorCode(destination.floor)}</em></div>
               <div className="tch-room-intro-copy"><span>{destinationLabs.length > 1 ? `${destinationLabs.length} chức năng trong cùng không gian` : "Room profile"}</span><h3>{destinationLab?.name ?? destination.label.split(" · ")[1]}</h3><p>{destinationLab?.desc ?? `Không gian ${destination.room} thuộc ${floorName(destination.floor)}, phục vụ hoạt động nghiên cứu, đào tạo và kết nối dự án.`}</p>
                 {destinationTags.length > 0 && <div className="tch-room-intro-tags">{destinationTags.map((tag) => <i key={tag}>{tag}</i>)}</div>}
                 {destinationLab && <Link href={`/labs/${destinationLab.id}`}>Xem hồ sơ chi tiết <b>→</b></Link>}
               </div>
             </section>
-            <div className="tch-floor-room-list">{roomsByFloor(activeFloor).map((room, index) => <button key={room.id} onClick={() => chooseDestination(room.id)} className={destinationId === room.id ? "is-active" : ""}><span>{String(index + 1).padStart(2, "0")}</span><strong>{room.room}</strong><em>{room.label.split(" · ")[1]}</em></button>)}</div>
+            <div className="tch-plan-panel"><div className="tch-plan-meta"><span>Mặt bằng đang xem</span><strong>{floorName(activeFloor)}</strong><p>{floorLabels[activeFloor]}</p></div>
+              <div className="tch-plan-canvas"><FloorPlanGraphic floor={activeFloor} locations={roomsByFloor(activeFloor)} routePoints={route.pathsByFloor[activeFloor]} activeConnection={!route.sameFloor && (activeFloor === start.floor || activeFloor === destination.floor) ? route.connection : undefined} interactive destinationId={destinationId} onDestination={chooseDestination} /></div>
+              <div className="tch-floor-room-list">{roomsByFloor(activeFloor).map((room, index) => <button key={room.id} onClick={() => chooseDestination(room.id)} className={destinationId === room.id ? "is-active" : ""}><span>{String(index + 1).padStart(2, "0")}</span><strong>{room.room}</strong><em>{room.label.split(" · ")[1]}</em></button>)}</div>
+            </div>
+            <WayfindingPanel />
           </div>
         </div>}
-        <aside className="tch-wayfinding-panel">
+        {mode === "building" && <WayfindingPanel />}
+      </div>
+    </section>
+  );
+
+  function WayfindingPanel() {
+    return <aside className="tch-wayfinding-panel">
           <div className="tch-wayfinding-controls"><div className="tch-wayfinding-title"><span>Door-to-door wayfinding</span><strong>Đi đúng cửa · đúng thang · đúng tầng</strong></div>
             <label>Điểm bắt đầu<select value={startId} onChange={(event) => chooseStart(event.target.value)}><option value="entrance">Sảnh chính · Tầng trệt</option>{FLOORS.slice().reverse().map((floor) => <optgroup label={floorName(floor)} key={floor}>{roomsByFloor(floor).map((room) => <option value={room.id} key={room.id}>{room.label}</option>)}</optgroup>)}</select></label>
             <label>Điểm đến<select value={destinationId} onChange={(event) => chooseDestination(event.target.value)}>{FLOORS.slice().reverse().map((floor) => <optgroup label={floorName(floor)} key={floor}>{roomsByFloor(floor).map((room) => <option value={room.id} key={room.id}>{room.label}</option>)}</optgroup>)}</select></label>
           </div>
           <div className="tch-wayfinding-route"><ol>{route.steps.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, "0")}</span>{step}</li>)}</ol>
-            <div className="tch-route-summary"><span>{route.sameFloor ? floorName(start.floor) : `${floorCode(start.floor)} → ${floorCode(destination.floor)}`}</span><strong>{route.sameFloor ? "Cùng tầng" : route.useLift ? "Thang máy · GF ↔ F4–F6" : `Bậc thang ${route.stair}`}</strong></div>
-            <p className="tch-route-note">Tuyến cam bám theo cửa, sảnh và hành lang, không xuyên tường. Có hai cầu thang CT1–CT2; thang máy chỉ dừng GF và F4–F6. Không dùng thay hướng dẫn thoát hiểm.</p>
+            <div className="tch-route-summary"><span>{route.sameFloor ? floorName(start.floor) : `${floorCode(start.floor)} → ${floorCode(destination.floor)}`}</span><strong>{route.sameFloor ? "Cùng tầng" : route.useLift ? "Thang máy · GF ↔ F4–F7" : `Bậc thang ${route.stair}`}</strong></div>
+            <p className="tch-route-note">Tuyến cam bám theo cửa, sảnh và hành lang, không xuyên tường. Có hai cầu thang CT1–CT2; thang máy chỉ dừng GF và F4–F7. Chức năng định hướng, không thay thế sơ đồ thoát hiểm.</p>
             <Link href="/labs">Xem toàn bộ danh mục labs <span>→</span></Link>
           </div>
-        </aside>
-      </div>
-    </section>
-  );
+        </aside>;
+  }
 }
+

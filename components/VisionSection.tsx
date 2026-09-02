@@ -1,6 +1,9 @@
 export function VisionSection() {
   return (
     <section className="tch-intro" id="vision">
+      <div className="tch-kinetic-type" aria-hidden="true">
+        <div>HỘI TỤ CÔNG NGHỆ — THỬ NGHIỆM THỰC — CHIA SẺ TRI THỨC — HỘI TỤ CÔNG NGHỆ — THỬ NGHIỆM THỰC — CHIA SẺ TRI THỨC —</div>
+      </div>
       <div className="tch-section-index">
         <span>01</span>
         <p>Tầm nhìn</p>
@@ -33,3 +36,4 @@ export function VisionSection() {
     </section>
   );
 }
+

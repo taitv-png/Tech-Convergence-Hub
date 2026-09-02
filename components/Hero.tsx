@@ -11,9 +11,7 @@ const systems = [
     name: "IoT",
     description: "Kết nối hệ thống nhúng, cảm biến và Digital Twin để thu thập dữ liệu theo thời gian thực.",
     tags: ["Embedded systems", "Sensors", "Digital twin"],
-    spaces: "E301 · E304",
-    labLine: "Hệ thống Nhúng & IoT · Dây chuyền sản xuất thông minh",
-    position: "node-urban",
+    labs: ["Embedded & IoT System Lab"],
   },
   {
     id: "immersive",
@@ -21,9 +19,7 @@ const systems = [
     name: "Immersive Tech",
     description: "Hologram, AR, VR và trải nghiệm tương tác phục vụ đào tạo, nghiên cứu và trình diễn.",
     tags: ["AR / VR", "Hologram", "Experience"],
-    spaces: "E101 — E104",
-    labLine: "Human-Centered AI · Immersive Expo · Convergence Center",
-    position: "node-immersive",
+    labs: ["Hologram Printing Lab", "Immersive Technology Convergence", "Immersive Technology Center"],
   },
   {
     id: "logistics",
@@ -31,9 +27,7 @@ const systems = [
     name: "Logistics",
     description: "Mô phỏng cảng thông minh, vận hành terminal và chuỗi cung ứng trong môi trường kết nối.",
     tags: ["Smart seaport", "Terminal", "Supply chain"],
-    spaces: "E401 · E404",
-    labLine: "Smart Port Logistics · Mobility & Rail Systems",
-    position: "node-robotics",
+    labs: ["Smart Seaport Logistics & Terminal Operations Lab", "MPS Station Center"],
   },
   {
     id: "ocean",
@@ -41,9 +35,7 @@ const systems = [
     name: "Ocean Tech",
     description: "Quan trắc biển, dữ liệu không gian và mô phỏng động lực học vùng bờ cho phát triển bền vững.",
     tags: ["Monitoring", "Spatial data", "Coastal systems"],
-    spaces: "E302 · E404",
-    labLine: "Ocean Robotics · Coastal Data & Monitoring",
-    position: "node-automation",
+    labs: ["Ocean Monitoring & Spatial Planning Lab", "Ocean Physics & Coastal Dynamics Lab", "Spatial Analytics & Planning Lab"],
   },
   {
     id: "ai",
@@ -51,9 +43,63 @@ const systems = [
     name: "Artificial Intelligence",
     description: "Kết nối Physical AI, dữ liệu lớn và các mô hình thông minh cho những bài toán thực tế.",
     tags: ["Physical AI", "Big data", "Intelligence"],
-    spaces: "E402 · E403 · E601",
-    labLine: "Edge–Physical AI · Big Data · Open Innovation Lab",
-    position: "node-ocean",
+    labs: ["Edge–Physical AI Lab", "AI & Big Data Lab"],
+  },
+  {
+    id: "mobility",
+    code: "06 / MOBILITY",
+    name: "Mobility",
+    description: "Kết nối phương tiện tự hành, đường sắt và dữ liệu di chuyển cho đô thị linh hoạt hơn.",
+    tags: ["Smart mobility", "Rail systems", "Autonomous vehicles"],
+    labs: ["Smart Mobility Lab", "Rail Systems Lab", "Automated Vehicles & Systems Lab"],
+  },
+  {
+    id: "robotics",
+    code: "07 / ROBOTICS",
+    name: "Robotics",
+    description: "Phát triển robot di động, robot đại dương và hệ thống tự hành trong môi trường thực.",
+    tags: ["Mobile robots", "Ocean robotics", "Autonomy"],
+    labs: ["Automated Vehicles & Systems Lab", "Mobile Robot Lab", "Ocean Robotics Lab"],
+  },
+  {
+    id: "smart-city",
+    code: "08 / SMART CITY",
+    name: "Smart City",
+    description: "Biến dữ liệu đô thị thành mô hình, mô phỏng và quyết định thiết kế có thể kiểm chứng.",
+    tags: ["Urban data", "Digital twin", "Urban design"],
+    labs: ["Smart City Lab", "Data-Driven Urban Design Lab", "META – Digital Twin Lab"],
+  },
+  {
+    id: "energy",
+    code: "09 / ENERGY",
+    name: "Energy",
+    description: "Nghiên cứu năng lượng tái tạo đại dương và các hệ vật lý phục vụ chuyển dịch xanh.",
+    tags: ["Renewable energy", "Ocean physics", "Sustainability"],
+    labs: ["Ocean Renewable Energy Lab", "Ocean Physics Lab"],
+  },
+  {
+    id: "materials",
+    code: "10 / MATERIAL",
+    name: "Material",
+    description: "Hội tụ cơ khí chính xác, vật lý kiến trúc, điều khiển công nghiệp và kinh tế tuần hoàn.",
+    tags: ["Precision", "Industrial control", "Circular economy"],
+    labs: ["Precision Mechanics Lab", "Architectural & Urban Physics Lab", "Process Control & Industrial Communication Network Lab", "Circular Economy Lab"],
+  },
+  {
+    id: "cyber",
+    code: "11 / CYBER",
+    name: "Cyber Security",
+    description: "Thực hành bảo vệ dữ liệu, hạ tầng số và các hệ thống kết nối của campus thông minh.",
+    tags: ["Cybersecurity", "Digital infrastructure", "Resilience"],
+    labs: ["Cybersecurity Lab"],
+  },
+  {
+    id: "ux",
+    code: "12 / UX",
+    name: "UX",
+    description: "Đặt con người ở trung tâm của giao diện, trải nghiệm và những ứng dụng AI mới.",
+    tags: ["Ergonomics", "Human-centered AI", "Interaction"],
+    labs: ["ErgoUX Lab", "Human-Centered AI Innovation Lab"],
   },
 ] as const;
 
@@ -82,7 +128,7 @@ export function Hero() {
         <span>Technology convergence platform · 2026</span>
       </div>
 
-      <div className="tch-system-map" aria-label="Khám phá năm cụm công nghệ của Tech-Convergence Hub">
+      <div className="tch-system-map" aria-label="Khám phá mười hai theme công nghệ của Tech-Convergence Hub">
         <div className="system-core">
           <i className="system-core-wave wave-one" aria-hidden="true" />
           <i className="system-core-wave wave-two" aria-hidden="true" />
@@ -105,9 +151,9 @@ export function Hero() {
         <div className="system-axis system-axis-x" aria-hidden="true" />
         <div className="system-axis system-axis-y" aria-hidden="true" />
 
-        {systems.map((system) => (
+        {systems.map((system, index) => (
           <button
-            className={`system-node ${system.position} ${activeId === system.id ? "is-active" : ""}`}
+            className={`system-node system-node-${index} ${activeId === system.id ? "is-active" : ""}`}
             type="button"
             key={system.id}
             aria-pressed={activeId === system.id}
@@ -126,9 +172,10 @@ export function Hero() {
         <h2>{active.name}</h2>
         <p>{active.description}</p>
         <div className="system-readout-labs">
-          <span>Không gian tiêu biểu</span>
-          <strong>{active.spaces}</strong>
-          <p>{active.labLine}</p>
+          <span>{active.labs.length.toString().padStart(2, "0")} labs dưới theme</span>
+          <ul>
+            {active.labs.map((lab) => <li key={lab}>{lab}</li>)}
+          </ul>
         </div>
         <div className="system-readout-tags">
           {active.tags.map((tag) => (
@@ -164,3 +211,4 @@ export function Hero() {
     </section>
   );
 }
+

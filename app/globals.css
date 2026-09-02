@@ -4567,3 +4567,168 @@ button.tch-plan-room { cursor: pointer; }
   stroke-width: .8;
   filter: drop-shadow(0 0 4px rgba(255, 145, 77, .75));
 }
+
+/* 2026 interaction pass — kinetic research atlas, compact campus explorer */
+.tch-hero {
+  min-height: max(840px, 100svh);
+  background:
+    radial-gradient(circle at 72% 43%, rgba(235, 104, 28, .11), transparent 34%),
+    linear-gradient(180deg, #f8f5f1 0%, #f5f2ee 74%, #f0d8c5 100%);
+}
+.tch-system-map { top: 14%; right: 1.5vw; width: min(64vw, 1080px); height: min(76vh, 760px); }
+.system-orbit-one { width: 38%; }
+.system-orbit-two { width: 72%; }
+.system-node {
+  width: clamp(112px, 10.5vw, 154px);
+  padding: 9px 11px 10px;
+  border-left-width: 2px;
+  background: rgba(255, 251, 246, .86);
+}
+.system-node::after { height: clamp(18px, 3.2vw, 44px); }
+.system-node span { margin-bottom: 5px; font-size: clamp(.55rem, .6vw, .68rem); letter-spacing: .15em; }
+.system-node strong { font-size: clamp(.68rem, .72vw, .82rem); line-height: 1.2; }
+.system-node-0 { left: 43%; top: 0; }
+.system-node-1 { left: 66%; top: 6%; }
+.system-node-2 { left: 81%; top: 20%; }
+.system-node-3 { left: 85%; top: 42%; }
+.system-node-4 { left: 78%; top: 64%; }
+.system-node-5 { left: 62%; top: 78%; }
+.system-node-6 { left: 40%; top: 83%; }
+.system-node-7 { left: 18%; top: 77%; }
+.system-node-8 { left: 3%; top: 63%; }
+.system-node-9 { left: 0; top: 41%; }
+.system-node-10 { left: 7%; top: 19%; }
+.system-node-11 { left: 23%; top: 5%; }
+.tch-hero > .system-readout { top: clamp(148px, 16vh, 184px); width: min(390px, 31vw); }
+.system-readout-labs ul { display: grid; gap: 4px; margin: 2px 0 0; padding: 0; list-style: none; }
+.system-readout-labs li { position: relative; padding-left: 13px; color: rgba(23, 19, 17, .76); font-size: .68rem; line-height: 1.45; }
+.system-readout-labs li::before { content: "—"; position: absolute; left: 0; color: #d95810; }
+.tch-hero-copy { width: min(42vw, 650px); padding-top: clamp(43vh, 47vh, 510px); }
+
+.tch-intro { position: relative; overflow: hidden; padding-top: clamp(142px, 14vw, 210px); background: linear-gradient(180deg, #f0d8c5 0%, #fbfaf8 20%, #fbfaf8 76%, #d4a07a 100%); }
+.tch-kinetic-type {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 28px;
+  overflow: hidden;
+  border-top: 1px solid rgba(235, 104, 28, .3);
+  border-bottom: 1px solid rgba(235, 104, 28, .22);
+  color: #d95810;
+  font-size: clamp(1.6rem, 3.1vw, 4rem);
+  font-weight: 280;
+  letter-spacing: -.025em;
+  line-height: 1.55;
+  white-space: nowrap;
+}
+.tch-kinetic-type > div { width: max-content; animation: tch-kinetic-scroll 30s linear infinite; }
+@keyframes tch-kinetic-scroll { to { transform: translateX(-50%); } }
+
+.tch-campus-section {
+  padding-inline: clamp(22px, 4vw, 72px);
+  background:
+    linear-gradient(180deg, #d4a07a 0, #4b3025 5%, #151515 14%, #151515 88%, #40281d 100%),
+    #151515;
+}
+.tch-campus-section > .tch-explorer-toolbar,
+.tch-campus-section > .tch-building-explorer { grid-column: 1 / -1; }
+.tch-explorer-toolbar { margin-top: clamp(44px, 6vw, 78px) !important; }
+.tch-building-explorer { grid-template-columns: minmax(0, 1.58fr) minmax(300px, .42fr); gap: clamp(20px, 2.8vw, 44px); }
+.tch-building-viewport.is-webgl-viewer { min-height: clamp(540px, 62vh, 690px); }
+.tch-building-controls { display: flex !important; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 0 0 !important; }
+.tch-building-controls span { text-align: left; }
+.tch-building-controls button {
+  flex: 0 0 auto;
+  min-width: 210px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255,145,77,.45);
+  background: transparent;
+  color: #fffaf5;
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.tch-building-controls button:hover,
+.tch-building-controls button.is-active { background: #eb681c; border-color: #ff914d; }
+
+.tch-building-explorer.mode-floors { grid-template-columns: 1fr; }
+.tch-floor-browser { border-top: 1px solid rgba(255,145,77,.24); }
+.tch-floor-workspace {
+  display: grid;
+  grid-template-columns: minmax(220px, .72fr) minmax(440px, 1.55fr) minmax(280px, .73fr);
+  gap: clamp(16px, 2vw, 30px);
+  align-items: start;
+  padding-top: 22px;
+}
+.tch-floor-workspace .tch-room-intro-card {
+  position: sticky;
+  top: calc(var(--header-height) + 22px);
+  display: block;
+  margin: 0;
+  background: linear-gradient(155deg, rgba(235,104,28,.2), rgba(23,23,23,.94) 46%);
+}
+.tch-floor-workspace .tch-room-intro-code { min-height: 154px; padding: 22px; border-right: 0; border-bottom: 1px solid rgba(255,145,77,.24); }
+.tch-floor-workspace .tch-room-intro-code strong { font-size: clamp(2.6rem, 4vw, 4.5rem); }
+.tch-floor-workspace .tch-room-intro-copy { padding: 22px; }
+.tch-floor-workspace .tch-room-intro-copy h3 { font-size: clamp(1.35rem, 1.8vw, 2rem); line-height: 1.16; }
+.tch-floor-workspace .tch-room-intro-copy p { font-size: .7rem; }
+.tch-floor-workspace .tch-plan-panel { padding: 0; }
+.tch-floor-workspace .tch-plan-meta { padding: 4px 0 15px; }
+.tch-floor-workspace .tch-plan-meta > strong { font-size: clamp(1.8rem, 2.5vw, 3rem); }
+.tch-floor-workspace .tch-plan-meta p { max-width: 28ch; font-size: .64rem; }
+.tch-floor-workspace .tch-plan-canvas { min-height: clamp(360px, 35vw, 520px) !important; border: 1px solid rgba(255,250,245,.12); background: rgba(255,255,255,.025); }
+.tch-floor-workspace .tch-clean-plan { width: 88%; }
+.tch-floor-workspace .tch-floor-room-list { grid-template-columns: repeat(2, minmax(0,1fr)) !important; margin-top: 10px; }
+.tch-floor-workspace .tch-wayfinding-panel { position: sticky; top: calc(var(--header-height) + 22px); display: block; min-width: 0; padding: 20px; }
+.tch-building-explorer.mode-floors .tch-floor-workspace .tch-wayfinding-panel { display: block; grid-template-columns: none; }
+.tch-floor-workspace .tch-wayfinding-panel ol { margin-top: 18px; }
+.tch-floor-workspace .tch-wayfinding-panel li { padding: 9px 0; font-size: .66rem; }
+
+.partner-section { padding-top: clamp(104px, 10vw, 156px) !important; background: linear-gradient(180deg, #40281d 0%, #f5f2ee 15%, #f5f2ee 100%) !important; }
+.partner-stack { gap: 26px; margin-top: 58px; padding-block: 8px 14px; }
+.partner-marquee-reverse { margin-left: 0; }
+.partner-track { gap: clamp(46px, 5.5vw, 92px); }
+.partner-logo { width: clamp(132px, 11vw, 190px); height: clamp(54px, 5vw, 76px); }
+.partner-logo-kamisoft { width: clamp(148px, 12vw, 205px); height: clamp(58px, 5.2vw, 82px); }
+
+@media (max-width: 1180px) {
+  .tch-floor-workspace { grid-template-columns: minmax(220px, .7fr) minmax(430px, 1.3fr); }
+  .tch-building-explorer.mode-floors .tch-floor-workspace .tch-wayfinding-panel { grid-column: 1 / -1; position: static; display: grid; grid-template-columns: minmax(250px,.7fr) minmax(380px,1.3fr); gap: 28px; }
+  .tch-floor-workspace .tch-wayfinding-route ol { margin-top: 0; }
+}
+
+@media (max-width: 980px) {
+  .tch-hero { min-height: auto; }
+  .tch-system-map { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; height: auto; }
+  .system-core { position: relative; grid-column: 1 / -1; left: auto; top: auto; justify-self: center; margin: 38px 0 52px; translate: none; }
+  .system-orbit, .system-axis { display: none; }
+  .system-node { position: relative; inset: auto !important; width: auto; min-height: 64px; }
+  .system-node::after { display: none; }
+  .tch-hero-copy { width: 100%; padding-top: 54px; }
+  .tch-floor-workspace { grid-template-columns: 1fr; }
+  .tch-floor-workspace .tch-room-intro-card,
+  .tch-floor-workspace .tch-wayfinding-panel { position: static; }
+  .tch-building-explorer.mode-floors .tch-floor-workspace .tch-wayfinding-panel { grid-column: auto; display: block; grid-template-columns: none; }
+}
+
+@media (max-width: 680px) {
+  .tch-system-map { grid-template-columns: 1fr; }
+  .system-core { grid-column: 1; }
+  .tch-explorer-toolbar { align-items: stretch; flex-wrap: wrap; }
+  .tch-explorer-toolbar button { min-width: 0; flex: 1 1 44%; }
+  .tch-explorer-toolbar > span { width: 100%; margin: 4px 0 0; }
+  .tch-building-controls { align-items: stretch; flex-direction: column; }
+  .tch-building-controls button { width: 100%; min-width: 0; }
+  .tch-building-viewport.is-webgl-viewer { min-height: 520px; }
+  .tch-floor-workspace .tch-plan-meta { grid-template-columns: 1fr; }
+  .tch-floor-workspace .tch-plan-meta p { grid-column: 1; grid-row: auto; }
+  .tch-floor-workspace .tch-clean-plan { width: 98%; }
+  .partner-stack { gap: 20px; }
+  .partner-logo { width: 124px; height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tch-kinetic-type > div { animation: none; }
+}
+
