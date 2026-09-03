@@ -17,17 +17,17 @@ export function VisionSection() {
     const section = sectionRef.current;
     if (!section) return;
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setVisible(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.22 });
+      setVisible(entry.isIntersecting);
+    }, { threshold: 0.18 });
     observer.observe(section);
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) {
+      setCounts([0, 0, 0]);
+      return;
+    }
     const startedAt = performance.now();
     let frame = 0;
     const animate = (now: number) => {
@@ -50,7 +50,7 @@ export function VisionSection() {
       <div className="tch-intro-main">
         <p className="tch-section-kicker tch-reveal-stage stage-heading">A shared platform for open innovation</p>
         <h2 className="tch-reveal-stage stage-heading">
-          Một hệ sinh thái được thiết kế để{" "}
+          <span>Một hệ sinh thái được thiết kế để</span>
           <em>công nghệ gặp nhau.</em>
         </h2>
 

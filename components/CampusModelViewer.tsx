@@ -133,6 +133,7 @@ export function CampusModelViewer({
     const context = new THREE.Group();
     scene.add(context);
     const movingCars: { object: THREE.Group; speed: number; limit: number; direction: number }[] = [];
+    const movingPeople: { object: THREE.Group; speed: number; minX: number; maxX: number; direction: number }[] = [];
     const routeLayer = new THREE.Group();
     routeLayerRef.current = routeLayer;
     building.add(routeLayer);
@@ -176,7 +177,7 @@ export function CampusModelViewer({
       FLOORS.forEach((floor) => {
         const height = floorSources.get(floor)!.bounds.getSize(new THREE.Vector3()).y;
         floorBaseY.set(floor, stackedY);
-        stackedY += Math.max(0.3, height * 0.62);
+        stackedY += Math.max(0.3, height * (floor === "0" ? 0.36 : 0.62));
       });
 
       FLOORS.forEach((floor) => {
@@ -279,10 +280,9 @@ export function CampusModelViewer({
 
       const blockMaterial = new THREE.MeshStandardMaterial({ color: 0x343432, roughness: 0.92 });
       const blockSpecs = [
-        [-0.82, -0.72, 0.27, 0.3, 0.34], [0.83, -0.74, 0.25, 0.28, 0.26],
-        [-0.86, -0.18, 0.22, 0.25, 0.2], [0.88, -0.18, 0.23, 0.28, 0.3],
-        [-0.68, 0.38, 0.18, 0.2, 0.15], [0.7, 0.34, 0.2, 0.23, 0.2],
-        [-0.3, -0.92, 0.24, 0.18, 0.2], [0.34, -0.9, 0.22, 0.2, 0.25],
+        [-0.54, -0.58, 0.18, 0.22, 0.31], [0.54, -0.58, 0.18, 0.22, 0.25],
+        [-0.57, -0.12, 0.16, 0.2, 0.2], [0.57, -0.12, 0.16, 0.2, 0.27],
+        [-0.32, -0.78, 0.16, 0.15, 0.18], [0.32, -0.78, 0.16, 0.16, 0.22],
       ];
       blockSpecs.forEach(([x, z, w, d, h]) => {
         const block = new THREE.Mesh(
@@ -290,6 +290,14 @@ export function CampusModelViewer({
           blockMaterial,
         );
         block.position.set(campusCenter.x + contextWidth * x * 0.5, Math.max(2, campusSize.y * h * 0.5), campusCenter.z + contextDepth * z * 0.5);
+        context.add(block);
+      });
+
+      const distantMaterial = new THREE.MeshStandardMaterial({ color: 0x4b4844, roughness: 1, transparent: true, opacity: 0.28, depthWrite: false });
+      [-0.42, -0.14, 0.15, 0.43].forEach((x, index) => {
+        const height = campusSize.y * (0.14 + (index % 3) * 0.035);
+        const block = new THREE.Mesh(new THREE.BoxGeometry(contextWidth * 0.18, height, contextDepth * 0.13), distantMaterial);
+        block.position.set(campusCenter.x + contextWidth * x, height * 0.5, roadZ + roadWidth * 1.22);
         context.add(block);
       });
 
@@ -307,10 +315,10 @@ export function CampusModelViewer({
       };
       for (let index = 0; index < 12; index += 1) {
         const x = campusCenter.x - contextWidth * 0.42 + index * (contextWidth * 0.84 / 11);
-        addTree(x, roadZ - roadWidth * 0.62, 0.84 + (index % 3) * 0.08);
+        addTree(x, roadZ - roadWidth * 0.62, 1.12 + (index % 3) * 0.1);
       }
       [[-0.42, -0.18], [0.46, -0.22], [-0.58, 0.06], [0.6, 0.02], [-0.34, 0.24], [0.38, 0.26]].forEach(([x, z], index) => {
-        addTree(campusCenter.x + contextWidth * x, campusCenter.z + contextDepth * z, 0.86 + (index % 2) * 0.14);
+        addTree(campusCenter.x + contextWidth * x, campusCenter.z + contextDepth * z, 1.08 + (index % 2) * 0.16);
       });
 
       const peopleMaterial = new THREE.MeshStandardMaterial({ color: 0xe6ddd2, roughness: 0.9 });
@@ -324,6 +332,7 @@ export function CampusModelViewer({
         person.add(body, head);
         person.position.set(campusCenter.x - contextWidth * 0.34 + index * contextWidth * 0.072, 0, roadZ - roadWidth * 0.62 + (index % 2 ? 0.55 : -0.45));
         context.add(person);
+        movingPeople.push({ object: person, speed: 0.00038 + (index % 4) * 0.00007, minX: campusCenter.x - contextWidth * 0.4, maxX: campusCenter.x + contextWidth * 0.4, direction: index % 2 === 0 ? 1 : -1 });
       }
 
       const carColors = [0xeb681c, 0xd8d3cc, 0x73706b, 0xa7332c, 0x48606a, 0xe1b34b, 0x685a72, 0xb8b4ae];
@@ -399,6 +408,10 @@ export function CampusModelViewer({
       movingCars.forEach((car) => {
         car.object.position.x += car.speed * frameDelta * car.direction;
         if (Math.abs(car.object.position.x) > car.limit) car.object.position.x = -car.limit * car.direction;
+      });
+      movingPeople.forEach((person) => {
+        person.object.position.x += person.speed * frameDelta * person.direction;
+        if (person.object.position.x > person.maxX || person.object.position.x < person.minX) person.direction *= -1;
       });
       controls.update();
       renderer.render(scene, camera);

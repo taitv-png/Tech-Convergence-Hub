@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CSSProperties, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { CampusModelViewer } from "@/components/CampusModelViewer";
 import { floorLabels, labs } from "@/data/labs";
 import { findCampusPath } from "@/lib/campusNavmesh";
@@ -353,6 +353,8 @@ function ElevatorFlight3D({ startFloor, destinationFloor }: { startFloor: string
 }
 
 export function OrbitMap() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [sectionVisible, setSectionVisible] = useState(false);
   const locations = useMemo<RouteLocation[]>(() => {
     const uniqueRooms = new Map<string, RouteLocation>();
     labs.forEach((lab) => lab.room.split(",").map((room) => room.trim()).filter(Boolean).forEach((room) => {
@@ -413,24 +415,31 @@ export function OrbitMap() {
   }, [start, destination]);
 
   const roomsByFloor = (floor: string) => locations.filter((item) => item.floor === floor && item.id !== "entrance");
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => setSectionVisible(entry.isIntersecting), { threshold: 0.12 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
   const chooseFloor = (floor: string) => { setActiveFloor(floor); setMode("floors"); };
   const chooseStart = (id: string) => {
     setStartId(id);
     const next = locations.find((item) => item.id === id);
-    if (next) { setActiveFloor(next.floor); setMode("floors"); }
+    if (next) setActiveFloor(next.floor);
   };
   const chooseDestination = (id: string) => {
     setDestinationId(id);
     const next = locations.find((item) => item.id === id);
-    if (next) { setActiveFloor(next.floor); setMode("floors"); }
+    if (next) setActiveFloor(next.floor);
   };
 
   return (
-    <section className="tch-campus-section" id="campus-explorer">
-      <div className="tch-section-index"><strong>02</strong><span>Campus explorer</span></div>
-      <div className="tch-campus-heading"><p>Eight connected levels · one shared infrastructure</p><h2>Khám phá hub <em>theo từng tầng.</em></h2><span>Mặt bằng được dựng lại theo đúng khối phòng, cửa, sảnh thang và hướng lên xuống của Cơ sở E.</span></div>
-      <div className="tch-explorer-toolbar" role="group" aria-label="Chế độ khám phá Campus E"><button className={mode === "building" ? "is-active" : ""} onClick={() => setMode("building")}>3D Building</button><button className={mode === "floors" ? "is-active" : ""} onClick={() => setMode("floors")}>Mặt bằng tầng</button><span>{mode === "building" ? (exploded ? "Các tầng đang tách để quan sát" : "Toàn bộ Campus E đang ở dạng một khối") : `${floorName(activeFloor)} · chọn phòng trực tiếp trên mặt bằng`}</span></div>
-      <div className={`tch-building-explorer mode-${mode}`}>
+    <section ref={sectionRef} className={`tch-campus-section${sectionVisible ? " is-visible" : ""}`} id="campus-explorer">
+      <div className="tch-section-index tch-campus-reveal stage-index"><strong>02</strong><span>Campus explorer</span></div>
+      <div className="tch-campus-heading tch-campus-reveal stage-heading"><p>Eight connected levels · one shared infrastructure</p><h2>Khám phá hub <em>theo từng tầng.</em></h2><span>Mặt bằng được dựng lại theo đúng khối phòng, cửa, sảnh thang và hướng lên xuống của Cơ sở E.</span></div>
+      <div className="tch-explorer-toolbar tch-campus-reveal stage-toolbar" role="group" aria-label="Chế độ khám phá Campus E"><button className={mode === "building" ? "is-active" : ""} onClick={() => setMode("building")}>3D Building</button><button className={mode === "floors" ? "is-active" : ""} onClick={() => setMode("floors")}>Mặt bằng tầng</button><span>{mode === "building" ? (exploded ? "Các tầng đang tách để quan sát" : "Toàn bộ Campus E đang ở dạng một khối") : `${floorName(activeFloor)} · chọn phòng trực tiếp trên mặt bằng`}</span></div>
+      <div className={`tch-building-explorer tch-campus-reveal stage-explorer mode-${mode}`}>
         {mode === "building" ? <div className="tch-building-panel is-model-viewer">
           <div className="tch-building-viewport is-webgl-viewer">
             <CampusModelViewer
