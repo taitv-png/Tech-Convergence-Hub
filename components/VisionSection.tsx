@@ -1,22 +1,60 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+const metrics = [
+  { value: 36, padded: false, label: "không gian công nghệ" },
+  { value: 7, padded: true, label: "cụm năng lực liên ngành" },
+  { value: 1, padded: true, label: "nền tảng đổi mới mở" },
+];
+
 export function VisionSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [counts, setCounts] = useState([0, 0, 0]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.22 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    const startedAt = performance.now();
+    let frame = 0;
+    const animate = (now: number) => {
+      const progress = Math.min(1, (now - startedAt) / 1500);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setCounts(metrics.map((metric) => Math.round(metric.value * eased)));
+      if (progress < 1) frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [visible]);
+
   return (
-    <section className="tch-intro" id="vision">
-      <div className="tch-kinetic-type" aria-hidden="true">
-        <div>HỘI TỤ CÔNG NGHỆ — THỬ NGHIỆM THỰC — CHIA SẺ TRI THỨC — HỘI TỤ CÔNG NGHỆ — THỬ NGHIỆM THỰC — CHIA SẺ TRI THỨC —</div>
-      </div>
-      <div className="tch-section-index">
+    <section className={`tch-intro${visible ? " is-visible" : ""}`} id="vision" ref={sectionRef}>
+      <div className="tch-section-index tch-reveal-stage stage-index">
         <span>01</span>
         <p>Tầm nhìn</p>
       </div>
 
       <div className="tch-intro-main">
-        <p className="tch-section-kicker">A shared platform for open innovation</p>
-        <h2>
+        <p className="tch-section-kicker tch-reveal-stage stage-heading">A shared platform for open innovation</p>
+        <h2 className="tch-reveal-stage stage-heading">
           Một hệ sinh thái được thiết kế để{" "}
           <em>công nghệ gặp nhau.</em>
         </h2>
 
-        <div className="tch-intro-columns">
+        <div className="tch-intro-columns tch-reveal-stage stage-copy">
           <p>
             Tech-Convergence Hub là hạt nhân của hệ sinh thái UniverCity Innovation Hub UEH — nơi tri thức
             liên ngành, công nghệ mũi nhọn và những bài toán thực tế cùng hiện diện trong một không gian mở.
@@ -27,10 +65,13 @@ export function VisionSection() {
           </p>
         </div>
 
-        <div className="tch-metrics" aria-label="Quy mô Tech-Convergence Hub">
-          <div><strong>36</strong><span>không gian công nghệ</span></div>
-          <div><strong>07</strong><span>cụm năng lực liên ngành</span></div>
-          <div><strong>01</strong><span>nền tảng đổi mới mở</span></div>
+        <div className="tch-metrics tch-reveal-stage stage-metrics" aria-label="Quy mô Tech-Convergence Hub">
+          {metrics.map((metric, index) => (
+            <div key={metric.label}>
+              <strong>{metric.padded ? String(counts[index]).padStart(2, "0") : counts[index]}</strong>
+              <span>{metric.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

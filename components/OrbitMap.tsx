@@ -443,10 +443,9 @@ export function OrbitMap() {
               roomAnchors={modelRoomAnchors}
               onFloorSelect={chooseFloor}
             />
-            <nav className="tch-building-floor-shortcuts" aria-label="Mở nhanh mặt bằng tầng">{FLOORS.map((floor) => <button key={floor} onClick={() => chooseFloor(floor)}>{floorCode(floor)}</button>)}</nav>
-            <div className="tch-rotation-readout">Mô hình thật · SketchUp Campus E</div>
+            {exploded && <nav className="tch-building-floor-shortcuts" aria-label="Mở nhanh mặt bằng tầng">{FLOORS.map((floor) => <button key={floor} onClick={() => chooseFloor(floor)}>{floorCode(floor)}</button>)}</nav>}
           </div>
-          <div className="tch-building-controls"><span>Kéo để xoay · cuộn để phóng to · bấm trực tiếp vào tầng để mở mặt bằng</span><button type="button" className={exploded ? "is-active" : ""} onClick={() => setExploded((value) => !value)}>{exploded ? "Ghép lại thành một khối" : "Tách các tầng để khám phá"}</button></div>
+          <div className="tch-building-controls"><span>{exploded ? "Kéo để xoay · cuộn để phóng to · bấm nhẹ vào tầng để mở mặt bằng" : "Kéo để xoay · cuộn để phóng to · tách tầng trước khi chọn mặt bằng"}</span><button type="button" className={exploded ? "is-active" : ""} onClick={() => setExploded((value) => !value)}>{exploded ? "Ghép lại thành một khối" : "Tách các tầng để khám phá"}</button></div>
         </div> : <div className="tch-floor-browser">
           <nav className="tch-floor-tabs" aria-label="Chọn tầng">{FLOORS.slice().reverse().map((floor) => <button className={activeFloor === floor ? "is-active" : ""} key={floor} onClick={() => setActiveFloor(floor)}><span>{floorCode(floor)}</span>{floorName(floor)}</button>)}</nav>
           <div className="tch-floor-workspace">

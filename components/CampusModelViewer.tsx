@@ -26,12 +26,13 @@ type FloorRecord = {
   container: THREE.Group;
   material: THREE.MeshStandardMaterial;
   bounds: THREE.Box3;
+  origin: THREE.Vector3;
+  baseY: number;
   floor: string;
 };
 
 const FLOORS = ["0", "1", "2", "3", "4", "5", "6", "7"];
-const COLLAPSED_FLOOR_GAP = 4.35;
-const EXPLODED_FLOOR_GAP = 9.2;
+const EXPLODED_FLOOR_GAP = 5.8;
 const ARCHITECTURE = new THREE.Color("#e9e4dc");
 const STRUCTURE = new THREE.Color("#8f8b84");
 const ROUTE = new THREE.Color("#ff914d");
@@ -42,10 +43,9 @@ function floorNodePrefix(floor: string) {
 }
 
 function localPoint(record: FloorRecord, point: PlanPoint, height = 0.42) {
-  const center = record.bounds.getCenter(new THREE.Vector3());
-  const x = THREE.MathUtils.lerp(record.bounds.min.x, record.bounds.max.x, point.x / 100) - center.x;
-  const z = THREE.MathUtils.lerp(record.bounds.max.z, record.bounds.min.z, point.y / 100) - center.z;
-  return new THREE.Vector3(x, height, z);
+  const x = THREE.MathUtils.lerp(record.bounds.min.x, record.bounds.max.x, point.x / 100) - record.origin.x;
+  const z = THREE.MathUtils.lerp(record.bounds.max.z, record.bounds.min.z, point.y / 100) - record.origin.z;
+  return new THREE.Vector3(x, record.bounds.max.y - record.origin.y + height, z);
 }
 
 function connectionPoint(floor: string, connection: ConnectionId): PlanPoint | null {
@@ -128,32 +128,61 @@ export function CampusModelViewer({
     scene.add(rimLight);
 
     const building = new THREE.Group();
+    building.rotation.y = -Math.PI / 2;
     scene.add(building);
     const context = new THREE.Group();
     scene.add(context);
     const movingCars: { object: THREE.Group; speed: number; limit: number; direction: number }[] = [];
     const routeLayer = new THREE.Group();
     routeLayerRef.current = routeLayer;
-    scene.add(routeLayer);
+    building.add(routeLayer);
 
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
     const loader = new ColladaLoader();
     let disposed = false;
 
-    loader.loadAsync(`${basePath}/models/campus-e/campus-e-source.dae`).then((collada) => {
+    const loadCampusModel = async () => {
+      if ("DecompressionStream" in window) {
+        const response = await fetch(`${basePath}/models/campus-e/campus-e-source.dae.gz`);
+        if (!response.ok || !response.body) throw new Error(`Campus E compressed model returned ${response.status}`);
+        const stream = response.body.pipeThrough(new DecompressionStream("gzip"));
+        const source = await new Response(stream).text();
+        return loader.parse(source, `${basePath}/models/campus-e/`);
+      }
+      return loader.loadAsync(`${basePath}/models/campus-e/campus-e-source.dae`);
+    };
+
+    loadCampusModel().then((collada) => {
       if (disposed) return;
       if (!collada) throw new Error("Campus E DAE did not return a scene");
       collada.scene.updateMatrixWorld(true);
 
+      const floorSources = new Map<string, { source: THREE.Object3D; bounds: THREE.Box3 }>();
+      const campusRawBounds = new THREE.Box3();
       FLOORS.forEach((floor) => {
         let source: THREE.Object3D | undefined;
         collada.scene.traverse((object) => {
           if (!source && typeof object.name === "string" && object.name.startsWith(floorNodePrefix(floor))) source = object;
         });
         if (!source) throw new Error(`Missing Campus E floor node ${floor}`);
+        const bounds = new THREE.Box3().setFromObject(source);
+        floorSources.set(floor, { source, bounds });
+        campusRawBounds.union(bounds);
+      });
+      const rawCenter = campusRawBounds.getCenter(new THREE.Vector3());
+      const horizontalOrigin = new THREE.Vector3(rawCenter.x, 0, rawCenter.z);
+      const floorBaseY = new Map<string, number>();
+      let stackedY = 0;
+      FLOORS.forEach((floor) => {
+        const height = floorSources.get(floor)!.bounds.getSize(new THREE.Vector3()).y;
+        floorBaseY.set(floor, stackedY);
+        stackedY += Math.max(0.3, height * 0.62);
+      });
 
-        const rawBounds = new THREE.Box3().setFromObject(source);
-        const center = rawBounds.getCenter(new THREE.Vector3());
+      FLOORS.forEach((floor) => {
+        const floorSource = floorSources.get(floor)!;
+        const source = floorSource.source;
+        const rawBounds = floorSource.bounds;
         const material = new THREE.MeshStandardMaterial({
           color: ARCHITECTURE,
           roughness: 0.82,
@@ -180,15 +209,17 @@ export function CampusModelViewer({
         object.castShadow = false;
         object.receiveShadow = false;
         object.userData.floor = floor;
-        object.position.set(-center.x, -rawBounds.min.y, -center.z);
+        const origin = new THREE.Vector3(horizontalOrigin.x, rawBounds.min.y, horizontalOrigin.z);
+        const baseY = floorBaseY.get(floor) ?? 0;
+        object.position.set(-origin.x, -origin.y, -origin.z);
 
         const container = new THREE.Group();
-        container.position.y = Number(floor) * (explodedRef.current ? EXPLODED_FLOOR_GAP : COLLAPSED_FLOOR_GAP);
+        container.position.y = baseY + (explodedRef.current ? Number(floor) * EXPLODED_FLOOR_GAP : 0);
         container.userData.floor = floor;
         container.add(object);
         building.add(container);
 
-        const record: FloorRecord = { container, material, bounds: rawBounds, floor };
+        const record: FloorRecord = { container, material, bounds: rawBounds, origin, baseY, floor };
         floorRecordsRef.current.set(floor, record);
 
         (roomAnchors[floor] ?? []).forEach((room) => {
@@ -211,8 +242,8 @@ export function CampusModelViewer({
       const campusBounds = new THREE.Box3().setFromObject(building);
       const campusSize = campusBounds.getSize(new THREE.Vector3());
       const campusCenter = campusBounds.getCenter(new THREE.Vector3());
-      const contextWidth = Math.max(52, campusSize.x * 2.5);
-      const contextDepth = Math.max(42, campusSize.z * 2.1);
+      const contextWidth = Math.max(68, campusSize.x * 3.2);
+      const contextDepth = Math.max(56, campusSize.z * 2.8);
       const ground = new THREE.Mesh(
         new THREE.PlaneGeometry(contextWidth, contextDepth),
         new THREE.MeshStandardMaterial({ color: 0x242422, roughness: 1, metalness: 0 }),
@@ -221,9 +252,10 @@ export function CampusModelViewer({
       ground.position.set(campusCenter.x, -0.24, campusCenter.z + campusSize.z * 0.12);
       context.add(ground);
 
-      const roadZ = campusBounds.max.z + Math.max(7, campusSize.z * 0.3);
+      const roadWidth = Math.max(9, campusSize.z * 0.28);
+      const roadZ = campusBounds.max.z + roadWidth * 0.78;
       const road = new THREE.Mesh(
-        new THREE.PlaneGeometry(contextWidth, Math.max(7.5, campusSize.z * 0.22)),
+        new THREE.PlaneGeometry(contextWidth, roadWidth),
         new THREE.MeshStandardMaterial({ color: 0x101010, roughness: 0.96 }),
       );
       road.rotation.x = -Math.PI / 2;
@@ -238,10 +270,19 @@ export function CampusModelViewer({
         context.add(marking);
       });
 
+      const sidewalkMaterial = new THREE.MeshStandardMaterial({ color: 0x58534d, roughness: 1 });
+      [-roadWidth * 0.57, roadWidth * 0.57].forEach((offset) => {
+        const sidewalk = new THREE.Mesh(new THREE.BoxGeometry(contextWidth, 0.18, 2.2), sidewalkMaterial);
+        sidewalk.position.set(campusCenter.x, -0.08, roadZ + offset);
+        context.add(sidewalk);
+      });
+
       const blockMaterial = new THREE.MeshStandardMaterial({ color: 0x343432, roughness: 0.92 });
       const blockSpecs = [
-        [-0.82, -0.7, 0.34, 0.42, 0.3], [0.86, -0.72, 0.3, 0.36, 0.23],
-        [-0.88, 0.12, 0.25, 0.3, 0.2], [0.9, 0.08, 0.28, 0.34, 0.27],
+        [-0.82, -0.72, 0.27, 0.3, 0.34], [0.83, -0.74, 0.25, 0.28, 0.26],
+        [-0.86, -0.18, 0.22, 0.25, 0.2], [0.88, -0.18, 0.23, 0.28, 0.3],
+        [-0.68, 0.38, 0.18, 0.2, 0.15], [0.7, 0.34, 0.2, 0.23, 0.2],
+        [-0.3, -0.92, 0.24, 0.18, 0.2], [0.34, -0.9, 0.22, 0.2, 0.25],
       ];
       blockSpecs.forEach(([x, z, w, d, h]) => {
         const block = new THREE.Mesh(
@@ -252,7 +293,40 @@ export function CampusModelViewer({
         context.add(block);
       });
 
-      const carColors = [0xeb681c, 0xd8d3cc, 0x73706b, 0xa7332c];
+      const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x4b3325, roughness: 1 });
+      const crownMaterial = new THREE.MeshStandardMaterial({ color: 0x556346, roughness: 0.95 });
+      const addTree = (x: number, z: number, scale = 1) => {
+        const tree = new THREE.Group();
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * scale, 0.16 * scale, 1.5 * scale, 6), trunkMaterial);
+        trunk.position.y = 0.75 * scale;
+        const crown = new THREE.Mesh(new THREE.IcosahedronGeometry(0.78 * scale, 0), crownMaterial);
+        crown.position.y = 1.75 * scale;
+        tree.add(trunk, crown);
+        tree.position.set(x, 0, z);
+        context.add(tree);
+      };
+      for (let index = 0; index < 12; index += 1) {
+        const x = campusCenter.x - contextWidth * 0.42 + index * (contextWidth * 0.84 / 11);
+        addTree(x, roadZ - roadWidth * 0.62, 0.84 + (index % 3) * 0.08);
+      }
+      [[-0.42, -0.18], [0.46, -0.22], [-0.58, 0.06], [0.6, 0.02], [-0.34, 0.24], [0.38, 0.26]].forEach(([x, z], index) => {
+        addTree(campusCenter.x + contextWidth * x, campusCenter.z + contextDepth * z, 0.86 + (index % 2) * 0.14);
+      });
+
+      const peopleMaterial = new THREE.MeshStandardMaterial({ color: 0xe6ddd2, roughness: 0.9 });
+      const peopleAccent = new THREE.MeshStandardMaterial({ color: 0xeb681c, roughness: 0.75 });
+      for (let index = 0; index < 10; index += 1) {
+        const person = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.16, 0.75, 6), index % 4 === 0 ? peopleAccent : peopleMaterial);
+        body.position.y = 0.48;
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.14, 7, 5), peopleMaterial);
+        head.position.y = 0.98;
+        person.add(body, head);
+        person.position.set(campusCenter.x - contextWidth * 0.34 + index * contextWidth * 0.072, 0, roadZ - roadWidth * 0.62 + (index % 2 ? 0.55 : -0.45));
+        context.add(person);
+      }
+
+      const carColors = [0xeb681c, 0xd8d3cc, 0x73706b, 0xa7332c, 0x48606a, 0xe1b34b, 0x685a72, 0xb8b4ae];
       carColors.forEach((color, index) => {
         const car = new THREE.Group();
         const body = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.62, 1.05), new THREE.MeshStandardMaterial({ color, roughness: 0.56 }));
@@ -278,7 +352,15 @@ export function CampusModelViewer({
 
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
+    let pointerDown: { x: number; y: number } | null = null;
+    const rememberPointer = (event: PointerEvent) => {
+      pointerDown = { x: event.clientX, y: event.clientY };
+    };
     const handlePointer = (event: PointerEvent) => {
+      if (!explodedRef.current || !pointerDown) return;
+      const movement = Math.hypot(event.clientX - pointerDown.x, event.clientY - pointerDown.y);
+      pointerDown = null;
+      if (movement > 6) return;
       const rect = renderer.domElement.getBoundingClientRect();
       pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -287,6 +369,7 @@ export function CampusModelViewer({
       const floor = hit?.object.userData.floor as string | undefined;
       if (floor) onFloorSelectRef.current(floor);
     };
+    renderer.domElement.addEventListener("pointerdown", rememberPointer);
     renderer.domElement.addEventListener("pointerup", handlePointer);
 
     const resize = () => {
@@ -328,6 +411,7 @@ export function CampusModelViewer({
       cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      renderer.domElement.removeEventListener("pointerdown", rememberPointer);
       renderer.domElement.removeEventListener("pointerup", handlePointer);
       controls.dispose();
       renderer.dispose();
@@ -348,7 +432,7 @@ export function CampusModelViewer({
     const routeLayer = routeLayerRef.current;
     const starts = new Map<string, number>();
     records.forEach((record, floor) => starts.set(floor, record.container.position.y));
-    const targetGap = exploded ? EXPLODED_FLOOR_GAP : COLLAPSED_FLOOR_GAP;
+    const targetGap = exploded ? EXPLODED_FLOOR_GAP : 0;
     const startedAt = performance.now();
     let animationFrame = 0;
     if (routeLayer) routeLayer.visible = false;
@@ -357,11 +441,11 @@ export function CampusModelViewer({
       const eased = 1 - Math.pow(1 - progress, 3);
       records.forEach((record, floor) => {
         const from = starts.get(floor) ?? 0;
-        record.container.position.y = THREE.MathUtils.lerp(from, Number(floor) * targetGap, eased);
+        record.container.position.y = THREE.MathUtils.lerp(from, record.baseY + Number(floor) * targetGap, eased);
       });
       if (progress < 1) animationFrame = requestAnimationFrame(animateLayout);
       else {
-        if (routeLayer) routeLayer.visible = true;
+        if (routeLayer) routeLayer.visible = exploded;
         setLayoutRevision((value) => value + 1);
       }
     };
@@ -373,6 +457,7 @@ export function CampusModelViewer({
     const records = floorRecordsRef.current;
     const routeLayer = routeLayerRef.current;
     if (!routeLayer || loadState !== "ready") return;
+    routeLayer.visible = exploded;
 
     while (routeLayer.children.length) {
       const child = routeLayer.children.pop()!;
@@ -393,7 +478,7 @@ export function CampusModelViewer({
         if (!(object instanceof CSS2DObject)) return;
         const element = object.element as HTMLElement;
         element.classList.toggle("is-muted", !routeEmphasized);
-        element.hidden = !routeEmphasized;
+        element.hidden = !exploded || !routeEmphasized;
         element.classList.toggle("is-active-floor", floor === activeFloor);
       });
     });

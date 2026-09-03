@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 const partners = [
   { name: "UEH", src: "/logos/ueh.png", width: 240, height: 90 },
@@ -14,14 +17,29 @@ const partners = [
 
 export function PartnerMarquee() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
   const firstRow = partners.slice(0, 5);
   const secondRow = partners.slice(5);
 
   const repeatedFirstRow = [...firstRow, ...firstRow, ...firstRow];
   const repeatedSecondRow = [...secondRow, ...secondRow, ...secondRow];
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.18 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="container section partner-section" id="partner-section" aria-label="Mạng lưới đối tác quốc tế">
+    <section ref={sectionRef} className={`container section partner-section${visible ? " is-visible" : ""}`} id="partner-section" aria-label="Mạng lưới đối tác quốc tế">
       <div className="section-head partner-head">
         <div className="partner-index"><span>03</span><small>Network</small></div>
         <div className="partner-title">
@@ -70,3 +88,4 @@ export function PartnerMarquee() {
     </section>
   );
 }
+
