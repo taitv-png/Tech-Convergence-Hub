@@ -1,49 +1,39 @@
-import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { NewsSection } from "@/components/NewsSection";
-import { ProjectIntroStrip } from "@/components/ProjectIntroStrip";
-import { ProjectSideNav } from "@/components/ProjectSideNav";
-import { siteNavItems } from "@/components/siteNavItems";
-
+import { Footer } from "@/components/Footer";
+import { news } from "@/data/labs";
+import Link from "next/link";
+import { Arrow } from "@/components/Arrow";
+export const metadata = { title: "Tin & Hoạt động | Tech-Convergence Hub" };
 export default function NewsPage() {
   return (
     <>
       <Header />
-      <main>
-        <section className="container page-title-wrap news-title-grid news-title-wrap" id="news-title">
-          <div>
-            <h1 className="page-title">Tin tức</h1>
-            <p className="lead news-lead">
-              Cập nhật định hướng, cơ chế vận hành và danh mục đầu tư của
-              Tech-Convergence Hub theo hồ sơ đề xuất mới nhất.
-            </p>
-          </div>
-          <div className="news-title-media" aria-hidden="true" />
+      <main id="main-content">
+        <section className="site-container directory-hero">
+          <p className="eyebrow">TIN & HOẠT ĐỘNG</p>
+          <h1>
+            Những kết nối mới.
+            <br />
+            Những chuyển động mới.
+          </h1>
+          <p>
+            Định hướng phát triển, hoạt động nghiên cứu và câu chuyện vận hành của hệ sinh thái TCH.
+          </p>
         </section>
-        <section className="project-page-section">
-          <div className="container project-page-layout">
-            <ProjectSideNav
-              ariaLabel="Điều hướng trong mục tin tức"
-              backHref="/"
-              backLabel="Overview"
-              kicker="In this Project:"
-              links={siteNavItems.map((item) => ({
-                href: item.href,
-                label: item.label,
-                current: item.label === "Tin & sự kiện",
-              }))}
-            />
-
-            <div className="project-page-content">
-              <ProjectIntroStrip
-                id="news-intro"
-                title="Tin tức và hoạt động"
-                description="Mục Tin tức được tổ chức như lớp vận hành của Tech-Convergence Hub, nơi ghi nhận các quyết định quản trị, tiến độ triển khai, quan hệ hợp tác và các mốc hoạt động quan trọng của dự án. Nội dung ở đây phản ánh những gì đang thay đổi trong hệ sinh thái: từ định hướng chiến lược, phân bổ nguồn lực, đến các chương trình làm việc, công bố và sự kiện kết nối với đối tác. Cấu trúc này giúp người đọc theo dõi nhanh nhịp phát triển của dự án, đồng thời nhìn thấy mối liên hệ giữa hạ tầng labs, hoạt động nghiên cứu và truyền thông cập nhật của toàn hệ thống."
-              />
-            </div>
-          </div>
-
-          <NewsSection showHeader={false} />
+        <section className="site-container home-news-grid news-directory">
+          {news.map((item, index) => (
+            <Link className="editorial-card" href={"/news/" + (index + 1)} key={item.title}>
+              <span className="space-meta">
+                <span>{item.category}</span>
+                <span>{item.date}</span>
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.excerpt}</p>
+              <span className="text-link">
+                Đọc bài viết <Arrow diagonal />
+              </span>
+            </Link>
+          ))}
         </section>
       </main>
       <Footer />

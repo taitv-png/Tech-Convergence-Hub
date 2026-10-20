@@ -1,0 +1,297 @@
+/* Intro: "Trường hội tụ" hero and the technology explorer that follows it.
+   One motion (ConvergenceField canvas). Text and controls never move with the pointer. */
+.cv-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  min-height: clamp(600px, calc(100svh - var(--header-height)), 860px);
+  border-bottom: 1px solid var(--line);
+}
+.cv-field {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.cv-field canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Keeps the reading column calm: the field fades out behind the copy. */
+.cv-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--bg) 0%,
+    color-mix(in srgb, var(--bg) 84%, transparent) 36%,
+    transparent 64%
+  );
+}
+.cv-hero-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-block);
+  padding-block: clamp(56px, 9vh, 112px) 24px;
+}
+.cv-hero-copy {
+  max-width: 660px;
+}
+.cv-hero-copy > * {
+  animation: cv-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.cv-hero-copy > :nth-child(2) {
+  animation-delay: 60ms;
+}
+.cv-hero-copy > :nth-child(3) {
+  animation-delay: 120ms;
+}
+.cv-hero-copy > :nth-child(4) {
+  animation-delay: 180ms;
+}
+body .cv-hero h1 {
+  max-width: none;
+  margin: 28px 0;
+  font-size: var(--type-display);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+.cv-hero h1 > span {
+  display: block;
+}
+.cv-hero h1 .cv-accent {
+  color: var(--accent);
+}
+body p.cv-hero-lede {
+  max-width: 27em;
+  margin: 0 0 40px;
+  font-size: var(--type-title);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.cv-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+}
+.cv-hero-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-strong);
+  font-size: var(--type-xs);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+body .cv-hero-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  color: var(--text) !important;
+}
+body .cv-hero-meta a:hover {
+  color: var(--accent) !important;
+}
+
+/* 01 Technology directions: picker + result. The heading row above never changes. */
+.cv-tech-body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+.cv-tech-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(6, auto);
+  grid-auto-flow: column;
+  column-gap: 32px;
+  border-top: 1px solid var(--line-strong);
+}
+.cv-tech-picker button {
+  display: grid;
+  grid-template-columns: 28px 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 60px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--type-body);
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+.cv-tech-number {
+  font-size: var(--type-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.cv-tech-signal {
+  display: block;
+  width: 10px;
+  height: 1px;
+  background: var(--line-strong);
+  transition:
+    width 200ms ease,
+    background 200ms ease;
+}
+.cv-tech-picker button:hover,
+.cv-tech-picker button.is-selected,
+.cv-tech-picker button.is-selected .cv-tech-number {
+  color: var(--accent);
+}
+.cv-tech-picker button:hover .cv-tech-signal,
+.cv-tech-picker button.is-selected .cv-tech-signal {
+  width: 24px;
+  background: var(--accent);
+}
+.cv-tech-picker button:focus-visible {
+  outline-offset: 2px;
+}
+.cv-tech-result {
+  min-height: 640px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-strong);
+}
+.cv-tech-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  font-size: var(--type-xs) !important;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.cv-tech-meta > span:first-child {
+  color: var(--accent);
+}
+body .cv-tech-result h3 {
+  margin: 28px 0 12px;
+  font-size: var(--type-section);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+body p.cv-tech-description {
+  max-width: 30em;
+  margin: 0 0 32px;
+  font-size: var(--type-title);
+  line-height: 1.55;
+  color: var(--muted);
+}
+.cv-tech-result > .text-link {
+  margin-top: 24px;
+}
+.cv-tech-result .cv-lab-rows {
+  animation: cv-fade 240ms ease both;
+}
+
+@keyframes cv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes cv-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .cv-hero-meta {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .cv-hero-meta > span:nth-child(2) {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .cv-hero {
+    min-height: 0;
+  }
+  .cv-field::after {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--bg) 72%, transparent) 30%,
+      color-mix(in srgb, var(--bg) 86%, transparent) 100%
+    );
+  }
+  .cv-hero-inner {
+    padding-block: 136px 16px;
+  }
+  .cv-tech-body {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .cv-tech-result {
+    min-height: 0;
+  }
+}
+@media (max-width: 640px) {
+  body .cv-hero h1 {
+    margin: 22px 0;
+    line-height: 1.18;
+  }
+  body p.cv-hero-lede {
+    font-size: var(--type-body);
+    margin-bottom: 32px;
+  }
+  .cv-actions {
+    gap: 12px 24px;
+  }
+  .cv-hero-meta > span:first-child {
+    font-size: var(--type-xs);
+  }
+  .cv-tech-picker {
+    column-gap: 20px;
+  }
+  .cv-tech-picker button {
+    grid-template-columns: 22px 16px minmax(0, 1fr);
+    gap: 6px;
+    min-height: 56px;
+    font-size: var(--type-sm);
+  }
+  .cv-tech-picker button.is-selected .cv-tech-signal,
+  .cv-tech-picker button:hover .cv-tech-signal {
+    width: 16px;
+  }
+  body p.cv-tech-description {
+    font-size: var(--type-body);
+    margin-bottom: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-hero-copy > *,
+  .cv-tech-result .cv-lab-rows {
+    animation: none;
+  }
+  .cv-tech-picker button,
+  .cv-tech-signal {
+    transition: none;
+  }
+}

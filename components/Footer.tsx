@@ -1,81 +1,49 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const primaryLinks = [
-  { label: "Về Technology Convergence Hub", href: "/" },
-  { label: "Tin & sự kiện", href: "/news" },
-  { label: "Giáo dục", href: "/" },
-  { label: "Danh mục labs", href: "/labs" },
-  { label: "Nhân sự", href: "/" },
-];
-
-const exploreLinks = [
-  { label: "Video", href: "/news" },
-  { label: "Ấn phẩm", href: "/news" },
-  { label: "Liên hệ", href: "/" },
-];
-
-const socialLinks = [
-  { label: "X", href: "https://x.com" },
-  { label: "Facebook", href: "https://facebook.com" },
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "YouTube", href: "https://youtube.com" },
-];
-
+import { Arrow } from "./Arrow";
 export function Footer() {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
   return (
-    <footer className="footer">
-      <div className="container footer-inner">
-        <div className="footer-column footer-column-main no-symbol">
-          <nav className="footer-link-list footer-link-list-main" aria-label="Điều hướng chính">
-            {primaryLinks.map((item) => (
-              <Link key={item.label} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div className="footer-column">
-          <span className="footer-heading">Khám phá thêm</span>
-          <nav className="footer-link-list" aria-label="Khám phá thêm">
-            {exploreLinks.map((item) => (
-              <Link key={item.label} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div className="footer-column footer-column-side">
-          <div className="footer-social" aria-label="Kênh xã hội">
-            {socialLinks.map((item) => (
-              <a key={item.label} href={item.href} target="_blank" rel="noreferrer">
-                {item.label}
-              </a>
-            ))}
+    <footer className="site-footer" id="contact">
+      <div className="site-container">
+        <div className="footer-top">
+          <div>
+            <Image
+              src={(process.env.NEXT_PUBLIC_BASE_PATH ?? "") + "/tch-logo-lockup.png"}
+              width={200}
+              height={70}
+              alt="Tech-Convergence Hub"
+            />
+            <p>
+              Tri thức liên ngành.
+              <br />
+              Công nghệ hội tụ. Giá trị thực tiễn.
+            </p>
           </div>
-
-          <div className="footer-signature">
-            <a className="footer-ueh-logo-link" href="https://ueh.edu.vn/" target="_blank" rel="noreferrer">
-              <Image
-                className="footer-ueh-logo"
-                src={`${basePath}/logos/ueh.png`}
-                alt="UEH"
-                width={240}
-                height={90}
-              />
+          <div>
+            <span className="eyebrow">Khám phá</span>
+            <Link href="/labs">Không gian & Labs</Link>
+            <Link href="/explore">Bản đồ & Tham quan 3D</Link>
+            <Link href="/news">Tin & hoạt động</Link>
+          </div>
+          <div>
+            <span className="eyebrow">Kết nối với TCH</span>
+            <a href="mailto:tch@ueh.edu.vn">
+              tch@ueh.edu.vn <Arrow diagonal />
             </a>
-            <p>Đại học Kinh tế Thành phố Hồ Chí Minh</p>
+            <p>
+              Campus E, UEH
+              <br />
+              54 Nguyễn Văn Thủ, TP. Hồ Chí Minh
+            </p>
+            <a href="https://iscm.ueh.edu.vn/" target="_blank" rel="noreferrer">
+              ISCM, UEH <Arrow diagonal />
+            </a>
           </div>
-
-          <div className="footer-contact" aria-label="Thông tin liên hệ Technology Convergence Hub">
-            <a href="mailto:tch@ueh.edu.vn">tch@ueh.edu.vn</a>
-            <p>54 Nguyễn Văn Thủ, Tân Định, Hồ Chí Minh</p>
-          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} Tech-Convergence Hub</span>
+          <span>Nền tảng nghiên cứu và đổi mới mở tại UEH</span>
+          <a href="#main-content">Về đầu trang ↑</a>
         </div>
       </div>
     </footer>

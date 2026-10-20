@@ -3,183 +3,79 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
-type NavItem = {
-  href: string;
-  label: string;
-};
-
-function MenuIcon() {
-  return (
-    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4 7h16M4 12h16M4 17h16" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="11" cy="11" r="6" />
-      <path d="M20 20l-4.2-4.2" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" />
-    </svg>
-  );
-}
-
-const navItems = [
-  { href: "/", label: "Về Technology Convergence Hub" },
-  { href: "/news", label: "Tin & sự kiện" },
-  { href: "/", label: "Giáo dục" },
-  { href: "/labs", label: "Danh mục labs" },
-  { href: "/", label: "Nhân sự" },
-  { href: "/news", label: "Video" },
-  { href: "/news", label: "Ấn phẩm" },
-  { href: "/", label: "Liên hệ" },
-] satisfies NavItem[];
-
+import { Arrow } from "./Arrow";
+const items = [
+  { href: "/", label: "Trang chủ" },
+  { href: "/#about", label: "Về TCH" },
+  { href: "/labs", label: "Không gian & Labs" },
+  { href: "/news", label: "Tin & hoạt động" },
+];
 export function Header() {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const pathname = usePathname();
-  const [isOverlay, setIsOverlay] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
-    const isHeroRoute =
-      pathname === "/" ||
-      pathname === "/labs" ||
-      pathname === "/news" ||
-      /^\/labs\/[^/]+$/.test(pathname) ||
-      /^\/news\/[^/]+$/.test(pathname);
-
-    const getHeroTransitionPoint = () => {
-      const heroMedia = document.querySelector<HTMLElement>(
-        ".hero-media-main, .page-title-media, .news-title-media, .lab-detail-media, .news-detail-media"
-      );
-
-      if (!heroMedia) {
-        return 56;
-      }
-
-      const heroBottom = heroMedia.getBoundingClientRect().bottom + window.scrollY;
-      const headerHeight = 76;
-      const earlyOffset = 32;
-
-      return Math.max(56, heroBottom - headerHeight - earlyOffset);
-    };
-
-    const updateHeaderMode = () => {
-      if (!isHeroRoute) {
-        setIsOverlay(false);
-        return;
-      }
-
-      const transitionPoint = getHeroTransitionPoint();
-      setIsOverlay(window.scrollY <= transitionPoint);
-    };
-
-    updateHeaderMode();
-    window.addEventListener("scroll", updateHeaderMode, { passive: true });
-    window.addEventListener("resize", updateHeaderMode);
-
-    return () => {
-      window.removeEventListener("scroll", updateHeaderMode);
-      window.removeEventListener("resize", updateHeaderMode);
-    };
+    setOpen(false);
   }, [pathname]);
-
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
-  const isActive = (item: NavItem) => {
-    const href = item.href;
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
-
+    if (!open) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [open]);
   return (
-    <header className={`header ${isOverlay ? "header-overlay" : "header-solid"}`}>
-      <div className="container nav">
-        <Link className="logo" href="/">
-          <Image
-            className="logo-lockup"
-            src={`${basePath}/tch-logo-lockup.png`}
-            width={307}
-            height={107}
-            alt="Tech Convergence Hub"
-            priority
-          />
-        </Link>
-
-        <div className="nav-tools" aria-label="Công cụ điều hướng">
-          <button className="nav-icon-btn" type="button" aria-label="Tìm kiếm" title="Tìm kiếm">
-            <SearchIcon />
-          </button>
-
-          <button className="nav-icon-btn" type="button" aria-label="Đăng nhập" title="Đăng nhập">
-            <UserIcon />
-          </button>
-
+    <>
+      <a className="skip-link" href="#main-content">
+        Đi đến nội dung
+      </a>
+      <header className="site-header">
+        <div className="site-container header-row">
+          <Link href="/" aria-label="TCH, trang chủ">
+            <Image
+              src={(process.env.NEXT_PUBLIC_BASE_PATH ?? "") + "/tch-logo-lockup.png"}
+              alt="Tech-Convergence Hub"
+              width={172}
+              height={60}
+              priority
+              className="brand-image"
+            />
+          </Link>
           <button
-            className="mobile-toggle nav-icon-btn"
             type="button"
-            aria-expanded={isMenuOpen}
-            aria-controls="primary-nav"
-            aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
-            title={isMenuOpen ? "Đóng menu" : "Mở menu"}
-            onClick={() => setIsMenuOpen((prev) => !prev)}
+            className="menu-toggle"
+            aria-label={open ? "Đóng menu" : "Mở menu"}
+            aria-expanded={open}
+            aria-controls="site-navigation"
+            onClick={() => setOpen(!open)}
           >
-            {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
-            <span className="sr-only">{isMenuOpen ? "Đóng" : "Menu"}</span>
+            {open ? "Đóng ×" : "Menu ☰"}
           </button>
-        </div>
-
-        <nav id="primary-nav" className={`nav-links ${isMenuOpen ? "is-open" : ""}`}>
-          <button
-            className="nav-close nav-icon-btn"
-            type="button"
-            aria-label="Đóng menu"
-            title="Đóng menu"
-            onClick={() => setIsMenuOpen(false)}
+          <nav
+            id="site-navigation"
+            className={"site-navigation " + (open ? "is-open" : "")}
+            aria-label="Điều hướng chính"
           >
-            <CloseIcon />
-            <span className="sr-only">Đóng</span>
-          </button>
-
-          {navItems.map((item) => {
-            const active = isActive(item);
-
-            return (
+            {items.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={active ? "active" : undefined}
-                aria-current={active ? "page" : undefined}
-                onClick={() => setIsMenuOpen(false)}
+                aria-current={pathname === item.href ? "page" : undefined}
+                onClick={() => setOpen(false)}
               >
                 {item.label}
               </Link>
-            );
-          })}
-        </nav>
-      </div>
-    </header>
+            ))}
+            <Link
+              className="button button-dark nav-explore"
+              href="/explore"
+              onClick={() => setOpen(false)}
+            >
+              Tham quan Campus E <Arrow diagonal />
+            </Link>
+          </nav>
+        </div>
+      </header>
+    </>
   );
 }

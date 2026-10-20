@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { Arrow } from "@/components/Arrow";
 import { news } from "../../../data/labs";
 
 type Props = { params: Promise<{ id: string }> };
@@ -38,29 +39,27 @@ export default async function NewsDetailPage({ params }: Props) {
   return (
     <>
       <Header />
-      <main>
-        <section className="container page-hero">
-          <Link className="back-link" href="/news">
-            ← Quay lại
-          </Link>
-          <div className="page-box news-detail-hero">
-            <article className="news-detail-media">
-              <div className="news-detail-overlay">
-                <div className="news-meta">
-                  <span>{item.category}</span>
-                  <span>{item.date}</span>
-                </div>
-                <h1>{item.title}</h1>
-                <p className="lead">{item.excerpt}</p>
-              </div>
-            </article>
+      <main id="main-content" className="cv-detail">
+        <article className="site-container cv-article">
+          <nav className="cv-breadcrumb" aria-label="Vị trí trang">
+            <Link href="/news">Tin & hoạt động</Link>
+            <span aria-hidden="true">/</span>
+            <span>{item.category}</span>
+          </nav>
+          <p className="eyebrow">
+            <span className="orange-dot" /> {item.category.toUpperCase()} · {item.date}
+          </p>
+          <h1>{item.title}</h1>
+          <p className="cv-detail-lede">{item.excerpt}</p>
+          <div className="cv-actions">
+            <Link className="button button-orange" href="/labs">
+              Khám phá labs <Arrow />
+            </Link>
+            <Link className="text-link" href="/news">
+              Tất cả bài viết <Arrow />
+            </Link>
           </div>
-          <div className="news-detail-gallery" aria-hidden="true">
-            <div className="news-slot news-slot-wide" />
-            <div className="news-slot" />
-            <div className="news-slot" />
-          </div>
-        </section>
+        </article>
       </main>
       <Footer />
     </>

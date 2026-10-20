@@ -1,0 +1,2811 @@
+/* Existing campus source, isolated from site styling. */
+.wayfinding-scope .room-render-gallery {
+  margin-top: 26px;
+}
+.wayfinding-scope .room-render-gallery figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #20292c;
+}
+.wayfinding-scope .room-render-gallery figure > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.wayfinding-scope .room-render-gallery figcaption {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 13px;
+  font-size: var(--type-sm);
+  color: #e8eceb;
+}
+.wayfinding-scope .room-render-gallery figcaption span {
+  color: #a4b4b9;
+}
+.wayfinding-scope .render-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 11px;
+}
+.wayfinding-scope .render-thumbnails button {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #3a4549;
+  border-radius: 5px;
+  background: #172024;
+  color: #c9d2d4;
+  text-align: left;
+  cursor: pointer;
+}
+.wayfinding-scope .render-thumbnails button[aria-pressed="true"] {
+  border-color: #f38a4d;
+  box-shadow: 0 0 0 1px #f38a4d;
+}
+.wayfinding-scope .render-thumbnails img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.wayfinding-scope .render-thumbnails span {
+  display: block;
+  padding: 8px;
+  font-size: var(--type-xs);
+  line-height: 1.4;
+}
+.wayfinding-scope .room-render-gallery button:focus-visible {
+  outline: 2px solid #ffa166;
+  outline-offset: 3px;
+}
+.wayfinding-scope .room-preview .room-canvas {
+  min-height: 540px;
+}
+.wayfinding-scope .room-options label {
+  font-size: var(--type-xs);
+  color: #375460;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.wayfinding-scope .room-options select {
+  background: white;
+  color: #284c5c;
+  border: 1px solid #bbc8cd;
+  padding: 7px;
+  border-radius: 5px;
+}
+.wayfinding-scope .room-item-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+  background: #e9edef;
+  border-top: 1px solid #ced7d9;
+}
+.wayfinding-scope .room-item-list button {
+  font-size: var(--type-xs);
+  padding: 7px 10px;
+}
+.wayfinding-scope .room-item-list button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.wayfinding-scope .room-preview .room-source-note {
+  font-size: var(--type-xs);
+  color: #536775;
+  margin: 0;
+  padding: 0 22px 14px;
+  line-height: 1.55;
+}
+.wayfinding-scope .room-preview .walk-controls {
+  bottom: 195px;
+}
+.wayfinding-scope .room-preview .walk-controls .jump-button {
+  width: auto;
+  font-size: var(--type-sm);
+  padding: 8px 14px;
+  background: #007f81;
+}
+.wayfinding-scope .room-preview .station-detail {
+  bottom: 196px;
+  max-height: 340px;
+  overflow: auto;
+}
+.wayfinding-scope .room-preview .station-detail .object-action {
+  margin-top: 14px;
+  background: #225669;
+  color: white;
+  width: 100%;
+  float: none;
+  font-size: var(--type-sm);
+  padding: 10px;
+}
+.wayfinding-scope .room-preview .station-detail p {
+  color: #47606c;
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .room-expanded {
+  position: fixed !important;
+  inset: 18px;
+  z-index: 100;
+  background: #e9edef;
+  box-shadow: 0 0 0 50px #10191bed;
+  max-height: calc(100dvh - 36px);
+}
+.wayfinding-scope .room-expanded .room-canvas {
+  min-height: 180px !important;
+  height: auto;
+  flex: 1;
+}
+.wayfinding-scope .room-expanded .room-preview-tools {
+  padding: 12px 20px;
+}
+.wayfinding-scope .room-expanded .room-options {
+  padding-bottom: 8px;
+}
+.wayfinding-scope .room-expanded .room-item-list {
+  padding: 8px 20px;
+}
+.wayfinding-scope .room-expanded .room-preview-caption {
+  padding: 10px 20px;
+}
+.wayfinding-scope .room-expanded .room-source-note {
+  padding-bottom: 9px;
+}
+.wayfinding-scope .room-expanded .station-detail {
+  bottom: 180px;
+}
+.wayfinding-scope .room-expanded .walk-controls {
+  bottom: 180px;
+}
+@media (max-width: 760px) {
+  .wayfinding-scope .room-expanded {
+    inset: 4px;
+    max-height: calc(100dvh - 8px);
+  }
+  .wayfinding-scope .room-preview .room-canvas {
+    min-height: 430px;
+  }
+  .wayfinding-scope .room-preview .station-detail {
+    bottom: 240px;
+    max-height: 230px;
+  }
+  .wayfinding-scope .room-preview .walk-controls {
+    bottom: 235px;
+  }
+  .wayfinding-scope .room-item-list {
+    gap: 4px;
+    padding: 8px;
+  }
+  .wayfinding-scope .room-preview-tools > div {
+    flex-wrap: wrap;
+  }
+  .wayfinding-scope .room-preview .room-source-note {
+    font-size: var(--type-xs);
+  }
+  .wayfinding-scope .room-expanded .room-source-note {
+    display: none;
+  }
+}
+.wayfinding-scope .room-preview .walk-controls button {
+  background: #244d60;
+  color: #fff;
+  border-color: #244d60;
+}
+.wayfinding-scope .room-preview .walk-controls button:active {
+  background: #f36b21;
+  border-color: #f36b21;
+}
+.wayfinding-scope .room-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px 12px;
+  flex-wrap: wrap;
+}
+.wayfinding-scope .room-options span {
+  margin-left: auto;
+  color: #46606c;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .room-profile .room-canvas {
+  min-height: 470px;
+  outline: none;
+}
+.wayfinding-scope .room-canvas:focus-visible {
+  outline: 2px solid #ee783a;
+  outline-offset: -2px;
+}
+.wayfinding-scope .walk-controls {
+  position: absolute;
+  left: 20px;
+  bottom: 72px;
+  display: flex;
+  gap: 5px;
+}
+.wayfinding-scope .walk-controls button {
+  width: 44px;
+  height: 44px;
+  background: #244d60;
+  color: white;
+  font-size: var(--type-title);
+  touch-action: none;
+}
+.wayfinding-scope .station-detail {
+  position: absolute;
+  right: 20px;
+  bottom: 95px;
+  width: min(320px, calc(100% - 40px));
+  padding: 20px;
+  background: #fffefb;
+  box-shadow: 0 12px 45px #14333d30;
+  border: 1px solid #becdd3;
+  border-radius: 8px;
+  color: #26414f;
+}
+.wayfinding-scope .station-detail > button {
+  float: right;
+  padding: 1px 8px;
+  font-size: var(--type-title);
+}
+.wayfinding-scope .station-detail small {
+  color: #b3511a;
+  font-size: var(--type-xs);
+  letter-spacing: 0.1em;
+}
+.wayfinding-scope .station-detail h3 {
+  font-size: var(--type-title);
+  margin: 12px 0;
+}
+.wayfinding-scope .station-detail p {
+  font-size: var(--type-sm);
+  color: #47606c;
+  line-height: 1.6;
+  margin: 0;
+}
+.wayfinding-scope .room-pending {
+  padding: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  background: #e8eef0;
+  color: #355361;
+}
+.wayfinding-scope .room-pending small {
+  font-size: var(--type-xs);
+  letter-spacing: 0.12em;
+}
+.wayfinding-scope .room-pending h3 {
+  font-size: var(--type-section);
+  margin: 18px 0;
+}
+.wayfinding-scope .room-pending p {
+  color: #46616e;
+  max-width: 460px;
+}
+.wayfinding-scope .room-pending button {
+  background: #284e60;
+  color: #fff;
+  padding: 13px 20px;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .wayfinding-scope .room-profile .room-canvas {
+    min-height: 380px;
+  }
+  .wayfinding-scope .room-options span {
+    margin: 0;
+  }
+  .wayfinding-scope .station-detail {
+    bottom: 120px;
+  }
+}
+.wayfinding-scope .room-profile {
+  max-width: 1600px;
+  margin: 28px auto;
+  display: grid;
+  grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.4fr);
+  border: 1px solid var(--line);
+  background: #161d20;
+}
+.wayfinding-scope .room-profile-copy {
+  padding: 36px;
+}
+.wayfinding-scope .room-profile-copy > small {
+  color: #ff985c;
+  letter-spacing: 0.16em;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .profile-id {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: var(--type-display);
+  margin-top: 22px;
+  color: #ff8b49;
+}
+.wayfinding-scope .profile-id span {
+  font-size: var(--type-sm);
+  border: 1px solid #596064;
+  padding: 6px 10px;
+  color: #c8d0d3;
+}
+.wayfinding-scope .room-profile h2 {
+  font-size: var(--type-title);
+  line-height: 1.35;
+  font-weight: 400;
+  margin: 12px 0 20px;
+}
+.wayfinding-scope .room-profile p {
+  font-size: var(--type-body);
+  line-height: 1.7;
+  color: #c3cbcd;
+}
+.wayfinding-scope .room-profile dl {
+  margin: 25px 0;
+}
+.wayfinding-scope .room-profile dl > div {
+  border-top: 1px solid #344047;
+  padding: 13px 0;
+}
+.wayfinding-scope .room-profile dt {
+  color: #82949e;
+  font-size: var(--type-xs);
+  margin-bottom: 7px;
+}
+.wayfinding-scope .room-profile dd {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: 1.5;
+}
+.wayfinding-scope .room-profile .profile-note {
+  font-size: var(--type-xs);
+  color: #91a0a8;
+}
+.wayfinding-scope .room-preview {
+  position: relative;
+  min-width: 0;
+  background: #e9edef;
+  display: flex;
+  flex-direction: column;
+}
+.wayfinding-scope .room-preview-tools {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #38515f;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .room-preview-tools > div {
+  display: flex;
+  gap: 6px;
+}
+.wayfinding-scope .room-preview button {
+  border: 1px solid #bbc8cd;
+  border-radius: 5px;
+  background: transparent;
+  color: #3c5663;
+  padding: 9px 13px;
+  cursor: pointer;
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .room-preview button.active {
+  background: #294c5d;
+  color: white;
+  border-color: #294c5d;
+}
+.wayfinding-scope .room-canvas {
+  height: 430px;
+  flex: 1;
+  min-height: 350px;
+  overflow: hidden;
+}
+.wayfinding-scope .room-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+.wayfinding-scope .room-preview-caption {
+  padding: 16px 22px;
+  color: #536c78;
+  font-size: var(--type-xs);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-top: 1px solid #d0dadd;
+}
+@media (max-width: 900px) {
+  .wayfinding-scope .room-profile {
+    grid-template-columns: 1fr;
+    margin: 20px 12px;
+  }
+  .wayfinding-scope .room-profile-copy {
+    padding: 24px;
+  }
+  .wayfinding-scope .room-canvas {
+    flex: none;
+    height: 380px;
+  }
+  .wayfinding-scope .room-preview-tools {
+    flex-wrap: wrap;
+  }
+}
+.wayfinding-scope .intro h1 {
+  line-height: 1.06 !important;
+}
+.wayfinding-scope .map-stage {
+  height: 660px !important;
+}
+.wayfinding-scope .three-host {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+.wayfinding-scope .map-stage {
+  overflow: hidden;
+  isolation: isolate;
+}
+.wayfinding-scope .three-host canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+}
+.wayfinding-scope .route-panel {
+  position: relative;
+  z-index: 4;
+  min-width: 0;
+  overflow: hidden;
+}
+.wayfinding-scope .route-panel h2,
+.wayfinding-scope .route-panel li span {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .wayfinding-scope .map-stage {
+    height: 540px !important;
+  }
+}
+.wayfinding-scope .legend i.class {
+  background: #69aee7 !important;
+}
+.wayfinding-scope .legend i.stair {
+  background: #b96335;
+}
+.wayfinding-scope .legend i.lift {
+  background: #2d8e70;
+}
+.wayfinding-scope .legend i.wc {
+  background: #687176;
+}
+.wayfinding-scope .mini-plan .facility-label {
+  fill: #dfe5e5;
+  font-size: 17px;
+  font-weight: 500;
+}
+.wayfinding-scope .mini-plan .plan-route {
+  stroke-width: 9px;
+}
+.wayfinding-scope {
+  --orange: #f36b21;
+  --ink: #111719;
+  --panel: #171d20;
+  --line: #30393d;
+  --text: #f5f2ed;
+  --muted: #aeb6b8;
+}
+.wayfinding-scope * {
+  box-sizing: border-box;
+}
+.wayfinding-scope,
+.wayfinding-scope {
+  margin: 0;
+  background: #0e1214;
+  color: var(--text);
+  font-family: var(--font-body), sans-serif;
+}
+.wayfinding-scope button,
+.wayfinding-scope select {
+  font: inherit;
+}
+.wayfinding-scope .app-shell {
+  min-height: 100vh;
+  background: radial-gradient(circle at 53% 25%, #243037 0, #121719 38%, #0d1113 76%);
+  letter-spacing: 0.01em;
+}
+.wayfinding-scope .topbar {
+  height: 72px;
+  padding: 0 2.5vw;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #2a3235;
+  background: #f4f2ed;
+  color: #16191a;
+}
+.wayfinding-scope .topbar img {
+  width: 152px;
+  height: 48px;
+  object-fit: contain;
+  object-position: left;
+}
+.wayfinding-scope .topbar > div:nth-child(2) {
+  margin-left: 24px;
+  padding-left: 24px;
+  border-left: 1px solid #c8c5bf;
+  display: grid;
+  gap: 4px;
+}
+.wayfinding-scope .topbar span,
+.wayfinding-scope .topbar b {
+  font-size: var(--type-xs);
+  letter-spacing: 0.2em;
+}
+.wayfinding-scope .topbar b {
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .status {
+  margin-left: auto;
+  font-size: var(--type-xs);
+  letter-spacing: 0.16em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wayfinding-scope .status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #35b478;
+  box-shadow: 0 0 0 5px #35b47820;
+}
+.wayfinding-scope .intro {
+  max-width: 1600px;
+  margin: auto;
+  min-height: 180px;
+  padding: 28px 3vw 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--line);
+}
+.wayfinding-scope .intro small,
+.wayfinding-scope .panel-title,
+.wayfinding-scope .mini-head {
+  font-size: var(--type-xs);
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: #ff8b49;
+}
+.wayfinding-scope .intro h1 {
+  font-size: clamp(38px, 4.4vw, 74px);
+  font-weight: 300;
+  line-height: 0.9;
+  margin: 13px 0 0;
+  letter-spacing: -0.04em;
+}
+.wayfinding-scope .intro h1 em {
+  font-style: normal;
+  color: var(--orange);
+}
+.wayfinding-scope .intro p {
+  max-width: 460px;
+  color: var(--muted);
+  font-size: var(--type-sm);
+  line-height: 1.7;
+  margin: 0 0 5px;
+}
+.wayfinding-scope .workspace {
+  max-width: 1600px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 300px minmax(520px, 1fr) 340px;
+  min-height: 660px;
+}
+.wayfinding-scope .panel {
+  background: #14191c;
+  padding: 24px;
+  border-right: 1px solid var(--line);
+}
+.wayfinding-scope .route-panel {
+  border-right: 0;
+  border-left: 1px solid var(--line);
+}
+.wayfinding-scope .panel-title,
+.wayfinding-scope .mini-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.wayfinding-scope .panel-title svg,
+.wayfinding-scope .mini-head svg {
+  width: 15px;
+}
+.wayfinding-scope .controls-panel label {
+  display: grid;
+  gap: 8px;
+  color: #b9c1c3;
+  font-size: var(--type-xs);
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  margin-top: 26px;
+}
+.wayfinding-scope .controls-panel select {
+  width: 100%;
+  padding: 12px 13px;
+  background: #0f1416;
+  color: #f6f2ed;
+  border: 1px solid #374044;
+  border-radius: 2px;
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+}
+.wayfinding-scope .room-card {
+  margin-top: 25px;
+  border: 1px solid #55321f;
+  background: linear-gradient(135deg, #2c1b13, #171a1c);
+  padding: 18px;
+  display: flex;
+  gap: 17px;
+}
+.wayfinding-scope .room-card > span {
+  font-size: var(--type-section);
+  font-weight: 200;
+  color: var(--orange);
+  min-width: 55px;
+}
+.wayfinding-scope .room-card div {
+  border-left: 1px solid #704129;
+  padding-left: 16px;
+}
+.wayfinding-scope .room-card small {
+  font-size: var(--type-xs);
+  letter-spacing: 0.16em;
+  color: #f5a273;
+}
+.wayfinding-scope .room-card strong {
+  font-size: var(--type-title);
+  display: block;
+  margin-top: 5px;
+}
+.wayfinding-scope .room-card p {
+  font-size: var(--type-xs);
+  line-height: 1.45;
+  color: #c7c8c6;
+  margin: 4px 0 0;
+}
+.wayfinding-scope .legend {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+.wayfinding-scope .legend b {
+  font-size: var(--type-xs);
+  letter-spacing: 0.16em;
+  color: #899295;
+  margin-bottom: 2px;
+}
+.wayfinding-scope .legend span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--type-xs);
+  color: #bdc3c4;
+}
+.wayfinding-scope .legend i {
+  width: 16px;
+  height: 8px;
+  background: #315d78;
+}
+.wayfinding-scope .legend i.class {
+  background: #3c7d7a;
+}
+.wayfinding-scope .legend i.selected {
+  background: var(--orange);
+}
+.wayfinding-scope .legend i.route {
+  height: 3px;
+  background: #ff7627;
+  box-shadow: 0 0 9px #ff7627;
+}
+.wayfinding-scope .map-stage {
+  position: relative;
+  min-width: 0;
+}
+.wayfinding-scope .three-host {
+  height: 100%;
+  min-height: 660px;
+}
+.wayfinding-scope .stage-tools {
+  height: 48px;
+  position: absolute;
+  z-index: 3;
+  left: 18px;
+  right: 18px;
+  top: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.wayfinding-scope .stage-tools button {
+  border: 1px solid #465055;
+  background: #111719dd;
+  color: #d8ddde;
+  padding: 9px 12px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: var(--type-xs);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.wayfinding-scope .stage-tools button.active,
+.wayfinding-scope .stage-tools button:hover {
+  border-color: #f36b21;
+  color: #fff;
+}
+.wayfinding-scope .stage-tools svg {
+  width: 14px;
+}
+.wayfinding-scope .stage-tools span {
+  margin-left: auto;
+  color: #8d989b;
+  font-size: var(--type-xs);
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.wayfinding-scope .stage-tools span svg {
+  width: 13px;
+}
+.wayfinding-scope .floor-rail {
+  position: absolute;
+  left: 17px;
+  top: 80px;
+  display: grid;
+  background: #111719e8;
+  border: 1px solid #394247;
+}
+.wayfinding-scope .floor-rail button {
+  width: 38px;
+  height: 34px;
+  border: 0;
+  border-bottom: 1px solid #394247;
+  background: transparent;
+  color: #8f999b;
+  font-size: var(--type-xs);
+  cursor: pointer;
+}
+.wayfinding-scope .floor-rail button.active,
+.wayfinding-scope .floor-rail button:hover {
+  background: var(--orange);
+  color: white;
+}
+.wayfinding-scope .route-panel h2 {
+  font-weight: 300;
+  font-size: var(--type-title);
+  line-height: 1.4;
+  margin: 22px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.wayfinding-scope .route-panel h2 svg {
+  width: 15px;
+  color: var(--orange);
+}
+.wayfinding-scope .route-mode {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: #ff9b61;
+  border-top: 1px solid #2e3639;
+  border-bottom: 1px solid #2e3639;
+  padding: 12px 0;
+  font-size: var(--type-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.wayfinding-scope .route-mode svg {
+  width: 16px;
+}
+.wayfinding-scope .route-panel ol {
+  list-style: none;
+  margin: 13px 0 23px;
+  padding: 0;
+}
+.wayfinding-scope .route-panel li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 7px;
+  padding: 10px 0;
+  border-bottom: 1px solid #293034;
+  font-size: var(--type-xs);
+  line-height: 1.45;
+  color: #c2c8c9;
+}
+.wayfinding-scope .route-panel li b {
+  color: var(--orange);
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .mini-head {
+  padding-top: 4px;
+}
+.wayfinding-scope .mini-plan {
+  width: 100%;
+  margin-top: 10px;
+  background: #0d1214;
+  border: 1px solid #30383b;
+}
+.wayfinding-scope .mini-plan text {
+  fill: #e9eceb;
+  font-size: 25px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+.wayfinding-scope .plan-shell {
+  fill: #171d20;
+  stroke: #687277;
+  stroke-width: 3;
+}
+.wayfinding-scope .plan-corridor {
+  fill: none;
+  stroke: #4e5a5e;
+  stroke-width: 25;
+  opacity: 0.42;
+}
+.wayfinding-scope .plan-room {
+  fill: #315d78;
+  stroke: #75a8c0;
+  stroke-width: 3;
+}
+.wayfinding-scope .plan-room.selected {
+  fill: #f36b21;
+  stroke: #ffc198;
+}
+.wayfinding-scope .door {
+  fill: #ffd3b9;
+  stroke: #fff;
+  stroke-width: 2;
+}
+.wayfinding-scope .core {
+  fill: #784328;
+  stroke: #ff9254;
+  stroke-width: 3;
+}
+.wayfinding-scope .lift {
+  fill: #27775f;
+  stroke: #6ce2b5;
+  stroke-width: 3;
+}
+.wayfinding-scope .plan-route {
+  fill: none;
+  stroke: #ff7627;
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px #ff7627);
+}
+.wayfinding-scope footer {
+  max-width: 1600px;
+  margin: auto;
+  border-top: 1px solid var(--line);
+  padding: 14px 3vw 20px;
+  color: #879194;
+  font-size: var(--type-xs);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.wayfinding-scope footer svg {
+  width: 15px;
+  color: var(--orange);
+}
+.wayfinding-scope footer span {
+  margin-left: auto;
+  color: #d16b36;
+}
+@media (max-width: 1150px) {
+  .wayfinding-scope .workspace {
+    grid-template-columns: 250px 1fr;
+  }
+  .wayfinding-scope .route-panel {
+    grid-column: 1/-1;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .wayfinding-scope .mini-plan {
+    max-width: 520px;
+  }
+  .wayfinding-scope .intro {
+    min-height: 160px;
+  }
+  .wayfinding-scope .stage-tools span {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .wayfinding-scope .topbar {
+    height: 60px;
+  }
+  .wayfinding-scope .topbar img {
+    width: 126px;
+  }
+  .wayfinding-scope .topbar > div:nth-child(2) {
+    display: none;
+  }
+  .wayfinding-scope .intro {
+    align-items: flex-start;
+    display: grid;
+    gap: 20px;
+  }
+  .wayfinding-scope .intro p {
+    font-size: var(--type-xs);
+  }
+  .wayfinding-scope .workspace {
+    display: block;
+  }
+  .wayfinding-scope .panel {
+    border: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .wayfinding-scope .three-host {
+    min-height: 540px;
+  }
+  .wayfinding-scope .stage-tools {
+    flex-wrap: wrap;
+  }
+  .wayfinding-scope .map-stage {
+    height: 540px;
+  }
+  .wayfinding-scope footer span {
+    display: none;
+  }
+}
+.wayfinding-scope .intro h1 {
+  display: grid;
+  gap: 0.12em;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+.wayfinding-scope .intro p {
+  max-width: 490px;
+  text-wrap: pretty;
+}
+.wayfinding-scope .keep-together {
+  white-space: nowrap;
+}
+.wayfinding-scope .mini-plan .plan-route {
+  stroke-width: 5;
+  filter: none;
+}
+.wayfinding-scope .three-host canvas {
+  cursor: grab;
+  touch-action: none;
+}
+.wayfinding-scope .three-host canvas:active {
+  cursor: grabbing;
+}
+/* Movement stays out of the desktop canvas; touch devices get a compact D-pad. */
+@media (hover: hover) and (pointer: fine) {
+  .wayfinding-scope .room-preview .walk-controls {
+    display: none !important;
+  }
+}
+@media (hover: none), (pointer: coarse) {
+  .wayfinding-scope .room-preview .walk-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 46px) 64px;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 20px;
+    background: #17343bd9;
+    backdrop-filter: blur(10px);
+    bottom: 94px;
+    left: 16px;
+  }
+  .wayfinding-scope .walk-controls button {
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 12px;
+    touch-action: none;
+  }
+  .wayfinding-scope .walk-controls button:first-child {
+    grid-column: 2;
+  }
+  .wayfinding-scope .walk-controls button:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .wayfinding-scope .walk-controls button:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .wayfinding-scope .walk-controls button:nth-child(4) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .wayfinding-scope .walk-controls .jump-button {
+    grid-column: 4;
+    grid-row: 1/3;
+  }
+}
+.wayfinding-scope .keyboard-guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px 18px;
+  color: #37515a;
+  background: #e6ecee;
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .keyboard-guide kbd {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  border: 1px solid #b9c7cb;
+  border-bottom-width: 3px;
+  border-radius: 5px;
+  background: white;
+  padding: 3px 7px;
+  margin-right: 5px;
+}
+.wayfinding-scope .portal-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 160px;
+  transform: translateX(-50%);
+  padding: 12px 20px !important;
+  border-radius: 30px !important;
+  background: #153e47 !important;
+  color: white !important;
+  box-shadow: 0 5px 25px #1235;
+  z-index: 8;
+}
+.wayfinding-scope .portal-hint kbd {
+  padding: 4px 8px;
+  background: #e87930;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+.wayfinding-scope .floor-picker {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  padding: 28px;
+  background: #f8faf9;
+  color: #173b44;
+  border-radius: 18px;
+  box-shadow: 0 20px 80px #0005;
+  min-width: 260px;
+}
+.wayfinding-scope .floor-picker h3 {
+  font-size: var(--type-title);
+  margin: 10px 0;
+}
+.wayfinding-scope .floor-picker > div {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.wayfinding-scope .floor-picker button {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #9cb8be;
+}
+.wayfinding-scope .floor-picker .picker-close {
+  float: right;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .tour-transition {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #16343ef2;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: var(--type-title);
+  animation: tour-fade 0.85s ease both;
+}
+@keyframes tour-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
+}
+.wayfinding-scope .walk-controls .interact-button {
+  grid-column: 4;
+  grid-row: 3;
+  background: #ed7a32;
+  color: white;
+}
+.wayfinding-scope .destination-summary {
+  margin: 14px 0 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ffffff1a;
+}
+.wayfinding-scope .destination-summary small {
+  font-size: var(--type-xs);
+  letter-spacing: 0.1em;
+  color: #e98548;
+}
+.wayfinding-scope .destination-summary h3 {
+  font-size: var(--type-body);
+  line-height: 1.45;
+  margin: 8px 0;
+  color: #f4f2ed;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+.wayfinding-scope .destination-summary p {
+  font-size: var(--type-sm);
+  line-height: 1.65;
+  color: #bec9cc;
+  margin: 0;
+  text-wrap: pretty;
+}
+.wayfinding-scope .mini-plan .plan-context rect {
+  fill: #27353a;
+  stroke: #607279;
+}
+.wayfinding-scope .mini-plan .plan-context path {
+  fill: none;
+  stroke: #869397;
+  stroke-width: 2;
+}
+.wayfinding-scope .mini-plan .plan-context text {
+  fill: #ced8d8;
+  font-size: 19px;
+}
+.wayfinding-scope .mini-plan .plan-context .gate-post {
+  stroke: #ef8a49;
+  stroke-width: 6;
+}
+.wayfinding-scope .mini-plan .plan-context .gate-link {
+  stroke: #ef8a49;
+  stroke-width: 4;
+  stroke-dasharray: 6 4;
+}
+.wayfinding-scope .mini-plan .plan-context .gate-caption {
+  font-size: 12px;
+  fill: #efab7c;
+}
+.wayfinding-scope .mini-plan .plan-context .common-space {
+  font-size: 19px;
+  fill: #b7cecf;
+}
+.wayfinding-scope .route-panel {
+  overflow-y: auto;
+}
+.wayfinding-scope .room-card p {
+  text-wrap: pretty;
+}
+.wayfinding-scope .journey-back {
+  margin: 14px 0;
+  padding: 10px 13px;
+  border: 1px solid #79604b;
+  background: #182126;
+  color: #ffb583;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 5px;
+}
+.wayfinding-scope .room-card[role="button"] {
+  cursor: pointer;
+}
+.wayfinding-scope .room-detail-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(1440px, 95vw);
+  max-width: 95vw;
+  max-height: 92vh;
+  padding: 26px;
+  background: #141d21;
+  color: #f4f2ed;
+  border: 1px solid #50636b;
+  border-radius: 14px;
+  overflow: auto;
+}
+.wayfinding-scope .room-detail-dialog::backdrop {
+  background: #050b10c9;
+  backdrop-filter: blur(5px);
+}
+.wayfinding-scope .room-detail-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #33434b;
+  margin-bottom: 22px;
+  gap: 20px;
+}
+.wayfinding-scope .room-detail-dialog > header > span {
+  font-size: var(--type-xs);
+  letter-spacing: 0.12em;
+}
+.wayfinding-scope .detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  gap: 32px;
+}
+.wayfinding-scope .detail-plan .mini-plan {
+  max-width: none;
+}
+.wayfinding-scope .detail-plan > p,
+.wayfinding-scope .detail-layout section > p {
+  font-size: var(--type-sm);
+  line-height: 1.75;
+  color: #bdcbcf;
+}
+.wayfinding-scope .detail-layout h2 {
+  font-weight: 500;
+  font-size: var(--type-section);
+  line-height: 1.4;
+}
+.wayfinding-scope .detail-layout h3 {
+  font-size: var(--type-sm);
+  color: #f4a26c;
+  margin-top: 26px;
+}
+.wayfinding-scope .detail-layout small {
+  color: #f4a26c;
+}
+.wayfinding-scope .detail-layout .room-render-gallery {
+  margin-top: 20px;
+}
+@media (max-width: 850px) {
+  .wayfinding-scope .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .wayfinding-scope .room-detail-dialog {
+    padding: 16px;
+  }
+  .wayfinding-scope .room-detail-dialog > header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 12px;
+  }
+}
+
+/* Landscape touch kiosk: every mode occupies the same 16:9 frame. */
+.wayfinding-scope,
+.wayfinding-scope,
+.wayfinding-scope {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.wayfinding-scope {
+  display: grid;
+  place-items: center;
+}
+.wayfinding-scope {
+  display: grid;
+  place-items: center;
+}
+.wayfinding-scope .app-shell {
+  width: min(100vw, 177.7778dvh);
+  height: min(100dvh, 56.25vw);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  container-type: inline-size;
+}
+.wayfinding-scope .app-shell button {
+  touch-action: manipulation;
+  min-height: 44px;
+  cursor: pointer;
+}
+.wayfinding-scope .app-shell button:focus-visible {
+  outline: 3px solid #ffb583;
+  outline-offset: 2px;
+}
+.wayfinding-scope .topbar {
+  height: 56px;
+  flex-shrink: 0;
+  padding: 0 22px;
+}
+.wayfinding-scope .topbar img {
+  height: 40px;
+  width: 140px;
+}
+.wayfinding-scope .intro {
+  height: 88px;
+  min-height: 0;
+  max-width: none;
+  width: 100%;
+  padding: 12px 22px;
+  align-items: center;
+  flex-shrink: 0;
+  display: flex;
+}
+.wayfinding-scope .intro h1 {
+  display: flex;
+  gap: 12px;
+  font-size: var(--type-section);
+  margin: 7px 0 0;
+}
+.wayfinding-scope .intro p {
+  font-size: var(--type-xs);
+  max-width: 460px;
+  line-height: 1.5;
+}
+.wayfinding-scope .workspace {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 220px minmax(260px, 1fr) 245px 245px;
+}
+.wayfinding-scope .workspace > .panel {
+  padding: 16px 14px;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.wayfinding-scope .workspace .map-stage {
+  height: 100% !important;
+  min-height: 0;
+}
+.wayfinding-scope .workspace .three-host {
+  min-height: 0;
+}
+.wayfinding-scope .workspace .route-panel {
+  grid-column: auto;
+}
+.wayfinding-scope .floor-plan-panel {
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wayfinding-scope .room-selector {
+  margin-top: 20px;
+}
+.wayfinding-scope .room-selector > span {
+  display: block;
+  color: #b9c1c3;
+  font-size: var(--type-xs);
+  margin-bottom: 8px;
+}
+.wayfinding-scope .select-room {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  background: #0f1416;
+  color: #fff;
+  border: 1px solid #58666b;
+  border-radius: 6px;
+  font-size: var(--type-sm);
+  line-height: 1.4;
+}
+.wayfinding-scope .select-room svg {
+  width: 16px;
+  flex-shrink: 0;
+}
+.wayfinding-scope .workspace .journey-back {
+  font-size: var(--type-xs);
+  margin: 10px 0;
+  padding: 9px;
+}
+.wayfinding-scope .workspace .room-card {
+  padding: 10px;
+  margin-top: 4px;
+  gap: 8px;
+}
+.wayfinding-scope .workspace .room-card > span {
+  font-size: var(--type-title);
+  min-width: 30px;
+}
+.wayfinding-scope .workspace .room-card div {
+  padding-left: 8px;
+}
+.wayfinding-scope .workspace .room-card strong {
+  font-size: var(--type-title);
+}
+.wayfinding-scope .workspace .room-card p {
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .workspace .legend {
+  grid-template-columns: 1fr 1fr;
+  gap: 9px 5px;
+  margin-top: 16px;
+}
+.wayfinding-scope .legend b,
+.wayfinding-scope .legend span:last-child {
+  grid-column: 1/-1;
+}
+.wayfinding-scope .legend span {
+  font-size: var(--type-xs);
+  gap: 5px;
+}
+.wayfinding-scope .workspace .stage-tools {
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  height: auto;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wayfinding-scope .workspace .stage-tools button {
+  font-size: var(--type-xs);
+  padding: 8px;
+  letter-spacing: 0;
+}
+.wayfinding-scope .workspace .stage-tools span {
+  width: 100%;
+  font-size: var(--type-xs);
+  margin: 0;
+  display: flex;
+}
+.wayfinding-scope .workspace .floor-rail {
+  top: 102px;
+  left: 12px;
+}
+.wayfinding-scope .workspace .floor-rail button {
+  width: 44px;
+  height: 44px;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .workspace .route-panel h2 {
+  font-size: var(--type-sm);
+  margin: 14px 0 10px;
+}
+.wayfinding-scope .workspace .destination-summary {
+  margin: 10px 0;
+  padding-bottom: 10px;
+}
+.wayfinding-scope .workspace .destination-summary h3 {
+  font-size: var(--type-sm);
+  margin: 5px 0;
+  line-height: 1.4;
+}
+.wayfinding-scope .destination-summary p {
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .workspace .route-panel li {
+  font-size: var(--type-xs);
+  padding: 9px 0;
+  grid-template-columns: 22px 1fr;
+}
+.wayfinding-scope .route-panel ol {
+  margin: 8px 0;
+}
+.wayfinding-scope .route-mode {
+  padding: 9px 0;
+}
+.wayfinding-scope .tour-launch {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 7px;
+  text-align: left;
+  padding: 16px 12px;
+  border: 1px solid #ffb583;
+  background: linear-gradient(125deg, #b84911, #ed7027);
+  color: white;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.wayfinding-scope .tour-launch svg {
+  grid-row: 1/3;
+  width: 28px;
+  height: 28px;
+}
+.wayfinding-scope .tour-launch strong {
+  font-size: var(--type-title);
+}
+.wayfinding-scope .tour-launch span {
+  font-size: var(--type-xs);
+  line-height: 1.5;
+}
+.wayfinding-scope .tour-launch:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.wayfinding-scope .floor-plan-panel .mini-plan {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  object-fit: contain;
+}
+.wayfinding-scope .floor-plan-panel .journey-back {
+  margin: 0;
+}
+.wayfinding-scope .plan-placeholder {
+  font-size: var(--type-sm);
+  color: var(--muted);
+  line-height: 1.6;
+}
+.wayfinding-scope .app-shell > footer {
+  width: 100%;
+  max-width: none;
+  flex-shrink: 0;
+  height: 32px;
+  padding: 6px 20px;
+  font-size: var(--type-xs);
+  overflow: hidden;
+}
+.wayfinding-scope .room-picker-dialog,
+.wayfinding-scope .room-detail-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(94vw, 164dvh);
+  height: min(88dvh, 49.5vw);
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid #566a73;
+  border-radius: 12px;
+  background: #141d21;
+  color: #f4f2ed;
+}
+.wayfinding-scope dialog::backdrop {
+  background: #050b10cf;
+  backdrop-filter: blur(5px);
+}
+.wayfinding-scope .room-picker-dialog header,
+.wayfinding-scope .room-detail-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 16px;
+}
+.wayfinding-scope .room-picker-dialog small {
+  color: #ff985c;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .room-picker-dialog h2 {
+  margin: 6px 0;
+  font-size: var(--type-title);
+}
+.wayfinding-scope .room-picker-dialog button,
+.wayfinding-scope .room-detail-dialog header button {
+  min-height: 48px;
+  padding: 10px 18px;
+  border: 1px solid #596971;
+  border-radius: 6px;
+  background: #1c2a30;
+  color: #fff;
+}
+.wayfinding-scope .room-picker-dialog nav {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+.wayfinding-scope .room-picker-dialog button[aria-pressed="true"],
+.wayfinding-scope .room-detail-dialog button[aria-pressed="true"] {
+  background: #d95d1d;
+  border-color: #ffb583;
+}
+.wayfinding-scope .room-picker-dialog h3 {
+  font-size: var(--type-title);
+  color: #ffb583;
+  margin: 20px 0 12px;
+}
+.wayfinding-scope .picker-rooms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.wayfinding-scope .picker-rooms button {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  text-align: left;
+  min-height: 100px;
+}
+.wayfinding-scope .picker-rooms b {
+  color: #ffb583;
+  font-size: var(--type-title);
+  min-width: 110px;
+}
+.wayfinding-scope .picker-rooms span {
+  font-size: var(--type-body);
+  line-height: 1.5;
+}
+.wayfinding-scope .room-detail-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.wayfinding-scope .room-detail-dialog > header {
+  flex-shrink: 0;
+}
+.wayfinding-scope .room-detail-dialog header > div {
+  display: flex;
+  gap: 8px;
+}
+.wayfinding-scope .detail-layout {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+.wayfinding-scope .detail-plan {
+  min-height: 0;
+  display: flex;
+}
+.wayfinding-scope .detail-plan .mini-plan {
+  height: 100%;
+  margin: 0;
+  max-width: none;
+}
+.wayfinding-scope .detail-layout h2 {
+  font-size: var(--type-title);
+  margin: 12px 0;
+}
+.wayfinding-scope .detail-layout h3 {
+  margin-top: 18px;
+}
+.wayfinding-scope .detail-layout section > p {
+  font-size: var(--type-sm);
+  line-height: 1.6;
+}
+.wayfinding-scope .room-detail-dialog > .room-render-gallery {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  gap: 18px;
+}
+.wayfinding-scope .room-detail-dialog .room-render-gallery figure {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.wayfinding-scope .room-detail-dialog .room-render-gallery figure > img {
+  flex: 1;
+  min-height: 0;
+  object-fit: contain;
+}
+.wayfinding-scope .room-detail-dialog .render-thumbnails {
+  width: 190px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  gap: 10px;
+}
+.wayfinding-scope .room-detail-dialog .render-thumbnails button {
+  min-height: 0;
+}
+.wayfinding-scope .room-detail-dialog .render-thumbnails img {
+  max-height: 110px;
+  object-fit: cover;
+}
+.wayfinding-scope .tour-screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.wayfinding-scope .tour-screen > header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 0 20px;
+  height: 66px;
+  flex-shrink: 0;
+}
+.wayfinding-scope .tour-screen > header strong {
+  font-size: var(--type-sm);
+  font-weight: 500;
+}
+.wayfinding-scope .tour-screen > header > span {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: var(--type-xs);
+  color: #ffb583;
+}
+.wayfinding-scope .tour-screen > header button {
+  flex-shrink: 0;
+}
+.wayfinding-scope .tour-screen .room-preview {
+  flex: 1;
+  min-height: 0;
+}
+.wayfinding-scope .tour-screen .room-preview-tools {
+  padding: 8px 20px;
+  flex-shrink: 0;
+}
+.wayfinding-scope .tour-screen .room-options {
+  padding: 0 20px 8px;
+  flex-shrink: 0;
+}
+.wayfinding-scope .tour-screen .room-canvas {
+  min-height: 0;
+  height: auto;
+  flex: 1;
+}
+.wayfinding-scope .tour-screen .room-item-list {
+  display: none;
+}
+.wayfinding-scope .tour-screen .room-preview-caption {
+  padding: 10px 20px;
+  min-height: 36px;
+  flex-shrink: 0;
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .tour-screen .walk-controls {
+  bottom: 52px;
+}
+.wayfinding-scope .tour-screen .portal-hint {
+  bottom: 65px;
+}
+.wayfinding-scope .tour-screen .station-detail {
+  bottom: 56px;
+  max-height: calc(100% - 170px);
+  overflow: auto;
+}
+.wayfinding-scope .touch-help {
+  position: absolute;
+  top: 110px;
+  left: 20px;
+  width: 350px;
+  max-width: 40%;
+  padding: 20px;
+  border: 1px solid #b4c9cc;
+  background: #fffffff2;
+  color: #23434f;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px #1234;
+  z-index: 10;
+}
+.wayfinding-scope .touch-help strong {
+  font-size: var(--type-title);
+}
+.wayfinding-scope .touch-help p {
+  font-size: var(--type-sm);
+  line-height: 1.55;
+  margin: 12px 0;
+}
+.wayfinding-scope .touch-help button {
+  background: #244d60;
+  color: white;
+  width: 100%;
+}
+@media (min-width: 1600px) {
+  .wayfinding-scope .workspace {
+    grid-template-columns: 270px minmax(320px, 1fr) 300px 300px;
+  }
+  .wayfinding-scope .intro {
+    height: 104px;
+  }
+  .wayfinding-scope .intro h1 {
+    font-size: var(--type-section);
+  }
+  .wayfinding-scope .workspace > .panel {
+    padding: 22px 18px;
+  }
+  .wayfinding-scope .workspace .route-panel li {
+    font-size: var(--type-sm);
+    padding: 12px 0;
+  }
+  .wayfinding-scope .workspace .destination-summary h3 {
+    font-size: var(--type-title);
+  }
+  .wayfinding-scope .workspace .room-card p {
+    font-size: var(--type-sm);
+  }
+  .wayfinding-scope .room-selector > span {
+    font-size: var(--type-sm);
+  }
+  .wayfinding-scope .select-room {
+    font-size: var(--type-sm);
+  }
+  .wayfinding-scope .workspace .legend {
+    gap: 14px;
+  }
+  .wayfinding-scope .legend span {
+    font-size: var(--type-xs);
+  }
+  .wayfinding-scope .workspace .room-card {
+    margin-top: 12px;
+    padding: 16px;
+  }
+  .wayfinding-scope .workspace .stage-tools button {
+    font-size: var(--type-xs);
+  }
+  .wayfinding-scope .tour-screen .room-preview-tools {
+    padding: 14px 22px;
+  }
+}
+@media (max-height: 760px) {
+  .wayfinding-scope .topbar {
+    height: 48px;
+  }
+  .wayfinding-scope .intro {
+    height: 70px;
+  }
+  .wayfinding-scope .intro h1 {
+    font-size: var(--type-section);
+  }
+  .wayfinding-scope .intro small {
+    font-size: var(--type-xs);
+  }
+  .wayfinding-scope .room-selector {
+    margin-top: 12px;
+  }
+  .wayfinding-scope .workspace > .panel {
+    padding: 12px;
+  }
+  .wayfinding-scope .workspace .legend {
+    gap: 7px;
+    margin-top: 12px;
+  }
+  .wayfinding-scope .workspace .route-panel li {
+    padding: 6px 0;
+    font-size: var(--type-xs);
+  }
+  .wayfinding-scope .workspace .floor-rail {
+    top: 92px;
+  }
+  .wayfinding-scope .workspace .floor-rail button {
+    height: 44px;
+  }
+  .wayfinding-scope .room-picker-dialog {
+    padding: 18px;
+  }
+  .wayfinding-scope .picker-rooms button {
+    min-height: 86px;
+  }
+  .wayfinding-scope .touch-help {
+    top: 105px;
+    padding: 14px;
+  }
+  .wayfinding-scope .touch-help p {
+    margin: 9px 0;
+    font-size: var(--type-sm);
+  }
+}
+.wayfinding-scope .tour-screen .station-detail {
+  max-height: none;
+  overflow: visible;
+}
+.wayfinding-scope .tour-screen .station-detail p {
+  font-size: var(--type-sm);
+  line-height: 1.5;
+}
+
+/* Modern minimal theme: overrides on top of globals.css + kiosk.css */
+.wayfinding-scope {
+  --bg: #0a0f12;
+  --surface: #10171b;
+  --raised: #172026;
+  --line: #ffffff14;
+  --text: #ecf1f3;
+  --muted: #8c9da5;
+  --accent: #ff6b2c;
+  --start: #5eead4;
+  --orange: #ff6b2c;
+  --r: 14px;
+}
+.wayfinding-scope,
+.wayfinding-scope,
+.wayfinding-scope {
+  background: var(--bg);
+}
+.wayfinding-scope .app-shell,
+.wayfinding-scope .app-shell button,
+.wayfinding-scope .app-shell select,
+.wayfinding-scope .app-shell input,
+.wayfinding-scope dialog {
+  font-family: var(--font-body), sans-serif;
+  letter-spacing: 0;
+}
+.wayfinding-scope .app-shell {
+  width: 100%;
+  height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+}
+.wayfinding-scope .app-shell button:focus-visible,
+.wayfinding-scope .app-shell input:focus-visible {
+  outline: 2px solid var(--start);
+  outline-offset: 2px;
+}
+/* top bar */
+.wayfinding-scope .app-shell .topbar {
+  height: 68px;
+  padding: 0 24px;
+  background: var(--surface);
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+}
+.wayfinding-scope .app-shell .topbar img {
+  filter: brightness(0) invert(1);
+  height: 60px;
+  width: 218px;
+  object-fit: contain;
+  object-position: left center;
+  opacity: 1;
+}
+.wayfinding-scope .app-shell .topbar > div:nth-child(2) {
+  margin-left: 18px;
+  padding-left: 18px;
+  border-left: 1px solid var(--line);
+  gap: 1px;
+}
+.wayfinding-scope .app-shell .topbar span {
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.wayfinding-scope .app-shell .topbar b {
+  font-size: var(--type-sm);
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.wayfinding-scope .app-shell .status {
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.wayfinding-scope .app-shell .intro {
+  display: none;
+}
+/* layout */
+.wayfinding-scope .app-shell .workspace {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: clamp(320px, 23vw, 400px) minmax(0, 1fr) clamp(320px, 22vw, 390px);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0;
+  background: var(--bg);
+}
+.wayfinding-scope .app-shell .workspace > .panel {
+  background: var(--surface);
+  border: 0;
+  border-right: 1px solid var(--line);
+  padding: 20px;
+  overflow: auto;
+}
+.wayfinding-scope .app-shell .workspace > .controls-panel {
+  grid-column: 1;
+  grid-row: 1/3;
+  overflow: hidden;
+}
+.wayfinding-scope .app-shell .workspace > .route-panel {
+  grid-column: 3;
+  grid-row: 2;
+  border-top: 1px solid var(--line) !important;
+  border-right: 0;
+  border-left: 1px solid var(--line);
+  overflow: hidden;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.wayfinding-scope .app-shell .map-stage {
+  grid-column: 2;
+  grid-row: 1/3;
+  height: 100% !important;
+  background: radial-gradient(ellipse at 50% 40%, #16232a, var(--bg) 70%);
+}
+.wayfinding-scope .app-shell .workspace > .floor-plan-panel {
+  grid-column: 3;
+  grid-row: 1;
+  border-right: 0;
+  border-left: 1px solid var(--line);
+  gap: 12px;
+  overflow: hidden;
+}
+.wayfinding-scope .app-shell .panel-title,
+.wayfinding-scope .app-shell .mini-head {
+  font-size: var(--type-sm);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--text);
+  gap: 8px;
+}
+.wayfinding-scope .app-shell .panel-title svg,
+.wayfinding-scope .app-shell .mini-head svg {
+  width: 16px;
+  color: var(--muted);
+}
+/* journey pickers */
+.wayfinding-scope .app-shell .room-selector {
+  margin-top: 14px;
+  position: relative;
+}
+.wayfinding-scope .app-shell .room-selector > span {
+  font-size: var(--type-xs);
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.wayfinding-scope .app-shell .select-room {
+  min-height: 52px;
+  padding: 12px 14px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  font-size: var(--type-sm);
+  font-weight: 500;
+  transition: border-color 0.15s;
+}
+.wayfinding-scope .app-shell .select-room:hover {
+  border-color: #ffffff33;
+}
+.wayfinding-scope .app-shell .select-room svg {
+  color: var(--muted);
+}
+.wayfinding-scope .app-shell .journey-back {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  min-height: 40px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .app-shell .journey-back:hover {
+  color: var(--text);
+  border-color: #ffffff33;
+}
+.wayfinding-scope .app-shell .journey-back.nav-emphasis {
+  position: relative;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #ff7a35, #f05416);
+  border-color: #ff9a68;
+  color: #fff;
+  font-weight: 700;
+  box-shadow:
+    0 7px 22px #ff6b2c3d,
+    0 0 0 1px #ffb28a24 inset;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+  animation: nav-orange-pulse 2.8s ease-in-out infinite;
+}
+.wayfinding-scope .app-shell .journey-back.nav-emphasis:hover {
+  color: #fff;
+  border-color: #ffc0a0;
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 30px #ff6b2c55,
+    0 0 0 1px #ffd1ba55 inset;
+}
+.wayfinding-scope .app-shell .journey-back.nav-emphasis:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 14px #ff6b2c38;
+}
+.wayfinding-scope .app-shell .reset-journey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-inline: 15px;
+}
+.wayfinding-scope .app-shell .reset-journey svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.4;
+}
+@keyframes nav-orange-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 7px 22px #ff6b2c32,
+      0 0 0 1px #ffb28a24 inset;
+  }
+  50% {
+    box-shadow:
+      0 9px 30px #ff6b2c52,
+      0 0 0 1px #ffd1ba3d inset;
+  }
+}
+.wayfinding-scope .app-shell .room-card {
+  margin-top: 14px;
+  padding: 14px;
+  gap: 14px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+}
+.wayfinding-scope .app-shell .room-card > span {
+  font-size: var(--type-title);
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 38px;
+}
+.wayfinding-scope .app-shell .room-card div {
+  border: 0;
+  padding: 0;
+}
+.wayfinding-scope .app-shell .room-card small {
+  display: block;
+  margin-bottom: 3px;
+  color: #ffad85;
+  font-size: var(--type-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.wayfinding-scope .app-shell .room-card strong {
+  font-size: var(--type-section);
+  line-height: 1.1;
+  margin: 0;
+}
+.wayfinding-scope .app-shell .room-card p.room-card-name {
+  font-size: var(--type-sm);
+  line-height: 1.45;
+  color: var(--text);
+  font-weight: 650;
+  margin-top: 7px;
+  text-wrap: balance;
+}
+.wayfinding-scope .app-shell .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 18px;
+}
+.wayfinding-scope .app-shell .legend b {
+  display: none;
+}
+.wayfinding-scope .app-shell .legend span {
+  font-size: var(--type-xs);
+  color: var(--muted);
+  gap: 6px;
+}
+.wayfinding-scope .app-shell .legend i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.wayfinding-scope .legend i.lab {
+  background: #5e8fb8;
+}
+.wayfinding-scope .legend i.class {
+  background: #a8b5c0 !important;
+}
+.wayfinding-scope .legend i.stair {
+  background: #a9855f;
+}
+.wayfinding-scope .legend i.lift {
+  background: #8b7cf6;
+}
+.wayfinding-scope .legend i.wc {
+  background: #5d6e76;
+}
+.wayfinding-scope .legend i.selected {
+  background: var(--accent);
+}
+.wayfinding-scope .legend i.route {
+  height: 3px;
+  width: 14px;
+  box-shadow: none;
+  background: var(--accent);
+}
+.wayfinding-scope .app-shell .legend span:last-child {
+  grid-column: auto;
+}
+/* map controls */
+.wayfinding-scope .app-shell .stage-tools {
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  gap: 6px;
+}
+.wayfinding-scope .app-shell .stage-tools button {
+  padding: 9px 14px;
+  min-height: 40px;
+  background: #10171bd9;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: var(--type-sm);
+  letter-spacing: 0;
+}
+.wayfinding-scope .app-shell .stage-tools button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.wayfinding-scope .app-shell .stage-tools button:hover:not(.active) {
+  color: var(--text);
+  border-color: #ffffff33;
+}
+.wayfinding-scope .app-shell .stage-tools span {
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+  color: var(--muted);
+  order: 9;
+  width: auto;
+  margin-left: auto;
+}
+.wayfinding-scope .app-shell .floor-rail {
+  top: auto;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 4px;
+  gap: 2px;
+  background: #10171bd9;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.wayfinding-scope .app-shell .floor-rail button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: var(--type-sm);
+  font-weight: 600;
+}
+.wayfinding-scope .app-shell .floor-rail button.active {
+  background: var(--accent);
+  color: #fff;
+}
+.wayfinding-scope .app-shell .floor-rail button:hover:not(.active) {
+  background: var(--raised);
+  color: var(--text);
+}
+/* route steps */
+.wayfinding-scope .app-shell .route-panel h2 {
+  font-size: var(--type-sm);
+  font-weight: 600;
+  margin: 10px 0 8px;
+  line-height: 1.35;
+}
+.wayfinding-scope .app-shell .route-panel h2 svg {
+  color: var(--muted);
+}
+.wayfinding-scope .app-shell .destination-summary {
+  margin: 0 0 12px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--line);
+}
+.wayfinding-scope .app-shell .destination-summary small {
+  font-size: var(--type-xs);
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+.wayfinding-scope .app-shell .destination-summary h3 {
+  font-size: var(--type-body);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--text);
+  margin: 5px 0 0;
+  text-wrap: balance;
+}
+.wayfinding-scope .app-shell .destination-summary p {
+  font-size: var(--type-sm);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.wayfinding-scope .app-shell .route-mode {
+  display: inline-flex;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #ff6b2c22;
+  color: #ffab84;
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.wayfinding-scope .app-shell .route-panel ol {
+  margin: 8px 0 0;
+}
+.wayfinding-scope .app-shell .route-panel li {
+  grid-template-columns: 24px 1fr;
+  gap: 9px;
+  padding: 7px 0;
+  border: 0;
+  font-size: var(--type-xs);
+  line-height: 1.4;
+  color: var(--text);
+}
+.wayfinding-scope .app-shell .route-panel li b {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: var(--type-xs);
+}
+/* tour + plan */
+.wayfinding-scope .app-shell .tour-launch {
+  padding: 16px;
+  border: 0;
+  border-radius: var(--r);
+  background: var(--accent);
+  box-shadow: 0 8px 30px #ff6b2c33;
+  transition: transform 0.15s;
+}
+.wayfinding-scope .app-shell .tour-launch:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.wayfinding-scope .app-shell .tour-launch:disabled {
+  background: var(--raised);
+  box-shadow: none;
+  color: var(--muted);
+  opacity: 1;
+}
+.wayfinding-scope .app-shell .tour-launch strong {
+  font-size: var(--type-body);
+}
+.wayfinding-scope .app-shell .tour-launch span {
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .app-shell .floor-plan-panel .mini-plan {
+  flex: 1;
+  min-height: 150px;
+  max-height: 300px;
+  height: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.wayfinding-scope .plan-shell {
+  fill: var(--surface);
+  stroke: #ffffff26;
+}
+.wayfinding-scope .plan-corridor {
+  stroke: #ffffff1f;
+}
+.wayfinding-scope .plan-room {
+  fill: #5e8fb8;
+  fill-opacity: 0.55;
+  stroke: #8db4d3;
+}
+.wayfinding-scope .plan-room.selected {
+  fill: var(--accent);
+  fill-opacity: 1;
+  stroke: #ffc3a3;
+}
+.wayfinding-scope .plan-route {
+  stroke: var(--accent);
+}
+.wayfinding-scope .core {
+  fill: #a9855f55;
+  stroke: #a9855f;
+}
+.wayfinding-scope .lift {
+  fill: #8b7cf655;
+  stroke: #8b7cf6;
+}
+.wayfinding-scope .door {
+  fill: #fff;
+  stroke: none;
+}
+.wayfinding-scope .app-shell .plan-placeholder {
+  font-size: var(--type-sm);
+  color: var(--muted);
+}
+.wayfinding-scope .app-shell > footer {
+  height: 36px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+  background: var(--surface);
+}
+.wayfinding-scope .app-shell > footer span {
+  color: var(--muted);
+}
+/* dialogs */
+.wayfinding-scope dialog.room-picker-dialog,
+.wayfinding-scope dialog.room-detail-dialog {
+  width: min(1100px, 94vw);
+  height: min(760px, 90dvh);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: 0 30px 100px #000a;
+  color: var(--text);
+}
+.wayfinding-scope .room-picker-dialog small {
+  font-size: var(--type-xs);
+  color: var(--muted);
+}
+.wayfinding-scope .room-picker-dialog h2 {
+  font-size: var(--type-title);
+  font-weight: 600;
+}
+.wayfinding-scope .room-picker-dialog button,
+.wayfinding-scope .room-detail-dialog header button {
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+}
+.wayfinding-scope .room-picker-dialog nav {
+  grid-template-columns: repeat(8, 1fr);
+}
+.wayfinding-scope .room-picker-dialog button[aria-pressed="true"],
+.wayfinding-scope .room-detail-dialog button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.wayfinding-scope .room-picker-dialog h3 {
+  color: var(--muted);
+  font-size: var(--type-sm);
+  font-weight: 500;
+}
+.wayfinding-scope .room-picker-dialog {
+  overflow: auto !important;
+}
+.wayfinding-scope .picker-rooms {
+  grid-template-columns: repeat(2, 1fr);
+}
+.wayfinding-scope .picker-rooms button {
+  min-height: 76px;
+  padding: 12px 16px;
+}
+.wayfinding-scope .picker-rooms button:hover {
+  border-color: var(--accent);
+}
+.wayfinding-scope .picker-rooms b {
+  color: var(--accent);
+  min-width: 84px;
+  font-size: var(--type-title);
+}
+.wayfinding-scope .picker-rooms span {
+  font-size: var(--type-sm);
+  color: var(--text);
+}
+.wayfinding-scope .detail-layout small,
+.wayfinding-scope .detail-layout h3 {
+  color: var(--accent);
+}
+.wayfinding-scope .detail-layout h2 {
+  font-size: var(--type-title);
+}
+/* 3D tour chrome (dark) */
+.wayfinding-scope .tour-screen {
+  background: var(--bg);
+}
+.wayfinding-scope .tour-screen > header {
+  position: relative;
+}
+.wayfinding-scope .tour-screen > header strong {
+  position: absolute;
+  left: 50%;
+  width: min(62%, 980px);
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: var(--type-body);
+  font-weight: 700 !important;
+  line-height: 1.3;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.wayfinding-scope .tour-screen > header > span {
+  color: var(--muted);
+  font-size: var(--type-xs);
+  letter-spacing: 0;
+}
+.wayfinding-scope .tour-screen > header .tour-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  z-index: 1;
+  margin: 0;
+  white-space: nowrap;
+}
+.wayfinding-scope .tour-screen > header .tour-back svg {
+  width: 23px;
+  height: 23px;
+  stroke-width: 2.5;
+}
+.wayfinding-scope .room-preview {
+  background: var(--surface);
+}
+.wayfinding-scope .room-preview-tools,
+.wayfinding-scope .room-preview-caption,
+.wayfinding-scope .keyboard-guide {
+  color: var(--muted);
+  border-color: var(--line);
+  background: var(--surface);
+}
+.wayfinding-scope .room-preview button {
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raised);
+  min-height: 40px;
+}
+.wayfinding-scope .room-preview button.active {
+  background: var(--text);
+  color: var(--bg);
+}
+.wayfinding-scope .room-preview .avatar-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: auto;
+  padding: 4px 5px 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #0a0f128f;
+}
+.wayfinding-scope .room-preview .avatar-picker > span {
+  margin: 0 4px 0 0;
+  color: var(--muted);
+  font-size: var(--type-xs);
+  font-weight: 600;
+}
+.wayfinding-scope .room-preview .avatar-picker button {
+  min-height: 34px;
+  padding: 7px 12px;
+  font-size: var(--type-xs);
+}
+.wayfinding-scope .room-preview .avatar-picker button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 5px 16px #ff6b2c33;
+}
+.wayfinding-scope .station-detail {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--line);
+  border-radius: 16px;
+}
+.wayfinding-scope .station-detail p,
+.wayfinding-scope .room-preview .station-detail p {
+  color: var(--muted);
+}
+.wayfinding-scope .station-detail small {
+  color: var(--accent);
+}
+.wayfinding-scope .touch-help,
+.wayfinding-scope .floor-picker {
+  background: rgba(16, 23, 27, 0.88);
+  color: var(--text);
+  border: 1px solid #ffffff20;
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+}
+.wayfinding-scope .touch-help button,
+.wayfinding-scope .room-preview .station-detail .object-action {
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+}
+.wayfinding-scope .room-preview .touch-help {
+  top: 132px;
+  box-shadow: 0 14px 42px #07101445;
+}
+.wayfinding-scope .floor-picker button {
+  background: var(--raised);
+  color: var(--text);
+  border-color: var(--line);
+}
+.wayfinding-scope .room-preview .walk-controls button {
+  background: var(--raised);
+  border-color: var(--line);
+}
+/* narrow screens: stack */
+@media (max-width: 1000px) {
+  .wayfinding-scope .app-shell {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+  .wayfinding-scope,
+  .wayfinding-scope,
+  .wayfinding-scope {
+    overflow: auto;
+    height: auto;
+  }
+  .wayfinding-scope .app-shell .workspace {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .wayfinding-scope .app-shell .map-stage {
+    order: -1;
+    height: 56dvh !important;
+    flex: none;
+  }
+  .wayfinding-scope .app-shell .workspace > .panel {
+    border: 0;
+    border-top: 1px solid var(--line);
+    overflow: visible;
+  }
+  .wayfinding-scope .app-shell .stage-tools span {
+    display: none;
+  }
+  .wayfinding-scope .room-picker-dialog nav {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .wayfinding-scope .picker-rooms {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wayfinding-scope * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.wayfinding-scope {
+  font-family: var(--font-body), sans-serif;
+  display: block;
+  min-height: 700px;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  --r: 6px;
+}
+.wayfinding-scope .app-shell {
+  height: calc(100dvh - 176px);
+  min-height: 700px;
+  width: 100%;
+  max-width: none;
+}
+.wayfinding-scope .app-shell .topbar {
+  display: none;
+}
+.wayfinding-scope .app-shell button,
+.wayfinding-scope dialog button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.wayfinding-scope .app-shell .select-room {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text);
+  width: 100%;
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .app-shell .room-selector > span {
+  display: block;
+  font-size: var(--type-xs);
+  margin-bottom: 10px;
+}
+.wayfinding-scope .app-shell .tour-launch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #fff;
+  gap: 8px;
+  position: relative;
+}
+.wayfinding-scope .app-shell .tour-launch svg {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+.wayfinding-scope .app-shell .tour-launch:disabled {
+  color: var(--muted);
+}
+.wayfinding-scope h1,
+.wayfinding-scope h2,
+.wayfinding-scope h3 {
+  max-width: none;
+  letter-spacing: 0;
+}
+.wayfinding-scope .room-picker-dialog button,
+.wayfinding-scope .room-detail-dialog button {
+  min-height: 44px;
+}
+.wayfinding-scope .app-shell footer {
+  font-size: var(--type-xs);
+  flex: none;
+}
+.wayfinding-scope .app-shell .workspace {
+  height: auto;
+  min-height: 580px;
+}
+.wayfinding-scope .app-shell .tour-screen {
+  min-height: 650px;
+}
+.wayfinding-scope .app-shell .tour-screen > header {
+  height: auto;
+  min-height: 80px;
+  flex-wrap: wrap;
+}
+.wayfinding-scope .app-shell .tour-screen > header strong {
+  max-width: 550px;
+}
+.wayfinding-scope .room-preview .room-canvas {
+  min-height: 420px;
+}
+.wayfinding-scope .panel-title {
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .room-picker-dialog nav button {
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .room-picker-dialog .picker-rooms button {
+  font-size: var(--type-sm);
+}
+.wayfinding-scope .room-picker-dialog {
+  height: auto;
+  max-height: 85dvh;
+}
+.wayfinding-scope .room-picker-dialog nav {
+  display: grid;
+  gap: 8px;
+}
+.wayfinding-scope .room-picker-dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.wayfinding-scope .room-picker-dialog h2 {
+  font-size: var(--type-title);
+}
+.wayfinding-scope .picker-rooms {
+  display: grid;
+  gap: 12px;
+}
+.wayfinding-scope .room-selector {
+  margin-bottom: 22px;
+}
+@media (max-width: 1000px) {
+  .wayfinding-scope .app-shell {
+    height: auto;
+    min-height: 700px;
+  }
+  .wayfinding-scope .app-shell .workspace {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .wayfinding-scope .app-shell .map-stage {
+    height: 460px !important;
+    order: -1;
+  }
+  .wayfinding-scope .app-shell .tour-screen {
+    height: auto;
+    min-height: 0;
+  }
+  .wayfinding-scope .app-shell .tour-screen .room-preview {
+    min-height: 700px;
+  }
+  .wayfinding-scope .app-shell .tour-screen > header strong {
+    font-size: var(--type-sm);
+  }
+}
