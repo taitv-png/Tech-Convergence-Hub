@@ -44,22 +44,31 @@ function LaserStrips({ model }: { model: (typeof slideModels)[number] }) {
   );
 }
 
-// Hero: one screen with the slide's blue flow, all five laser groups and the headline.
-// Everything is present on load and arrives with one gentle fade. Then the Campus E film
-// cross-fades in on scroll; no pinning, no click-to-reveal.
+const clamp = (value: number) => Math.min(1, Math.max(0, value));
+const ease = (value: number) => value * value * (3 - 2 * value);
+
+// The Campus E film opens the journey. On desktop it fades away over the complete
+// five-model scene in one shared stage. Smaller screens keep both scenes in normal flow.
 export function IntroSequence() {
+  const journey = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
   const hero = useRef<HTMLElement>(null);
   const film = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const root = journey.current;
+    const viewport = stage.current;
     const heroBox = hero.current;
     const filmBox = film.current;
     const player = video.current;
-    if (!heroBox || !filmBox || !player) return;
+    if (!root || !viewport || !heroBox || !filmBox || !player) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktop = window.matchMedia("(min-width: 901px) and (min-height: 640px)");
     let frame = 0;
     let visible = false;
+    let filmOpacity = 1;
+    let playbackVisible = false;
     let soundAllowed = false;
 
     const load = () => {
@@ -74,6 +83,7 @@ export function IntroSequence() {
       load();
       player.muted = soundRefused && !soundAllowed;
       player.play().catch(() => {
+        if (!playbackVisible) return;
         soundRefused = true;
         player.muted = true;
         player.play().catch(() => undefined);
@@ -81,26 +91,58 @@ export function IntroSequence() {
     };
     const unlockSound = () => {
       soundAllowed = true;
-      if (visible && !player.paused) player.muted = false;
+      if (playbackVisible && !player.paused) player.muted = false;
+    };
+    const syncPlayback = () => {
+      const next = visible && filmOpacity > 0.02 && !document.hidden;
+      if (next === playbackVisible) return;
+      playbackVisible = next;
+      if (next && !reducedMotion.matches) play();
+      else {
+        player.pause();
+        player.muted = true;
+      }
     };
 
     const render = () => {
       frame = 0;
       const height = window.innerHeight;
-      const heroRect = heroBox.getBoundingClientRect();
-      const filmRect = filmBox.getBoundingClientRect();
       const still = reducedMotion.matches;
-      // Cross-fade: the hero dims as it leaves, the film rises as it arrives and dims again
-      // into the charcoal of the logo scene that follows.
-      const heroVis = still ? 1 : Math.min(1, Math.max(0, heroRect.bottom / (height * 0.75)));
-      const enter = Math.min(1, Math.max(0, (height - filmRect.top) / (height * 0.7)));
-      const leave = Math.min(1, Math.max(0, filmRect.bottom / (height * 0.7)));
-      const filmVis = still ? 1 : Math.min(enter, leave);
+      const pinned = root.classList.contains("is-live");
+      let heroVis = 1;
+      if (pinned) {
+        const distance = Math.max(1, root.offsetHeight - viewport.offsetHeight);
+        const progress = clamp(
+          (viewport.getBoundingClientRect().top - root.getBoundingClientRect().top) / distance,
+        );
+        const reveal = ease(clamp((progress - 0.08) / 0.7));
+        filmOpacity = 1 - reveal;
+        // The film covers the fully rendered scene, so its fade reveals all five models
+        // together without a blank frame or staggered layout changes.
+        heroBox.inert = reveal < 0.5;
+        filmBox.inert = reveal >= 0.5;
+      } else {
+        const heroRect = heroBox.getBoundingClientRect();
+        const filmRect = filmBox.getBoundingClientRect();
+        const header = Number.parseFloat(getComputedStyle(root).getPropertyValue("--header-height")) || 0;
+        filmOpacity = still ? 1 : 1 - ease(clamp((header - filmRect.top) / (filmRect.height * 0.85)));
+        const enter = clamp((height - heroRect.top) / (height * 0.65));
+        const leave = clamp(heroRect.bottom / (height * 0.65));
+        heroVis = still ? 1 : ease(Math.min(enter, leave));
+        heroBox.inert = false;
+        filmBox.inert = false;
+      }
       heroBox.style.setProperty("--hero-vis", heroVis.toFixed(3));
-      filmBox.style.setProperty("--film-vis", filmVis.toFixed(3));
+      filmBox.style.setProperty("--film-vis", filmOpacity.toFixed(3));
+      syncPlayback();
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(render);
+    };
+    const applyMode = () => {
+      root.classList.toggle("is-live", desktop.matches && !reducedMotion.matches);
+      playbackVisible = false;
+      render();
     };
     const near = new IntersectionObserver(
       ([entry]) => {
@@ -111,8 +153,7 @@ export function IntroSequence() {
     const inView = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
-        if (visible && !reducedMotion.matches) play();
-        else if (!visible) player.pause();
+        syncPlayback();
       },
       { threshold: 0.25 },
     );
@@ -131,7 +172,12 @@ export function IntroSequence() {
     document.addEventListener("keydown", unlockSound, { once: true });
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
-    render();
+    document.addEventListener("visibilitychange", syncPlayback);
+    reducedMotion.addEventListener("change", applyMode);
+    desktop.addEventListener("change", applyMode);
+    const resize = new ResizeObserver(schedule);
+    resize.observe(heroBox);
+    applyMode();
     return () => {
       cancelAnimationFrame(frame);
       near.disconnect();
@@ -141,110 +187,124 @@ export function IntroSequence() {
       document.removeEventListener("keydown", unlockSound);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      document.removeEventListener("visibilitychange", syncPlayback);
+      reducedMotion.removeEventListener("change", applyMode);
+      desktop.removeEventListener("change", applyMode);
+      resize.disconnect();
+      root.classList.remove("is-live");
+      heroBox.inert = false;
+      filmBox.inert = false;
     };
   }, []);
 
   return (
-    <>
-      <section
-        ref={hero}
-        className="cv-hero2"
-        aria-labelledby="intro-title"
-        style={{ backgroundImage: `url("${base}/intro/blue-flow-poster.jpg")` }}
-      >
-        <video
-          className="cv-blue"
-          src={`${base}/intro/blue-flow.mp4`}
-          poster={`${base}/intro/blue-flow-poster.jpg`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          disablePictureInPicture
-          disableRemotePlayback
-          aria-hidden="true"
-          tabIndex={-1}
-        />
-        <div className="cv-hero2-beams" aria-hidden="true">
-          {slideModels.map((model) => (
-            <div
-              key={model.id}
-              className="cv-laser-column"
-              style={{ left: `${model.beam.left * 100}%`, width: `${model.beam.width * 100}%` }}
-            >
-              <LaserStrips model={model} />
-            </div>
-          ))}
-        </div>
-        <div className="cv-hero2-inner">
-          <div className="cv-hero2-copy">
-            <p className="cv-hero2-eyebrow">
-              <Image src={base + "/brand/ueh-white.png"} width={480} height={281} alt="UEH" priority />
-              <span>Tech-Convergence Hub · Campus E</span>
+    <div ref={journey} className="cv-intro-flow">
+      <div ref={stage} className="cv-intro-stage">
+        <section
+          ref={film}
+          className="cv-film2"
+          aria-label="Video giới thiệu Campus E"
+        >
+          <video
+            ref={video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            disablePictureInPicture
+            disableRemotePlayback
+            poster={`${base}/media/campus-e-poster.webp`}
+            aria-label="Video giới thiệu Campus E"
+          />
+          <div className="cv-film2-caption site-container">
+            <p>
+              <strong>Campus E</strong>
+              <span>54 Nguyễn Văn Thủ, TP. Hồ Chí Minh</span>
             </p>
-            <h1 id="intro-title">
-              <span>
-                Nơi công nghệ <em>hội tụ.</em>
-              </span>{" "}
-              <span>Ý tưởng vươn xa.</span>
-            </h1>
-            <div className="cv-actions">
-              <Link className="button button-orange" href="/labs">
-                Khám phá labs <Arrow />
-              </Link>
-              <Link className="text-link cv-on-dark" href="/explore">
-                Tham quan Campus E <Arrow diagonal />
-              </Link>
-            </div>
+            <span className="cv-film2-scroll">Cuộn để khám phá TCH <Arrow /></span>
           </div>
-          <figure className="cv-hero2-scene" aria-label="Năm mô hình không gian hội tụ tại TCH">
+        </section>
+
+        <section
+          ref={hero}
+          className="cv-hero2"
+          aria-labelledby="intro-title"
+          style={{ backgroundImage: `url("${base}/intro/blue-flow-poster.jpg")` }}
+        >
+          <video
+            className="cv-blue"
+            src={`${base}/intro/blue-flow.mp4`}
+            poster={`${base}/intro/blue-flow-poster.jpg`}
+            autoPlay
+            muted
+            loop
+            playsInline
+            disablePictureInPicture
+            disableRemotePlayback
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          <div className="cv-hero2-beams" aria-hidden="true">
             {slideModels.map((model) => (
               <div
                 key={model.id}
-                className={`cv-model-cell is-${model.id}`}
-                style={
-                  {
-                    "--building-left": `${model.building.left * 100}%`,
-                    "--building-top": bandY(BUILDING_TOP[model.id]),
-                    "--building-width": `${model.building.width * 100}%`,
-                    "--label-left": `${(model.label.left + model.label.width / 2) * 100}%`,
-                    "--label-top": bandY(LABEL_CENTER),
-                  } as CSSProperties
-                }
+                className="cv-laser-column"
+                style={{ left: `${model.beam.left * 100}%`, width: `${model.beam.width * 100}%` }}
               >
-                <div className="cv-cell-beam" aria-hidden="true">
-                  <LaserStrips model={model} />
-                </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="cv-building" src={`${base}/intro/building-${model.id}.png`} alt="" />
-                <span className="cv-model-name">{model.name}</span>
+                <LaserStrips model={model} />
               </div>
             ))}
-          </figure>
-        </div>
-      </section>
+          </div>
+          <div className="cv-hero2-inner">
+            <div className="cv-hero2-copy">
+              <p className="cv-hero2-eyebrow">
+                <Image src={base + "/brand/ueh-white.png"} width={480} height={281} alt="UEH" priority />
+                <span>Tech-Convergence Hub · Campus E</span>
+              </p>
+              <h1 id="intro-title">
+                <span>
+                  Nơi công nghệ <em>hội tụ.</em>
+                </span>{" "}
+                <span>Ý tưởng vươn xa.</span>
+              </h1>
+              <div className="cv-actions">
+                <Link className="button button-orange" href="/labs">
+                  Khám phá labs <Arrow />
+                </Link>
+                <Link className="text-link cv-on-dark" href="/explore">
+                  Tham quan Campus E <Arrow diagonal />
+                </Link>
+              </div>
+            </div>
+            <figure className="cv-hero2-scene" aria-label="Năm mô hình không gian hội tụ tại TCH">
+              {slideModels.map((model) => (
+                <div
+                  key={model.id}
+                  className={`cv-model-cell is-${model.id}`}
+                  style={
+                    {
+                      "--building-left": `${model.building.left * 100}%`,
+                      "--building-top": bandY(BUILDING_TOP[model.id]),
+                      "--building-width": `${model.building.width * 100}%`,
+                      "--label-left": `${(model.label.left + model.label.width / 2) * 100}%`,
+                      "--label-top": bandY(LABEL_CENTER),
+                    } as CSSProperties
+                  }
+                >
+                  <div className="cv-cell-beam" aria-hidden="true">
+                    <LaserStrips model={model} />
+                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="cv-building" src={`${base}/intro/building-${model.id}.png`} alt="" />
+                  <span className="cv-model-name">{model.name}</span>
+                </div>
+              ))}
+            </figure>
+          </div>
+        </section>
 
-      <section
-        ref={film}
-        className="cv-film2"
-        aria-label="Video giới thiệu Campus E"
-      >
-        <video
-          ref={video}
-          loop
-          muted
-          playsInline
-          preload="none"
-          disablePictureInPicture
-          disableRemotePlayback
-          poster={`${base}/media/campus-e-poster.webp`}
-          aria-label="Video giới thiệu Campus E"
-        />
-        <p className="cv-film2-caption site-container">
-          <strong>Campus E</strong>
-          <span>54 Nguyễn Văn Thủ, TP. Hồ Chí Minh</span>
-        </p>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
