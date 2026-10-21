@@ -1,5 +1,5 @@
-/* Home journey: one-screen hero (slide blue flow, five laser groups, headline), Campus E
-   film, TCH logo zoom, About, models. Loaded after graphic.css (see app/layout.tsx), so
+/* Home journey: Campus E film, five laser groups and headline, TCH logo zoom, About,
+   models. Loaded after graphic.css (see app/layout.tsx), so
    component rules here win over the shared system without !important. The default markup
    is complete without JavaScript; scripts only add scroll-linked opacity and the pinned
    logo zoom (.is-live). */
@@ -12,6 +12,50 @@
   --laser: #ff7a3d;
   position: relative;
   color: var(--night-ink);
+}
+
+/* Video first. Desktop shares one sticky frame, with the film fading off the model scene.
+   Without enhancement, on smaller screens or with reduced motion, both stay in normal flow. */
+.cv-intro-flow {
+  position: relative;
+  background: #121110;
+}
+.cv-intro-flow.is-live {
+  height: calc(210svh - var(--header-height));
+}
+.cv-intro-flow.is-live .cv-intro-stage {
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100svh - var(--header-height));
+  isolation: isolate;
+}
+.cv-intro-flow.is-live .cv-hero2,
+.cv-intro-flow.is-live .cv-film2 {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+}
+.cv-intro-flow.is-live .cv-hero2 {
+  z-index: 0;
+}
+.cv-intro-flow.is-live .cv-film2 {
+  z-index: 2;
+  opacity: var(--film-vis, 1);
+  pointer-events: none;
+}
+.cv-intro-flow.is-live .cv-film2 video,
+.cv-intro-flow.is-live .cv-film2::after,
+.cv-intro-flow.is-live .cv-film2-caption {
+  opacity: 1;
+}
+.cv-intro-flow.is-live .cv-hero2::after {
+  display: none;
+}
+.cv-intro-flow.is-live .cv-hero2-copy,
+.cv-intro-flow.is-live .cv-hero2-scene,
+.cv-intro-flow.is-live .cv-hero2-beams {
+  animation: none;
 }
 
 /* ---------- Hero ---------- */
@@ -47,7 +91,7 @@
     linear-gradient(0deg, #121110 0%, rgba(18, 17, 16, 0) 9%);
   pointer-events: none;
 }
-/* Cross-fade to the film: the hero dims to charcoal as it leaves. */
+/* In normal flow, the model scene fades gently in and out of the charcoal background. */
 .cv-hero2::after {
   content: "";
   position: absolute;
@@ -235,9 +279,9 @@ body .cv-hero2 .text-link:hover {
   }
 }
 
-/* ---------- Campus E film: no controls, no overlays; cross-fades in and out ---------- */
+/* ---------- Campus E film: first viewport, fades away with scroll ---------- */
 .cv-film2 {
-  height: 100svh;
+  height: calc(100svh - var(--header-height));
   min-height: 420px;
   overflow: hidden;
   background: var(--night);
@@ -274,11 +318,31 @@ body .cv-hero2 .text-link:hover {
   right: 0;
   bottom: 28px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
   margin: 0 auto;
   font-size: var(--type-sm);
   color: var(--night-muted);
   opacity: var(--film-vis, 1);
+}
+.cv-film2-caption p {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
+}
+.cv-film2-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.cv-film2-scroll svg {
+  width: 18px;
+  height: 18px;
+  rotate: 90deg;
 }
 .cv-film2-caption strong {
   font-size: var(--type-section);
@@ -682,6 +746,11 @@ body .cv-photo-credit a {
 /* Mobile hero: the five groups as a readable grid (two per row, the fifth centred), each
    with its own laser column behind the building. Nothing is dropped or shrunk to a sliver. */
 @media (max-width: 900px) {
+  .cv-film2-caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
   .cv-hero2 {
     height: auto;
     min-height: calc(100svh - var(--header-height));
