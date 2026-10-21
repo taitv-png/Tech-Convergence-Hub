@@ -12,7 +12,7 @@ export default function ExplorePage() {
   return (
     <>
       <Header />
-      <main id="main-content">
+      <main id="main-content" className="explore-app">
         <div className="explorer-heading site-container">
           <div>
             <p className="eyebrow">CAMPUS EXPLORER</p>

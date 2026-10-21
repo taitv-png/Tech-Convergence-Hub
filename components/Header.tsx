@@ -13,9 +13,26 @@ const items = [
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [aboutInView, setAboutInView] = useState(false);
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+  // On the home page, "Về TCH" is current while the About section crosses the middle band.
+  useEffect(() => {
+    setAboutInView(false);
+    const about = document.getElementById("about");
+    if (pathname !== "/" || !about) return;
+    const observer = new IntersectionObserver(([entry]) => setAboutInView(entry.isIntersecting), {
+      rootMargin: "-45% 0px -45% 0px",
+    });
+    observer.observe(about);
+    return () => observer.disconnect();
+  }, [pathname]);
+  const isCurrent = (href: string) => {
+    if (href === "/#about") return pathname === "/" && aboutInView;
+    if (href === "/") return pathname === "/" && !aboutInView;
+    return pathname === href || pathname.startsWith(href + "/");
+  };
   useEffect(() => {
     if (!open) return;
     const close = (event: KeyboardEvent) => {
@@ -60,7 +77,7 @@ export function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                aria-current={pathname === item.href ? "page" : undefined}
+                aria-current={isCurrent(item.href) ? (item.href.includes("#") ? "location" : "page") : undefined}
                 onClick={() => setOpen(false)}
               >
                 {item.label}

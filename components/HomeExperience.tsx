@@ -2,19 +2,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { labs, clusters, news, floorLabels } from "@/data/labs";
 import { technologyThemes } from "@/data/technology-themes";
+import { operatingModels } from "@/data/operating-models";
 import { Arrow } from "./Arrow";
-import { ConvergenceField } from "./ConvergenceField";
+import { IntroSequence } from "./IntroSequence";
+import { LogoDoor } from "./LogoDoor";
+import { AboutConvergence } from "./AboutConvergence";
 import { TechnologyExplorer } from "./TechnologyExplorer";
 import { CampusPortal } from "./CampusPortal";
 import { SectionHeading } from "./SectionHeading";
 import { PartnerRibbon } from "./PartnerRibbon";
+import { LabPhoto } from "./LabPhoto";
+import { OperatingModels } from "./OperatingModels";
 import { referenceImages } from "@/data/site-images";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const featured = [
-  { id: "immersive-technology-center", photo: "/rooms/e104/134.jpg" },
-  { id: "hologram-exhibition-room", photo: "/rooms/e102/102.jpg" },
-  { id: "smart-port-mobility-rail-lab", photo: "/rooms/e401/144.jpg" },
+// Eight representative labs in two rows of four fit one desktop screen; the rest is on /labs.
+const featuredIds = [
+  "immersive-technology-center",
+  "ai-big-data-lab",
+  "smart-port-mobility-rail-lab",
+  "ocean-robotics-lab",
+  "precision-mechanics-lab",
+  "smart-city-lab",
+  "embedded-iot-process-lab",
+  "security-lab",
 ];
 const newsImages = [
   { src: referenceImages.urban.src, alt: "Góc nhìn đô thị và hạ tầng kết nối" },
@@ -22,56 +33,21 @@ const newsImages = [
   { src: "/images/references/architecture.webp", alt: "Kiến trúc và thiết kế đô thị" },
 ];
 const floorCount = Object.keys(floorLabels).length;
-const pad = (value: number) => value.toString().padStart(2, "0");
 const floorName = (floor: string) => (floor === "0" ? "Tầng trệt" : "Tầng " + floor);
 
 export function HomeExperience() {
+  const featured = featuredIds
+    .map((id) => labs.find((lab) => lab.id === id))
+    .filter((lab) => lab !== undefined);
   return (
     <main id="main-content" className="redesign-home">
-      <section className="cv-hero" data-convergence-hero aria-labelledby="hero-title">
-        <ConvergenceField />
-        <div className="cv-hero-inner site-container">
-          <div className="cv-hero-copy">
-            <p className="eyebrow">
-              <span className="orange-dot" /> TECH-CONVERGENCE HUB · UEH
-            </p>
-            <h1 id="hero-title">
-              <span>Nơi công nghệ</span> <span className="cv-accent">hội tụ.</span>{" "}
-              <span>Ý tưởng vươn xa.</span>
-            </h1>
-            <p className="cv-hero-lede">
-              Kết nối tri thức, con người và công nghệ để cùng kiến tạo những giải pháp cho đô thị
-              và xã hội.
-            </p>
-            <div className="cv-actions">
-              <Link className="button button-orange" href="/labs">
-                Khám phá labs <Arrow />
-              </Link>
-              <Link className="text-link" href="/explore">
-                Tham quan Campus E <Arrow diagonal />
-              </Link>
-            </div>
-          </div>
-          <div className="cv-hero-meta">
-            <span>Campus E · 54 Nguyễn Văn Thủ, TP. Hồ Chí Minh</span>
-            <span>
-              {technologyThemes.length} hướng công nghệ · {labs.length} không gian
-            </span>
-            <a href="#technology">
-              Cuộn để khám phá <span aria-hidden="true">↓</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <IntroSequence />
+      <LogoDoor />
 
-      <TechnologyExplorer />
-
-      <section className="site-container home-section about-section" id="about">
-        <div className="section-heading">
-          <SectionHeading number="02" title="Về TCH">
-            Gặp nhau ở giao điểm. <span>Tạo nên điều mới.</span>
-          </SectionHeading>
-        </div>
+      <AboutConvergence>
+        <SectionHeading title="Về TCH">
+          Gặp nhau ở giao điểm. <span>Tạo nên điều mới.</span>
+        </SectionHeading>
         <div className="about-copy">
           <p>
             TCH là nền tảng nghiên cứu và đổi mới mở tại Campus E, UEH. Nơi trí tuệ nhân tạo,
@@ -85,40 +61,43 @@ export function HomeExperience() {
         </div>
         <dl className="cv-figures">
           <div>
-            <dt>Không gian công nghệ</dt>
+            <dt>Không gian trong danh mục</dt>
             <dd>{labs.length}</dd>
           </div>
           <div>
-            <dt>Cụm năng lực liên ngành</dt>
-            <dd>{pad(clusters.length)}</dd>
+            <dt>Hướng công nghệ</dt>
+            <dd>{technologyThemes.length}</dd>
           </div>
           <div>
-            <dt>Hướng công nghệ</dt>
-            <dd>{pad(technologyThemes.length)}</dd>
+            <dt>Mô hình không gian</dt>
+            <dd>{operatingModels.length}</dd>
           </div>
           <div>
             <dt>Tầng tại Campus E</dt>
-            <dd>{pad(floorCount)}</dd>
+            <dd>{floorCount}</dd>
           </div>
         </dl>
-      </section>
+      </AboutConvergence>
+
+      <TechnologyExplorer />
+
+      <OperatingModels />
 
       <section className="home-section ecosystem-section" id="ecosystem">
         <div className="site-container">
           <div className="section-heading">
-            <SectionHeading number="03" title="Cụm năng lực">
+            <SectionHeading title="Cụm năng lực">
               Khác chuyên môn. <span>Chung một tầm nhìn.</span>
             </SectionHeading>
             <p>{clusters.length} cụm chính thức kết nối các lab với những thách thức của thế giới thực.</p>
           </div>
           <div className="cluster-list">
-            {clusters.map((cluster, index) => (
+            {clusters.map((cluster) => (
               <Link
                 href={"/labs?cluster=" + encodeURIComponent(cluster.name) + "#lab-directory"}
                 className="cluster-item"
                 key={cluster.name}
               >
-                <span className="cluster-number">{pad(index + 1)}</span>
                 <h3>{cluster.name}</h3>
                 <span className="cluster-tags">
                   {labs.filter((lab) => lab.cluster === cluster.name).length} không gian ·{" "}
@@ -131,47 +110,36 @@ export function HomeExperience() {
         </div>
       </section>
 
-      <section className="site-container home-section" id="spaces">
+      <section className="site-container home-section cv-spaces" id="spaces">
         <div className="section-heading">
-          <SectionHeading number="04" title="Không gian & Labs">
+          <SectionHeading title="Không gian & Labs">
             Không gian cho <span>những ý tưởng lớn.</span>
           </SectionHeading>
           <Link className="text-link" href="/labs">
             Xem tất cả {labs.length} không gian <Arrow />
           </Link>
         </div>
-        <div className="featured-grid">
-          {featured.map((item) => {
-            const lab = labs.find((l) => l.id === item.id) ?? labs.find((l) => l.room === "E401")!;
-            return (
-              <Link className="space-card" key={lab.id} href={"/labs/" + lab.id}>
-                <div className="space-image">
-                  <Image
-                    src={base + item.photo}
-                    width={960}
-                    height={540}
-                    alt={"Phối cảnh thiết kế phòng " + lab.room}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="space-meta">
-                  <span>
-                    {lab.room} · {floorName(lab.floor)}
-                  </span>
-                  <span>Phối cảnh thiết kế</span>
-                </div>
-                <h3>{lab.name}</h3>
-                <p>{lab.desc}</p>
-              </Link>
-            );
-          })}
+        <div className="featured-grid cv-spaces-grid">
+          {featured.map((lab) => (
+            <Link className="space-card" key={lab.id} href={"/labs/" + lab.id}>
+              <div className="space-image">
+                <LabPhoto id={lab.id} sizes="(min-width: 900px) 25vw, 50vw" />
+              </div>
+              <span className="space-meta">
+                <span>
+                  {lab.room} · {floorName(lab.floor)}
+                </span>
+              </span>
+              <h3>{lab.name}</h3>
+            </Link>
+          ))}
         </div>
       </section>
 
       <section className="explore-band" id="campus">
         <div className="site-container explore-grid">
           <div>
-            <SectionHeading number="05" title="Campus Explorer">
+            <SectionHeading title="Campus Explorer">
               Dẫn đúng nơi. <span>Mở thêm góc nhìn.</span>
             </SectionHeading>
             <p className="campus-introduction">
@@ -183,13 +151,13 @@ export function HomeExperience() {
             </Link>
             <div className="explore-features">
               <Link href="/explore">
-                <span>01</span> Tìm phòng & chỉ đường <Arrow diagonal />
+                Tìm phòng & chỉ đường <Arrow diagonal />
               </Link>
               <Link href="/explore">
-                <span>02</span> Khám phá mô hình 3D <Arrow diagonal />
+                Khám phá mô hình 3D <Arrow diagonal />
               </Link>
               <Link href="/explore?room=E104">
-                <span>03</span> Tham quan phòng E104 <Arrow diagonal />
+                Tham quan phòng E104 <Arrow diagonal />
               </Link>
             </div>
           </div>
@@ -199,7 +167,7 @@ export function HomeExperience() {
 
       <section className="site-container home-section" id="news">
         <div className="section-heading">
-          <SectionHeading number="06" title="Tin & hoạt động">
+          <SectionHeading title="Tin & hoạt động">
             Những chuyển động mới <span>từ TCH.</span>
           </SectionHeading>
           <Link className="text-link" href="/news">

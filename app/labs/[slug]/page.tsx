@@ -1,11 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Arrow } from "@/components/Arrow";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { floorLabels, labs } from "../../../data/labs";
-import { roomRenders } from "@/data/site-images";
+import { LabPhoto, LabPhotoCredit } from "@/components/LabPhoto";
 import { getExplorerHref } from "@/lib/explorer-link";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -27,12 +26,9 @@ export default async function LabDetailPage({ params }: Props) {
 
   if (!lab) notFound();
 
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const related = labs.filter((x) => x.cluster === lab.cluster && x.id !== lab.id);
   const floorName = (floor: string) => (floor === "0" ? "Tầng trệt" : `Tầng ${floor}`);
   const floorRole = floorLabels[lab.floor]?.split(/\s[–-]\s/).slice(1).join(" - ");
-  const render = roomRenders[lab.room];
-  const image = render ?? lab.visual.realImage;
   const mapHref = getExplorerHref(lab.room, lab.floor);
   const capabilities = lab.capabilities ?? [
     `Phát triển và kiểm thử giải pháp trong cụm ${lab.cluster}`,
@@ -95,21 +91,15 @@ export default async function LabDetailPage({ params }: Props) {
                 </Link>
               </div>
             </div>
-            {image && (
-              <figure className="cv-detail-figure">
-                <Image
-                  src={basePath + image}
-                  width={960}
-                  height={600}
-                  alt={render ? `Phối cảnh thiết kế phòng ${lab.room}` : ""}
-                  priority
-                />
-                <figcaption>
-                  {render ? "Phối cảnh thiết kế" : "Hình minh họa lĩnh vực"}
-                  {floorRole ? ` · ${floorRole}` : ""}
-                </figcaption>
-              </figure>
-            )}
+            <figure className="cv-detail-figure">
+              <div className="cv-detail-photo">
+                <LabPhoto id={lab.id} sizes="(min-width: 900px) 45vw, 100vw" priority />
+              </div>
+              <figcaption>
+                {floorRole ? <span>{floorRole}</span> : null}
+                <LabPhotoCredit id={lab.id} />
+              </figcaption>
+            </figure>
           </div>
         </section>
 
@@ -166,31 +156,30 @@ export default async function LabDetailPage({ params }: Props) {
           <section className="site-container home-section cv-related">
             <div className="section-heading">
               <div className="section-masthead">
-                <div className="section-masthead-title">
-                  <h2>Lab cùng cụm</h2>
-                </div>
+                <h2>Lab cùng cụm</h2>
                 <p className="section-deck">{lab.cluster}</p>
               </div>
             </div>
-            <ul className="cv-lab-rows">
+            <div className="featured-grid cv-related-grid">
               {related.map((x) => (
-                <li key={x.id}>
+                <article className="space-card" key={x.id}>
                   <Link href={`/labs/${x.id}`}>
-                    <strong>{x.name}</strong>
-                    <span>
-                      {x.room} · {floorName(x.floor)}
+                    <div className="space-image">
+                      <LabPhoto id={x.id} />
+                    </div>
+                    <span className="space-meta">
+                      <span>
+                        {x.room} · {floorName(x.floor)}
+                      </span>
                     </span>
+                    <h3>{x.name}</h3>
                   </Link>
-                  <Link
-                    className="cv-map-link"
-                    href={getExplorerHref(x.room, x.floor)}
-                    aria-label={`Tìm ${x.room} trên bản đồ Campus E`}
-                  >
-                    Bản đồ <Arrow diagonal />
+                  <Link className="space-location" href={getExplorerHref(x.room, x.floor)}>
+                    Tìm trên bản đồ <Arrow diagonal />
                   </Link>
-                </li>
+                </article>
               ))}
-            </ul>
+            </div>
           </section>
         )}
       </main>

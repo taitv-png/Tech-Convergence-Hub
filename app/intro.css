@@ -1,79 +1,148 @@
-/* Intro: "Trường hội tụ" hero and the technology explorer that follows it.
-   One motion (ConvergenceField canvas). Text and controls never move with the pointer. */
-.cv-hero {
+/* Home journey: one-screen hero (slide blue flow, five laser groups, headline), Campus E
+   film, TCH logo zoom, About, models. Loaded after graphic.css (see app/layout.tsx), so
+   component rules here win over the shared system without !important. The default markup
+   is complete without JavaScript; scripts only add scroll-linked opacity and the pinned
+   logo zoom (.is-live). */
+.cv-hero2,
+.cv-film2,
+.cv-door {
+  --night: #121110;
+  --night-ink: #f6f3ee;
+  --night-muted: #c9c3b9;
+  --laser: #ff7a3d;
   position: relative;
-  isolation: isolate;
-  overflow: clip;
-  display: flex;
-  min-height: clamp(600px, calc(100svh - var(--header-height)), 860px);
-  border-bottom: 1px solid var(--line);
+  color: var(--night-ink);
 }
-.cv-field {
+
+/* ---------- Hero ---------- */
+.cv-hero2 {
+  /* Scene frame: the slide band 0.24 to 0.86 (ratio 16 : 5.58 = 2.867). */
+  --copy-room: 300px;
+  --scene-w: min(1560px, calc(100vw - 64px), calc((100svh - var(--header-height) - var(--copy-room)) * 2.867));
+  height: calc(100svh - var(--header-height));
+  min-height: 560px;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #0b1a4a;
+  background-position: center;
+  background-size: cover;
+}
+.cv-blue {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-.cv-field canvas {
-  display: block;
+  z-index: -2;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  pointer-events: none;
 }
-/* Keeps the reading column calm: the field fades out behind the copy. */
-.cv-field::after {
+/* Legibility: a soft deep-blue wash under the headline, charcoal at the very bottom. */
+.cv-hero2::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    var(--bg) 0%,
-    color-mix(in srgb, var(--bg) 84%, transparent) 36%,
-    transparent 64%
-  );
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(5, 12, 42, 0.62) 0%, rgba(5, 12, 42, 0.18) 38%, rgba(5, 12, 42, 0) 58%),
+    linear-gradient(0deg, #121110 0%, rgba(18, 17, 16, 0) 9%);
+  pointer-events: none;
 }
-.cv-hero-inner {
+/* Cross-fade to the film: the hero dims to charcoal as it leaves. */
+.cv-hero2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #121110;
+  opacity: calc(1 - var(--hero-vis, 1));
+  pointer-events: none;
+}
+.cv-hero2-beams {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 0;
+  width: var(--scene-w);
+  translate: -50% 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, #000 52%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, #000 52%);
+}
+.cv-laser-column {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.cv-laser-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+.cv-laser-strip.is-turned {
+  transform: rotate(180deg);
+}
+.cv-laser-strip picture,
+.cv-laser-strip img {
+  display: block;
+  height: 100%;
+}
+/* Slide crop: 26.563% removed on each side of the GIF. */
+.cv-laser-strip img {
+  position: absolute;
+  top: 0;
+  left: -56.67%;
+  width: 213.34%;
+  max-width: none;
+}
+.cv-hero2-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+.cv-hero2-copy {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-block);
-  padding-block: clamp(56px, 9vh, 112px) 24px;
+  align-items: center;
+  padding: clamp(24px, 4.2svh, 48px) 24px 0;
+  text-align: center;
 }
-.cv-hero-copy {
-  max-width: 660px;
-}
-.cv-hero-copy > * {
-  animation: cv-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-.cv-hero-copy > :nth-child(2) {
-  animation-delay: 60ms;
-}
-.cv-hero-copy > :nth-child(3) {
-  animation-delay: 120ms;
-}
-.cv-hero-copy > :nth-child(4) {
-  animation-delay: 180ms;
-}
-body .cv-hero h1 {
-  max-width: none;
-  margin: 28px 0;
-  font-size: var(--type-display);
+body p.cv-hero2-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 clamp(14px, 2.4svh, 24px);
+  font-size: var(--type-xs);
   font-weight: 500;
-  line-height: 1.14;
-  letter-spacing: -0.035em;
-  color: var(--text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #dfe6ff;
 }
-.cv-hero h1 > span {
+.cv-hero2-eyebrow img {
+  width: auto;
+  height: 26px;
+}
+.cv-hero2-eyebrow span {
+  padding-left: 14px;
+  border-left: 1px solid #ffffff55;
+}
+body .cv-hero2 h1 {
+  max-width: none;
+  margin: 0 0 clamp(18px, 3svh, 28px);
+  font-size: clamp(36px, min(5vw, 7.4svh), 66px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  text-shadow: 0 2px 24px rgba(5, 12, 42, 0.45);
+}
+.cv-hero2 h1 > span {
   display: block;
 }
-.cv-hero h1 .cv-accent {
-  color: var(--accent);
-}
-body p.cv-hero-lede {
-  max-width: 27em;
-  margin: 0 0 40px;
-  font-size: var(--type-title);
-  line-height: 1.6;
-  color: var(--muted);
+.cv-hero2 h1 em {
+  font-style: normal;
+  color: var(--laser);
 }
 .cv-actions {
   display: flex;
@@ -81,30 +150,286 @@ body p.cv-hero-lede {
   flex-wrap: wrap;
   gap: 16px 32px;
 }
-.cv-hero-meta {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 16px 40px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line-strong);
-  font-size: var(--type-xs);
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  color: var(--muted);
+.cv-hero2 .cv-actions {
+  justify-content: center;
 }
-body .cv-hero-meta a {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  color: var(--text) !important;
+body .cv-hero2 .text-link {
+  color: #ffffff !important;
 }
-body .cv-hero-meta a:hover {
-  color: var(--accent) !important;
+body .cv-hero2 .text-link:hover {
+  color: var(--laser) !important;
+}
+/* The five groups at their slide positions inside the band. */
+.cv-hero2-scene {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(8px, 2svh, 24px);
+  width: var(--scene-w);
+  aspect-ratio: 16 / 5.58;
+  margin: 0;
+  translate: -50% 0;
+}
+.cv-model-cell {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cv-cell-beam {
+  display: none;
+}
+.cv-building {
+  position: absolute;
+  left: var(--building-left);
+  top: var(--building-top);
+  width: var(--building-width);
+  height: auto;
+  -webkit-box-reflect: below 0 linear-gradient(transparent 55%, rgba(255, 255, 255, 0.22));
+}
+.is-sandbox .cv-building {
+  filter: drop-shadow(0 0 14px rgba(52, 199, 89, 0.35));
+}
+.is-living-lab .cv-building {
+  filter: drop-shadow(0 0 14px rgba(255, 40, 30, 0.28));
+}
+.is-laboratory .cv-building {
+  filter: drop-shadow(0 0 12px rgba(110, 180, 230, 0.45));
+}
+.is-makerspace .cv-building {
+  filter: drop-shadow(0 0 14px rgba(160, 80, 220, 0.45));
+}
+.is-field-lab .cv-building {
+  filter: drop-shadow(0 0 14px rgba(0, 176, 80, 0.4));
+}
+.cv-model-name {
+  position: absolute;
+  left: var(--label-left);
+  top: var(--label-top);
+  translate: -50% -50%;
+  font-size: max(12px, calc(var(--scene-w) * 0.0205));
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #ffffff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+}
+/* One gentle entrance for everything (about 1 s, offsets of at most 150 ms). */
+.cv-hero2-copy {
+  animation: cv-hero-in 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.cv-hero2-scene {
+  animation: cv-hero-in 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.12s both;
+}
+.cv-hero2-beams {
+  animation: cv-fade 1.2s ease-out 0.15s both;
+}
+@keyframes cv-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-/* 01 Technology directions: picker + result. The heading row above never changes. */
+/* ---------- Campus E film: no controls, no overlays; cross-fades in and out ---------- */
+.cv-film2 {
+  height: 100svh;
+  min-height: 420px;
+  overflow: hidden;
+  background: var(--night);
+}
+.cv-film2 video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: var(--film-vis, 1);
+  pointer-events: none;
+}
+.cv-blue::-webkit-media-controls,
+.cv-blue::-webkit-media-controls-enclosure,
+.cv-film2 video::-webkit-media-controls,
+.cv-film2 video::-webkit-media-controls-enclosure,
+.cv-about-frame video::-webkit-media-controls,
+.cv-about-frame video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+.cv-film2::after {
+  content: "";
+  position: absolute;
+  inset: 62% 0 0;
+  background: linear-gradient(transparent, rgba(18, 17, 16, 0.7));
+  opacity: var(--film-vis, 1);
+  pointer-events: none;
+}
+.cv-film2-caption {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  font-size: var(--type-sm);
+  color: var(--night-muted);
+  opacity: var(--film-vis, 1);
+}
+.cv-film2-caption strong {
+  font-size: var(--type-section);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+  color: var(--night-ink);
+}
+
+/* ---------- Logo zoom ---------- */
+/* Static: the lockup on charcoal, then the tagline, both fully readable. */
+.cv-door {
+  background: var(--night);
+}
+.cv-door-stage {
+  position: relative;
+  overflow: hidden;
+  background: #fbfaf7;
+}
+.cv-door-plate {
+  display: block;
+  width: 100%;
+  height: min(60svh, 560px);
+}
+.cv-door-scene {
+  display: grid;
+  place-items: center;
+  min-height: min(50svh, 460px);
+  padding: 48px 24px;
+  text-align: center;
+}
+.cv-door-scene p {
+  margin: 0;
+  font-size: var(--type-display);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  color: #22211f;
+}
+.cv-door-scene span {
+  color: #c2410c;
+}
+.cv-dark-end {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  top: min(60svh, 560px);
+  pointer-events: none;
+}
+/* Live: pinned; the mark opens onto the tagline, which grows a little (0.9 to 1). */
+.cv-door.is-live {
+  height: 220svh;
+}
+.cv-door.is-live .cv-door-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.cv-door.is-live .cv-door-plate {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.cv-door.is-live .cv-door-scene {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  padding: var(--header-height) 24px 0;
+}
+.cv-door.is-live .cv-door-scene p {
+  opacity: var(--door-scene, 0);
+  transform: scale(calc(0.9 + var(--door-scene, 0) * 0.1));
+  transform-origin: 50% 50%;
+}
+.cv-door.is-live .cv-dark-end {
+  top: calc(0.7 * (220svh - 100svh));
+}
+
+/* ---------- About ---------- */
+.cv-about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+.cv-about-copy {
+  min-width: 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-strong);
+}
+.cv-about-copy .about-copy {
+  margin-top: 32px;
+}
+.cv-about-copy .cv-figures {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 32px;
+}
+.cv-about-copy .cv-figures > div:nth-child(3) {
+  padding-left: 0;
+  border-left: 0;
+}
+.cv-about-copy .cv-figures > div:nth-child(n + 3) {
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.cv-about-film {
+  margin: 0;
+  min-width: 0;
+}
+/* Ambient light: the frame's dominant colour (blue while the rays converge, orange when
+   they burst) glows on the page around the video. Set by AboutConvergence. */
+.cv-about-stage {
+  --glow-rgb: 255 122 61;
+  --glow-a: 0;
+  position: relative;
+  isolation: isolate;
+}
+.cv-about-stage::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -14% -10%;
+  border-radius: 40%;
+  background: rgb(var(--glow-rgb) / calc(var(--glow-a) * 0.75));
+  filter: blur(56px);
+  transition: background-color 450ms linear;
+  pointer-events: none;
+}
+.cv-about-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2160 / 1470;
+  border-radius: 20px;
+  background: #121110;
+}
+.cv-about-frame video {
+  pointer-events: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.cv-about-film figcaption {
+  margin-top: 12px;
+  font-size: var(--type-xs);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* Technology directions: picker + result, heading row never moves. */
 .cv-tech-body {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -121,7 +446,7 @@ body .cv-hero-meta a:hover {
 }
 .cv-tech-picker button {
   display: grid;
-  grid-template-columns: 28px 24px minmax(0, 1fr);
+  grid-template-columns: 24px minmax(0, 1fr);
   align-items: center;
   gap: 8px;
   min-height: 60px;
@@ -137,11 +462,6 @@ body .cv-hero-meta a:hover {
   cursor: pointer;
   transition: color 160ms ease;
 }
-.cv-tech-number {
-  font-size: var(--type-xs);
-  font-variant-numeric: tabular-nums;
-  color: var(--muted);
-}
 .cv-tech-signal {
   display: block;
   width: 10px;
@@ -152,8 +472,7 @@ body .cv-hero-meta a:hover {
     background 200ms ease;
 }
 .cv-tech-picker button:hover,
-.cv-tech-picker button.is-selected,
-.cv-tech-picker button.is-selected .cv-tech-number {
+.cv-tech-picker button.is-selected {
   color: var(--accent);
 }
 .cv-tech-picker button:hover .cv-tech-signal,
@@ -165,7 +484,7 @@ body .cv-hero-meta a:hover {
   outline-offset: 2px;
 }
 .cv-tech-result {
-  min-height: 640px;
+  min-height: 600px;
   padding-top: 18px;
   border-top: 1px solid var(--line-strong);
 }
@@ -202,16 +521,76 @@ body p.cv-tech-description {
   animation: cv-fade 240ms ease both;
 }
 
-@keyframes cv-rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+
+/* ---------- Operating models: editorial rows ---------- */
+.cv-models-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
 }
+.cv-models-list > li {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+body .cv-models-list h3 {
+  margin: 0;
+  font-size: var(--type-title);
+  line-height: 1.35;
+}
+.cv-models-list p {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: 1.65;
+  color: var(--muted);
+}
+.cv-models-list li > p:first-of-type {
+  font-size: var(--type-body);
+  color: var(--text);
+}
+.cv-models-list dl {
+  display: contents;
+}
+.cv-models-list dt {
+  margin-bottom: 6px;
+  font-size: var(--type-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.cv-models-list dd {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: 1.65;
+  color: var(--muted);
+}
+.cv-models-note {
+  margin: 16px 0 0;
+  font-size: var(--type-xs);
+  color: var(--muted);
+}
+
+/* ---------- Lab photographs ---------- */
+.cv-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--tint);
+}
+.cv-photo-credit {
+  font-size: var(--type-xs);
+  color: var(--muted);
+}
+body .cv-photo-credit a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 @keyframes cv-fade {
   from {
     opacity: 0;
@@ -221,57 +600,37 @@ body p.cv-tech-description {
   }
 }
 
-@media (max-width: 1100px) {
-  .cv-hero-meta {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-  .cv-hero-meta > span:nth-child(2) {
-    display: none;
-  }
-}
 @media (max-width: 900px) {
-  .cv-hero {
-    min-height: 0;
+  .cv-door.is-live {
+    height: 180svh;
   }
-  .cv-field::after {
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      color-mix(in srgb, var(--bg) 72%, transparent) 30%,
-      color-mix(in srgb, var(--bg) 86%, transparent) 100%
-    );
+  .cv-door.is-live .cv-dark-end {
+    top: calc(0.7 * (180svh - 100svh));
   }
-  .cv-hero-inner {
-    padding-block: 136px 16px;
-  }
+  .cv-about,
   .cv-tech-body {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 32px;
   }
   .cv-tech-result {
     min-height: 0;
   }
+  .cv-models-list > li {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  }
+  .cv-models-list li > h3 {
+    grid-row: span 3;
+  }
 }
 @media (max-width: 640px) {
-  body .cv-hero h1 {
-    margin: 22px 0;
-    line-height: 1.18;
-  }
-  body p.cv-hero-lede {
-    font-size: var(--type-body);
-    margin-bottom: 32px;
-  }
-  .cv-actions {
-    gap: 12px 24px;
-  }
-  .cv-hero-meta > span:first-child {
-    font-size: var(--type-xs);
+  .cv-film2-caption strong {
+    font-size: var(--type-title);
   }
   .cv-tech-picker {
     column-gap: 20px;
   }
   .cv-tech-picker button {
-    grid-template-columns: 22px 16px minmax(0, 1fr);
+    grid-template-columns: 16px minmax(0, 1fr);
     gap: 6px;
     min-height: 56px;
     font-size: var(--type-sm);
@@ -284,14 +643,168 @@ body p.cv-tech-description {
     font-size: var(--type-body);
     margin-bottom: 24px;
   }
+  .cv-models-list > li {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .cv-models-list li > h3 {
+    grid-row: auto;
+  }
+  .cv-about-frame {
+    border-radius: 14px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cv-hero-copy > *,
+  .cv-hero2-copy,
+  .cv-hero2-scene,
+  .cv-hero2-beams,
   .cv-tech-result .cv-lab-rows {
-    animation: none;
+    animation: none !important;
   }
   .cv-tech-picker button,
   .cv-tech-signal {
     transition: none;
+  }
+}
+
+/* Lab detail photo: fixed 16:10 frame, credit under it. */
+.cv-detail-photo {
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: var(--tint);
+}
+.cv-detail-figure figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Mobile hero: the five groups as a readable grid (two per row, the fifth centred), each
+   with its own laser column behind the building. Nothing is dropped or shrunk to a sliver. */
+@media (max-width: 900px) {
+  .cv-hero2 {
+    height: auto;
+    min-height: calc(100svh - var(--header-height));
+    padding-bottom: 20px;
+  }
+  .cv-hero2-beams {
+    display: none;
+  }
+  .cv-hero2-copy {
+    padding: 28px 20px 24px;
+  }
+  .cv-hero2-eyebrow img {
+    height: 22px;
+  }
+  body .cv-hero2 h1 {
+    font-size: clamp(30px, 8.6vw, 44px);
+    line-height: 1.14;
+  }
+  .cv-hero2-scene {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: auto;
+    aspect-ratio: auto;
+    margin: 0 20px;
+    translate: none;
+  }
+  .cv-model-cell {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: clamp(118px, 15.5svh, 160px);
+    padding-bottom: 12px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(5, 12, 42, 0.32);
+  }
+  .cv-model-cell:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 5px);
+  }
+  .cv-cell-beam {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 64%;
+    translate: -50% 0;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), #000 60%);
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), #000 60%);
+  }
+  .cv-building {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    max-width: 74%;
+    max-height: 62%;
+    -webkit-box-reflect: unset;
+  }
+  .cv-model-name {
+    position: relative;
+    left: auto;
+    top: auto;
+    translate: none;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+}
+
+/* Until a source is attached, show the container's poster instead of an empty player. */
+.cv-blue:not([src]) {
+  visibility: hidden;
+}
+
+/* Homepage "Không gian & Labs": the section owns the whole screen (nothing else in the
+   frame); two rows of four labs. The dark campus band starts only after it has passed. */
+.home-section.cv-spaces {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100svh - var(--header-height));
+  padding-block: clamp(24px, 4.5svh, 56px);
+}
+.cv-spaces .section-heading {
+  margin-bottom: clamp(16px, 3svh, 32px);
+}
+.featured-grid.cv-spaces-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3svh, 36px) 24px;
+}
+.cv-spaces-grid .space-image {
+  aspect-ratio: auto;
+  height: clamp(100px, 16svh, 220px);
+}
+.cv-spaces-grid .space-meta {
+  margin: 12px 0 6px;
+}
+body .cv-spaces-grid h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.38;
+}
+@media (max-width: 900px) {
+  .featured-grid.cv-spaces-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+  .cv-spaces-grid .space-image {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+  body .cv-spaces-grid h3 {
+    font-size: 15px;
   }
 }

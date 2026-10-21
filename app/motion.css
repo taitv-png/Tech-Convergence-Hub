@@ -559,7 +559,6 @@ body a.preview-open:hover {
   animation-direction: reverse;
 }
 .collaboration-group {
-  min-width: 100vw;
   display: flex;
   align-items: center;
   gap: 64px;
@@ -581,14 +580,6 @@ body a.preview-open:hover {
   background: #252525;
   padding: 8px;
   border-radius: 4px;
-}
-.collaboration-logo:hover {
-  transform: translateY(-3px);
-}
-.collaboration-section.is-paused .collaboration-track,
-.collaboration-marquee:hover .collaboration-track,
-.collaboration-marquee:focus-within .collaboration-track {
-  animation-play-state: paused;
 }
 @keyframes copy-arrive {
   from {
@@ -646,7 +637,7 @@ body a.preview-open:hover {
 }
 @keyframes collaboration-travel {
   to {
-    transform: translateX(-50%);
+    transform: translateX(calc(-100% / 3));
   }
 }
 @media (max-width: 1000px) {

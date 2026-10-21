@@ -1,22 +1,10 @@
 import type { ReactNode } from "react";
 
-export function SectionHeading({
-  number,
-  title,
-  children,
-}: {
-  number: string;
-  title: string;
-  children?: ReactNode;
-}) {
+// Section title with an optional supporting line. No decorative numbering.
+export function SectionHeading({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="section-masthead">
-      <div className="section-masthead-title">
-        <span className="section-serial" aria-hidden="true">
-          {number}
-        </span>
-        <h2>{title}</h2>
-      </div>
+      <h2>{title}</h2>
       {children && <p className="section-deck">{children}</p>}
     </div>
   );

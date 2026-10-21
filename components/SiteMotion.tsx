@@ -21,11 +21,21 @@ export function SiteMotion() {
       frame = 0;
       const rect = section.getBoundingClientRect();
       const height = window.innerHeight;
-      const ramp = height * 0.65;
-      let darkness = Math.max(0, Math.min(1, (height - rect.top) / ramp, rect.bottom / ramp));
+      // Darken only once the previous section (Không gian & Labs) has mostly left the frame.
+      const ramp = height * 0.45;
+      let darkness = Math.max(0, Math.min(1, (height * 0.45 - rect.top) / ramp, rect.bottom / (height * 0.65)));
       if (reducedMotion.matches)
         darkness = rect.top < height * 0.5 && rect.bottom > height * 0.5 ? 1 : 0;
       else darkness = darkness * darkness * (3 - 2 * darkness);
+      // The opening (lasers, Campus E film, logo door) stays charcoal until the door has opened.
+      const introEnd = document.querySelector<HTMLElement>(".cv-dark-end");
+      if (introEnd) {
+        const top = introEnd.getBoundingClientRect().top;
+        const intro = reducedMotion.matches
+          ? top > 0 ? 1 : 0
+          : Math.max(0, Math.min(1, top / (height * 0.12)));
+        darkness = Math.max(darkness, intro);
+      }
       body.style.setProperty("--journey-darkness", darkness.toFixed(4));
       body.style.setProperty("--journey-light-share", `${((1 - darkness) * 100).toFixed(2)}%`);
     };
@@ -54,7 +64,7 @@ export function SiteMotion() {
     setTransitioning(false);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const elements = document.querySelectorAll<HTMLElement>(
-      ".section-heading, .about-copy, .cv-figures, .cluster-item, .featured-grid > a, .home-news-grid > a, .explore-grid > *, .contact-band",
+      ".section-heading, .cv-figures, .cluster-item, .featured-grid > a, .cv-models-list > li, .home-news-grid > a, .explore-grid > *, .contact-band",
     );
     const observer = new IntersectionObserver(
       (entries) => {
