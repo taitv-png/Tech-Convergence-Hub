@@ -17,8 +17,28 @@
 /* Video first. Desktop shares one sticky frame, with the film fading off the model scene.
    Without enhancement, on smaller screens or with reduced motion, both stay in normal flow. */
 .cv-intro-flow {
+  --lab-bleed: clamp(150px, 22svh, 240px);
   position: relative;
+  z-index: 1;
   background: #121110;
+}
+/* A quiet blue haze bridges the scene and the charcoal logo section. */
+.cv-intro-flow::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(100% - 100px);
+  left: 0;
+  right: 0;
+  height: calc(var(--lab-bleed) + 100px);
+  background:
+    radial-gradient(ellipse at 22% 24%, rgba(24, 45, 130, 0.4), transparent 66%),
+    radial-gradient(ellipse at 52% 15%, rgba(28, 108, 146, 0.14), transparent 54%),
+    radial-gradient(ellipse at 75% 20%, rgba(104, 42, 151, 0.14), transparent 54%);
+  filter: blur(24px);
+  -webkit-mask-image: linear-gradient(transparent, #000 28%, rgba(0, 0, 0, 0.45) 58%, transparent);
+  mask-image: linear-gradient(transparent, #000 28%, rgba(0, 0, 0, 0.45) 58%, transparent);
+  pointer-events: none;
 }
 .cv-intro-flow.is-live {
   height: calc(210svh - var(--header-height));
@@ -65,7 +85,7 @@
   --scene-w: min(1560px, calc(100vw - 64px), calc((100svh - var(--header-height) - var(--copy-room)) * 2.867));
   height: calc(100svh - var(--header-height));
   min-height: 560px;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
   background-color: #0b1a4a;
   background-position: center;
@@ -104,14 +124,16 @@
 .cv-hero2-beams {
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: calc(-1 * var(--lab-bleed));
   left: 50%;
   z-index: 0;
   width: var(--scene-w);
   translate: -50% 0;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, #000 52%);
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, #000 52%);
+  mix-blend-mode: screen;
+  filter: blur(0.65px);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, #000 35%, #000 calc(100% - var(--lab-bleed) - 48px), rgba(0, 0, 0, 0.4) calc(100% - var(--lab-bleed) + 20px), transparent 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, #000 35%, #000 calc(100% - var(--lab-bleed) - 48px), rgba(0, 0, 0, 0.4) calc(100% - var(--lab-bleed) + 20px), transparent 100%);
 }
 .cv-laser-column {
   position: absolute;
@@ -144,6 +166,7 @@
   position: relative;
   z-index: 1;
   height: 100%;
+  overflow: hidden;
 }
 .cv-hero2-copy {
   display: flex;
