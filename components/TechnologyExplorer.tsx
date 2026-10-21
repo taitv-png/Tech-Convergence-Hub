@@ -9,7 +9,6 @@ import { Arrow } from "./Arrow";
 import { SectionHeading } from "./SectionHeading";
 
 const floorName = (floor: string) => (floor === "0" ? "Tầng trệt" : "Tầng " + floor);
-const themeNumber = (code: string) => code.slice(0, 2);
 
 // The heading sits in its own row above the picker, so selecting a direction never moves it.
 // The result area reserves the height of the largest theme to keep the page below steady.
@@ -35,7 +34,7 @@ export function TechnologyExplorer() {
   return (
     <section className="cv-tech home-section site-container" id="technology">
       <div className="section-heading">
-        <SectionHeading number="01" title="Hướng công nghệ">
+        <SectionHeading title="Hướng công nghệ">
           {technologyThemes.length} hướng nghiên cứu. <span>Một điểm hội tụ.</span>
         </SectionHeading>
         <p>Chọn một hướng để thấy lab, phòng và tầng tương ứng tại Campus E.</p>
@@ -55,7 +54,6 @@ export function TechnologyExplorer() {
               onClick={() => setSelected(item.id)}
               onKeyDown={(event) => moveFocus(event, index)}
             >
-              <span className="cv-tech-number">{themeNumber(item.code)}</span>
               <span className="cv-tech-signal" aria-hidden="true" />
               <span className="cv-tech-name">{item.name}</span>
             </button>
@@ -63,10 +61,8 @@ export function TechnologyExplorer() {
         </div>
         <div className="cv-tech-result" id={panelId} aria-live="polite">
           <p className="cv-tech-meta">
-            <span>{theme.code}</span>
-            <span>
-              {matchingLabs.length} lab tại Campus E
-            </span>
+            <span>Hướng công nghệ</span>
+            <span>{matchingLabs.length} lab tại Campus E</span>
           </p>
           <h3>{theme.name}</h3>
           <p className="cv-tech-description">{theme.description}</p>

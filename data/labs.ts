@@ -268,7 +268,8 @@ export const clusters: Cluster[] = [
   },
 ];
 
-export const labs: Lab[] = [
+// Every room in the source data, classrooms included (kept for the record and the map).
+export const allSpaces: Lab[] = [
   taoLab({
     id: "precision-mechanics-lab",
     code: "MechProto",
@@ -655,6 +656,9 @@ export const labs: Lab[] = [
     apps: ["Không gian làm việc", "Hội thảo"],
   }),
 ];
+// The site lists laboratories and lab spaces only; classrooms ("Phòng học") are left out.
+export const labs: Lab[] = allSpaces.filter((space) => !space.id.startsWith("classroom-"));
+
 
 assertUniqueLabVisuals(labs);
 

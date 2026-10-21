@@ -4,8 +4,8 @@ import "./fonts.css";
 import "./globals.css";
 import "./redesign.css";
 import "./motion.css";
-import "./intro.css";
 import "./graphic.css";
+import "./intro.css";
 import { SiteMotion } from "@/components/SiteMotion";
 import { ScrollToTop } from "@/components/ScrollToTop";
 

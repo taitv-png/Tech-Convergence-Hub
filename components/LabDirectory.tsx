@@ -1,11 +1,10 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { clusters, labs } from "@/data/labs";
 import { technologyThemes } from "@/data/technology-themes";
 import { Arrow } from "./Arrow";
-import { imageForCluster, roomRenders } from "@/data/site-images";
+import { LabPhoto } from "./LabPhoto";
 import { getExplorerHref } from "@/lib/explorer-link";
 const normalize = (text: string) =>
   text
@@ -14,7 +13,6 @@ const normalize = (text: string) =>
     .replace(/đ/g, "d")
     .replace(/Đ/g, "D")
     .toLowerCase();
-const roomPhotos = roomRenders;
 export function LabDirectory({ showHeader = true }: { showHeader?: boolean }) {
   const [query, setQuery] = useState("");
   const [floor, setFloor] = useState("");
@@ -49,7 +47,6 @@ export function LabDirectory({ showHeader = true }: { showHeader?: boolean }) {
     if (window.location.search)
       window.history.replaceState(null, "", window.location.pathname + "#lab-directory");
   };
-  const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   return (
     <section className="site-container" id="lab-directory">
       {showHeader && (
@@ -126,31 +123,15 @@ export function LabDirectory({ showHeader = true }: { showHeader?: boolean }) {
       ) : (
         <div className="directory-grid">
           {filtered.map((lab) => (
-            <article
-              className={"space-card" + (roomPhotos[lab.room] ? " has-render" : " has-reference")}
-              key={lab.id}
-            >
+            <article className="space-card" key={lab.id}>
               <Link href={"/labs/" + lab.id}>
                 <div className="space-image">
-                  <Image
-                    src={
-                      base +
-                      (roomPhotos[lab.room] ??
-                        imageForCluster(lab.cluster)?.src ??
-                        lab.visual.realImage ??
-                        lab.visual.cardImage)
-                    }
-                    width={960}
-                    height={540}
-                    alt={lab.name}
-                    loading="lazy"
-                  />
+                  <LabPhoto id={lab.id} />
                 </div>
                 <div className="space-meta">
                   <span>
                     {lab.room} · {lab.floor === "0" ? "Tầng trệt" : "Tầng " + lab.floor}
                   </span>
-                  {roomPhotos[lab.room] && <span>Phối cảnh thiết kế</span>}
                 </div>
                 <h3>{lab.name}</h3>
                 <p>{lab.desc}</p>

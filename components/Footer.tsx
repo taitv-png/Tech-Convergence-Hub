@@ -43,6 +43,7 @@ export function Footer() {
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Tech-Convergence Hub</span>
           <span>Nền tảng nghiên cứu và đổi mới mở tại UEH</span>
+          <Link href="/credits">Nguồn ảnh</Link>
           <a href="#main-content">Về đầu trang ↑</a>
         </div>
       </div>
