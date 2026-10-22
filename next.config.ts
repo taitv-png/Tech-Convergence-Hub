@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
 		NEXT_PUBLIC_BASE_PATH: basePath,
 	},
 	basePath,
+	// Two root layouts (app/(en), app/(vi)) share one 404 page: app/global-not-found.tsx.
+	experimental: {
+		globalNotFound: true,
+	},
 	assetPrefix: basePath ? `${basePath}/` : undefined,
 	webpack(config) {
 		config.watchOptions = {

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { tr } from "./locale";
 import { commonSpaceName } from "./room-catalogue";
 import { createStudent, type RoomObstacle, type StudentVariant } from "./room104-scene";
 
@@ -201,7 +202,7 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
         );
     }
   }
-  const add = (name: string, x: number, z: number, description: string, action = "Tìm hiểu") => {
+  const add = (name: string, x: number, z: number, description: string, action = tr("Tìm hiểu", "Learn more")) => {
     const i = items.length;
     items.push({ name, x, z, title: name, description, action });
     const g = new THREE.Group();
@@ -244,26 +245,26 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
   };
   const special = room.id === "E102" || room.id === "E401";
   const seats = add(
-    "Khu bàn học",
+    tr("Khu bàn học", "Study area"),
     w > 0.6 ? -0.1 : 0,
     0.5,
-    "Bàn và ghế hướng về khu trình chiếu, chừa lối đi dọc để tham quan.",
+    tr("Bàn và ghế hướng về khu trình chiếu, chừa lối đi dọc để tham quan.", "Desks and chairs face the presentation area, with an aisle left for visitors."),
   );
   const presentation = add(
-    special ? "Màn hình trình chiếu" : "Bảng trắng",
+    special ? tr("Màn hình trình chiếu", "Presentation screen") : tr("Bảng trắng", "Whiteboard"),
     0,
     -d / 2 + 1.1,
     special
-      ? "Màn hình phục vụ trình chiếu và trao đổi. Có thể bật hoặc tắt nội dung minh họa."
-      : "Bảng trắng ở đầu phòng, phía trước các hàng bàn học.",
-    special ? "Bật / tắt màn hình" : "Viết / xóa bảng",
+      ? tr("Màn hình phục vụ trình chiếu và trao đổi. Có thể bật hoặc tắt nội dung minh họa.", "A screen for presentations and discussion. The sample content can be turned on or off.")
+      : tr("Bảng trắng ở đầu phòng, phía trước các hàng bàn học.", "A whiteboard at the front of the room, ahead of the rows of desks."),
+    special ? tr("Bật / tắt màn hình", "Screen on / off") : tr("Viết / xóa bảng", "Write / wipe the board"),
   );
   const teacher = add(
-    "Bàn làm việc",
+    tr("Bàn làm việc", "Work desk"),
     -w / 2 + 0.8,
     -d / 2 + 1.4,
-    "Bàn làm việc với máy tính và không gian chuẩn bị nội dung.",
-    "Bật / tắt máy tính",
+    tr("Bàn làm việc với máy tính và không gian chuẩn bị nội dung.", "A desk with a computer and space to prepare content."),
+    tr("Bật / tắt máy tính", "Computer on / off"),
   );
   const moving: THREE.Object3D[] = [];
   if (furnished) {
@@ -300,10 +301,10 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
     chair(teacherX, -d / 2 + 1.6, teacher);
     if (room.id === "E102") {
       const display = add(
-        "Vách lưới trưng bày",
+        tr("Vách lưới trưng bày", "Display mesh wall"),
         w / 2 - 0.35,
         0,
-        "Vách lưới đen dọc hai bên phòng, dùng treo và trưng bày học liệu.",
+        tr("Vách lưới đen dọc hai bên phòng, dùng treo và trưng bày học liệu.", "Black mesh walls along both sides of the room for hanging and showing learning materials."),
       );
       for (const side of [-1, 1])
         for (let z = -d / 2 + 2.6; z < d / 2 - 0.5; z += 2.2) {
@@ -314,10 +315,10 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
           for (let y = 0.1; y < 2.2; y += 0.14) box(0.025, 0.012, 1.75, x, y, z, metal, display);
         }
       const shelf = add(
-        "Kệ học liệu",
+        tr("Kệ học liệu", "Learning material shelf"),
         w / 2 - 0.75,
         -d / 2 + 0.25,
-        "Kệ mở ở cuối phòng, cạnh bàn máy tính và khu hậu kỳ.",
+        tr("Kệ mở ở cuối phòng, cạnh bàn máy tính và khu hậu kỳ.", "Open shelves at the back of the room, next to the computer desk and post-production area."),
       );
       for (let y = 0.15; y < 2.3; y += 0.35)
         box(1.25, 0.035, 0.38, w / 2 - 0.75, y, -d / 2 + 0.24, metal, shelf);
@@ -325,11 +326,11 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
     }
     if (room.id === "E401") {
       const bike = add(
-        "Xe đạp tương tác",
+        tr("Xe đạp tương tác", "Interactive bicycle"),
         -w / 2 + 0.45,
         d / 2 - 1.35,
-        "Xe đạp dùng cho trải nghiệm tương tác mô phỏng. Nhấn để thử quay bánh xe.",
-        "Chạy / dừng xe đạp",
+        tr("Xe đạp dùng cho trải nghiệm tương tác mô phỏng. Nhấn để thử quay bánh xe.", "A bicycle for interactive simulation. Press to spin the wheel."),
+        tr("Chạy / dừng xe đạp", "Start / stop the bicycle"),
       );
       const bx = -w / 2 + 0.45,
         bz = d / 2 - 1.35;
@@ -381,11 +382,11 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
       box(0.5, 0.035, 0.04, bx, 1.05, bz + 0.4, metal, bike);
       obstacle(bx, bz, 0.65, 1.6);
       const model = add(
-        "Bàn mô hình đô thị",
+        tr("Bàn mô hình đô thị", "Urban model table"),
         w / 2 - 0.7,
         -d / 2 + 2.0,
-        "Mô hình các khối nhà minh họa không gian đô thị. Nhấn để xem hiệu ứng vòng quét.",
-        "Bật / tắt vòng quét",
+        tr("Mô hình các khối nhà minh họa không gian đô thị. Nhấn để xem hiệu ứng vòng quét.", "Building blocks illustrating urban space. Press to see the scan ring."),
+        tr("Bật / tắt vòng quét", "Scan ring on / off"),
       );
       box(1.0, 0.8, 1.0, w / 2 - 0.65, 0.4, -d / 2 + 2.05, white, model);
       for (let i = 0; i < 12; i++)
@@ -446,7 +447,7 @@ export function createTeachingRoom(scene: THREE.Scene, room: TourRoom, furnished
     start: entry.start,
     portals: (room.doors ?? [room.door]).map((door) => {
       const e = roomEntry({ ...room, door });
-      return { id: "exit", label: "Ra hành lang", x: e.x, z: e.z, kind: "exit" as const };
+      return { id: "exit", label: tr("Ra hành lang", "To the corridor"), x: e.x, z: e.z, kind: "exit" as const };
     }),
     highlight: (i: number) => {
       selected = i;
@@ -523,7 +524,7 @@ export function createHallway(
       sign(r.id, p.x + nx * 0.14, 2.8, p.z + nz * 0.14);
       portals.push({
         id: r.id,
-        label: `Vào phòng ${r.id}`,
+        label: tr(`Vào phòng ${r.id}`, `Enter room ${r.id}`),
         x: p.x + nx * 0.75,
         z: p.z + nz * 0.75,
         kind: "room",
@@ -534,10 +535,10 @@ export function createHallway(
   if (floorIndex < 7) addBlock(0.8, 0.6, 2.2, 1.45, 0.45, 0xb48b65);
   addBlock(6.02, 4.95, 6.95, 5.65, 2.5, 0xa3afb1);
   const coreSpecs: [Portal["kind"], number, number, string][] = [
-    ["CT1", 6.55, 4.55, "CT1 · Cầu thang"],
+    ["CT1", 6.55, 4.55, tr("CT1 · Cầu thang", "CT1 · Stairs")],
   ];
-  if (floorIndex < 7) coreSpecs.push(["CT2", 1.5, 2.15, "CT2 · Cầu thang"]);
-  if ([0, 4, 5, 6].includes(floorIndex)) coreSpecs.push(["LIFT", 5.72, 5.25, "Thang máy"]);
+  if (floorIndex < 7) coreSpecs.push(["CT2", 1.5, 2.15, tr("CT2 · Cầu thang", "CT2 · Stairs")]);
+  if ([0, 4, 5, 6].includes(floorIndex)) coreSpecs.push(["LIFT", 5.72, 5.25, tr("Thang máy", "Lift")]);
   coreSpecs.forEach(([kind, x, z, label]) => {
     const p = world(x, z);
     portals.push({ id: kind, label, x: p.x, z: p.z, kind });
@@ -555,8 +556,8 @@ export function createHallway(
     box(1.2, 0.08 + i * 0.08, 0.19, p.x, 0.04 + i * 0.04, p.z, white);
   }
   for (const [x, name] of [
-    [6.25, "WC Nam"],
-    [7.35, "WC Nữ"],
+    [6.25, tr("WC Nam", "Men's toilets")],
+    [7.35, tr("WC Nữ", "Women's toilets")],
   ] as const) {
     addBlock(x - 0.35, 6.02, x + 0.35, 6.65, 0.6, 0xacbdbb);
     const p = world(x, 6.35);

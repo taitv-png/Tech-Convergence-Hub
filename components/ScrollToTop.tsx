@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getDictionary } from "@/lib/dictionary";
+import type { Locale } from "@/lib/i18n";
 
-export function ScrollToTop() {
+export function ScrollToTop({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale).common;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -31,8 +34,8 @@ export function ScrollToTop() {
       type="button"
       onClick={scrollToTop}
       className="scroll-to-top"
-      aria-label="Cuộn lên đầu trang"
-      title="Lên đầu trang"
+      aria-label={t.scrollTop}
+      title={t.scrollTop}
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 19V5M5 12l7-7 7 7" />

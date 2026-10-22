@@ -107,6 +107,8 @@ export function SiteMotion() {
         return;
       const link = (event.target as Element).closest<HTMLAnchorElement>("a[href]");
       if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+      // The language switch reloads into the other root layout and carries the query string.
+      if (link.hasAttribute("hreflang")) return;
       const url = new URL(link.href, window.location.href);
       if (url.origin !== window.location.origin || !/^https?:$/.test(url.protocol)) return;
       if (url.pathname === window.location.pathname && url.search === window.location.search)

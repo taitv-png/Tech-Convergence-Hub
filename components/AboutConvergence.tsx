@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
+import { getDictionary } from "@/lib/dictionary";
+import type { Locale } from "@/lib/i18n";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const source = () =>
@@ -11,7 +13,8 @@ const source = () =>
 // cropped x=2370 w=1470 h=2160 and rotated 90° clockwise to 2160 × 1470) illustrates it.
 // It plays muted and looping while visible, with no controls; clicks never pause it.
 // Under reduced motion it waits on its poster until the visitor clicks or taps it.
-export function AboutConvergence({ children }: { children: ReactNode }) {
+export function AboutConvergence({ children, locale }: { children: ReactNode; locale: Locale }) {
+  const t = getDictionary(locale).about;
   const figure = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
 
@@ -146,11 +149,11 @@ export function AboutConvergence({ children }: { children: ReactNode }) {
               disablePictureInPicture
               disableRemotePlayback
               poster={base + "/media/tch-convergence-v9-poster.webp"}
-              aria-label="Video minh họa: hội tụ, tích năng và lan tỏa tại Cơ sở E"
+              aria-label={t.videoLabel}
             />
           </div>
         </div>
-        <figcaption>Hội tụ · Tích năng · Lan tỏa</figcaption>
+        <figcaption>{t.videoCaption}</figcaption>
       </figure>
     </section>
   );

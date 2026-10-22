@@ -2,46 +2,47 @@
 
 import Link from "next/link";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
-import { technologyThemes } from "@/data/technology-themes";
-import { labs } from "@/data/labs";
 import { getExplorerHref } from "@/lib/explorer-link";
+import { getLabs, getThemes } from "@/lib/content";
+import { getDictionary } from "@/lib/dictionary";
+import { floorName, localePath, type Locale } from "@/lib/i18n";
 import { Arrow } from "./Arrow";
 import { SectionHeading } from "./SectionHeading";
 
-const floorName = (floor: string) => (floor === "0" ? "Tầng trệt" : "Tầng " + floor);
-
 // The heading sits in its own row above the picker, so selecting a direction never moves it.
 // The result area reserves the height of the largest theme to keep the page below steady.
-export function TechnologyExplorer() {
-  const [selected, setSelected] = useState(technologyThemes[0].id);
+export function TechnologyExplorer({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale).tech;
+  const themes = getThemes(locale);
+  const labs = getLabs(locale);
+  const [selected, setSelected] = useState(themes[0].id);
   const panelId = useId();
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
-  const theme = technologyThemes.find((item) => item.id === selected) ?? technologyThemes[0];
+  const theme = themes.find((item) => item.id === selected) ?? themes[0];
   const matchingLabs = theme.labs
     .map((id) => labs.find((lab) => lab.id === id))
     .filter((lab) => lab !== undefined);
 
   const moveFocus = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
-    const edge = { Home: 0, End: technologyThemes.length - 1 }[event.key];
+    const edge = { Home: 0, End: themes.length - 1 }[event.key];
     if (step === undefined && edge === undefined) return;
     event.preventDefault();
-    const next =
-      edge ?? (index + (step ?? 0) + technologyThemes.length) % technologyThemes.length;
+    const next = edge ?? (index + (step ?? 0) + themes.length) % themes.length;
     buttons.current[next]?.focus();
   };
 
   return (
     <section className="cv-tech home-section site-container" id="technology">
       <div className="section-heading">
-        <SectionHeading title="Hướng công nghệ">
-          {technologyThemes.length} hướng nghiên cứu. <span>Một điểm hội tụ.</span>
+        <SectionHeading title={t.title}>
+          {t.deckA(themes.length)} <span>{t.deckB}</span>
         </SectionHeading>
-        <p>Chọn một hướng để thấy lab, phòng và tầng tương ứng tại Campus E.</p>
+        <p>{t.intro}</p>
       </div>
       <div className="cv-tech-body">
-        <div className="cv-tech-picker" role="group" aria-label="Chọn hướng công nghệ">
-          {technologyThemes.map((item, index) => (
+        <div className="cv-tech-picker" role="group" aria-label={t.pick}>
+          {themes.map((item, index) => (
             <button
               key={item.id}
               ref={(node) => {
@@ -61,32 +62,32 @@ export function TechnologyExplorer() {
         </div>
         <div className="cv-tech-result" id={panelId} aria-live="polite">
           <p className="cv-tech-meta">
-            <span>Hướng công nghệ</span>
-            <span>{matchingLabs.length} lab tại Campus E</span>
+            <span>{t.meta}</span>
+            <span>{t.count(matchingLabs.length)}</span>
           </p>
           <h3>{theme.name}</h3>
           <p className="cv-tech-description">{theme.description}</p>
           <ul className="cv-lab-rows" key={theme.id}>
             {matchingLabs.map((lab) => (
               <li key={lab.id}>
-                <Link href={"/labs/" + lab.id}>
+                <Link href={localePath(locale, "/labs/" + lab.id)}>
                   <strong>{lab.name}</strong>
                   <span>
-                    {lab.room} · {floorName(lab.floor)}
+                    {lab.room} · {floorName(locale, lab.floor)}
                   </span>
                 </Link>
                 <Link
                   className="cv-map-link"
-                  href={getExplorerHref(lab.room, lab.floor)}
-                  aria-label={`Tìm ${lab.room} trên bản đồ Campus E`}
+                  href={localePath(locale, getExplorerHref(lab.room, lab.floor))}
+                  aria-label={t.mapLabel(lab.room)}
                 >
-                  Bản đồ <Arrow diagonal />
+                  {t.map} <Arrow diagonal />
                 </Link>
               </li>
             ))}
           </ul>
-          <Link className="text-link" href={"/labs?theme=" + theme.id + "#lab-directory"}>
-            Xem trong danh mục labs <Arrow />
+          <Link className="text-link" href={localePath(locale, "/labs?theme=" + theme.id + "#lab-directory")}>
+            {t.inDirectory} <Arrow />
           </Link>
         </div>
       </div>

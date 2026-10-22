@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { tr } from "./locale";
 
 // PDF page 3: 658.08 drawing points correspond to the dimensioned 21.10 m.
 // Furniture dimensions are estimates from Scenes 134–143, not surveyed measurements.
@@ -10,76 +11,76 @@ export const ROOM104 = {
 export type RoomObstacle = { x: number; z: number; w: number; d: number };
 export const ROOM_ITEMS = [
   {
-    name: "Khu bàn học",
+    name: tr("Khu bàn học", "Study area"),
     x: -2.15,
     z: 0.9,
-    title: "Bàn đôi mặt gỗ · ghế khung thép",
+    title: tr("Bàn đôi mặt gỗ · ghế khung thép", "Wood double desks · steel-frame chairs"),
     description:
-      "Cụm bàn học hướng về màn hình di động, với lối đi dọc bên dãy kệ. Tái dựng 5 bàn đôi và 10 ghế theo các góc render.",
-    action: "Xem khu bàn học",
+      tr("Cụm bàn học hướng về màn hình di động, với lối đi dọc bên dãy kệ. Tái dựng 5 bàn đôi và 10 ghế theo các góc render.", "Desks facing the mobile screen, with an aisle along the shelves. Five double desks and ten chairs rebuilt from the render angles."),
+    action: tr("Xem khu bàn học", "View the study area"),
   },
   {
-    name: "Màn hình di động",
+    name: tr("Màn hình di động", "Mobile screen"),
     x: 0.05,
     z: 1.03,
-    title: "Màn hình trình chiếu trên chân bánh xe",
+    title: tr("Màn hình trình chiếu trên chân bánh xe", "Presentation screen on a wheeled stand"),
     description:
-      "Màn hình lớn đặt giữa khu bàn học và khu làm việc. Nhấn nút để bật / tắt nội dung trình chiếu mẫu.",
-    action: "Bật / tắt màn hình",
+      tr("Màn hình lớn đặt giữa khu bàn học và khu làm việc. Nhấn nút để bật / tắt nội dung trình chiếu mẫu.", "A large screen between the study and work areas. Press the button to turn the sample content on or off."),
+    action: tr("Bật / tắt màn hình", "Screen on / off"),
   },
   {
-    name: "Dãy kệ trưng bày",
+    name: tr("Dãy kệ trưng bày", "Display shelves"),
     x: -2.15,
     z: -2.27,
-    title: "Ba khoang kệ kim loại màu đen",
+    title: tr("Ba khoang kệ kim loại màu đen", "Three black metal shelf bays"),
     description:
-      "Kệ mở nhiều tầng chạy dọc tường, dành cho trưng bày vật mẫu và học liệu. Các ngăn được để trống như ảnh thiết kế.",
-    action: "Xem dãy kệ",
+      tr("Kệ mở nhiều tầng chạy dọc tường, dành cho trưng bày vật mẫu và học liệu. Các ngăn được để trống như ảnh thiết kế.", "Open shelves along the wall for samples and learning materials. The shelves are left empty, as in the design images."),
+    action: tr("Xem dãy kệ", "View the shelves"),
   },
   {
-    name: "Tủ hồ sơ",
+    name: tr("Tủ hồ sơ", "File cabinet"),
     x: 0.05,
     z: -2.25,
-    title: "Tủ trắng · ngăn mở và cánh đóng",
+    title: tr("Tủ trắng · ngăn mở và cánh đóng", "White cabinet · open shelves and closed doors"),
     description:
-      "Tủ cao kết hợp ngăn sách, hồ sơ và khoang lưu trữ đóng. Nhấn nút để thử mở / đóng hai cánh tủ dưới.",
-    action: "Mở / đóng tủ",
+      tr("Tủ cao kết hợp ngăn sách, hồ sơ và khoang lưu trữ đóng. Nhấn nút để thử mở / đóng hai cánh tủ dưới.", "A tall cabinet with book and file shelves and closed storage. Press the button to open or close the two lower doors."),
+    action: tr("Mở / đóng tủ", "Open / close cabinet"),
   },
   {
-    name: "Quầy cà phê",
+    name: tr("Quầy cà phê", "Coffee bar"),
     x: 1.48,
     z: -2.18,
-    title: "Quầy gỗ · máy pha cà phê",
+    title: tr("Quầy gỗ · máy pha cà phê", "Wood counter · coffee machine"),
     description:
-      "Khu tiện ích có máy pha, cốc và kệ phía trên, cạnh bàn cao. Nhấn nút để chạy hiệu ứng pha cà phê minh họa.",
-    action: "Thử pha cà phê",
+      tr("Khu tiện ích có máy pha, cốc và kệ phía trên, cạnh bàn cao. Nhấn nút để chạy hiệu ứng pha cà phê minh họa.", "A service corner with a coffee machine, cups and shelves above, next to the high table. Press the button for a coffee demo."),
+    action: tr("Thử pha cà phê", "Brew a coffee"),
   },
   {
-    name: "Bàn cao",
+    name: tr("Bàn cao", "High table"),
     x: 3.05,
     z: -2.18,
-    title: "Bàn mặt gỗ · khung thép đen",
+    title: tr("Bàn mặt gỗ · khung thép đen", "Wood top · black steel frame"),
     description:
-      "Bàn cao nối tiếp quầy cà phê, có hai khay đặt trên mặt bàn và giữ khoảng trống trước cửa cuối phòng.",
-    action: "Xem bàn cao",
+      tr("Bàn cao nối tiếp quầy cà phê, có hai khay đặt trên mặt bàn và giữ khoảng trống trước cửa cuối phòng.", "A high table continuing the coffee bar, with two trays, keeping the space in front of the rear door clear."),
+    action: tr("Xem bàn cao", "View the high table"),
   },
   {
-    name: "Khu máy tính",
+    name: tr("Khu máy tính", "Computer area"),
     x: 2.45,
     z: 0.65,
-    title: "Ba máy tính · bàn làm việc đối diện",
+    title: tr("Ba máy tính · bàn làm việc đối diện", "Three computers · facing desks"),
     description:
-      "Hai máy tính phía ghế trắng, một máy phía ghế tựa cao. Màn hình, bàn phím và đèn bàn dựng theo ảnh; chưa gán cấu hình thiết bị thực tế.",
-    action: "Bật / tắt máy tính",
+      tr("Hai máy tính phía ghế trắng, một máy phía ghế tựa cao. Màn hình, bàn phím và đèn bàn dựng theo ảnh; chưa gán cấu hình thiết bị thực tế.", "Two computers on the white-chair side and one on the high-back side. Screens, keyboards and lamps follow the photos; no real hardware specification is implied."),
+    action: tr("Bật / tắt máy tính", "Computer on / off"),
   },
   {
-    name: "Tủ thấp & cây xanh",
+    name: tr("Tủ thấp & cây xanh", "Low cabinet & plants"),
     x: 0.95,
     z: 0.64,
-    title: "Tủ thấp chia ngăn · chậu cây dài",
+    title: tr("Tủ thấp chia ngăn · chậu cây dài", "Divided low cabinet · long planter"),
     description:
-      "Tủ thấp đặt ở đầu cụm bàn làm việc, phía trên có chậu cây, ngăn nhẹ khu máy tính với khu trình chiếu.",
-    action: "Xem tủ và cây",
+      tr("Tủ thấp đặt ở đầu cụm bàn làm việc, phía trên có chậu cây, ngăn nhẹ khu máy tính với khu trình chiếu.", "A low cabinet at the end of the work desks, with a planter on top, gently separating the computers from the presentation area."),
+    action: tr("Xem tủ và cây", "View the cabinet and plants"),
   },
 ] as const;
 

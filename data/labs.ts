@@ -11,6 +11,8 @@ export type Lab = {
   room: string;
   floor: string;
   cluster: string;
+  // Stable cluster key (see clusterKeyByName); filters and URLs use it, never the label.
+  clusterKey: string;
   desc: string;
   tech: string[];
   apps: string[];
@@ -26,6 +28,7 @@ export type Lab = {
 };
 
 export type Cluster = {
+  key: string;
   name: string;
   code: string;
   angle: number;
@@ -139,10 +142,23 @@ const assertUniqueLabVisuals = (labList: Lab[]) => {
   }
 };
 
+// Stable keys for the seven capability clusters; Vietnamese names are display labels and
+// are still accepted in old ?cluster= links.
+export const clusterKeyByName: Record<string, string> = {
+  "Robot và hệ thống tự hành": "robotics",
+  "Công nghệ nhập vai và trải nghiệm người dùng": "immersive",
+  "Đô thị thông minh và hệ thống đô thị": "urban",
+  "Biển, ven bờ và năng lượng": "ocean",
+  "Tự động hóa công nghiệp và IoT": "automation",
+  "An toàn thông tin và hạ tầng số": "cyber",
+  "Đổi mới sáng tạo và thương mại hóa": "innovation",
+};
+
 const taoLab = (
-  item: Omit<Lab, "audiences" | "outcomes" | "capabilities" | "visual">,
+  item: Omit<Lab, "audiences" | "outcomes" | "capabilities" | "visual" | "clusterKey">,
 ): Lab => ({
   ...item,
+  clusterKey: clusterKeyByName[item.cluster],
   audiences: doiTuongMacDinh,
   outcomes: dauRaMacDinh,
   capabilities: nangLucTheoCum(item.cluster),
@@ -157,6 +173,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
     floor: "Lầu 1",
     clusters: [
       {
+        key: "robotics",
         name: "Robot và hệ thống tự hành",
         code: "ROBOT",
         roomCount: 2,
@@ -165,6 +182,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
         tags: ["Robot di động", "Robot bay", "Robot dưới nước", "Hệ thống tự hành"],
       },
       {
+        key: "immersive",
         name: "Công nghệ nhập vai và trải nghiệm người dùng",
         code: "XR.HCI",
         roomCount: 4,
@@ -173,6 +191,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
         tags: ["Hologram", "VR/AR", "UX", "Tương tác"],
       },
       {
+        key: "urban",
         name: "Đô thị thông minh và hệ thống đô thị",
         code: "URBAN",
         roomCount: 5,
@@ -181,6 +200,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
         tags: ["Đô thị thông minh", "Giao thông", "Đường sắt", "Vận hành"],
       },
       {
+        key: "ocean",
         name: "Biển, ven bờ và năng lượng",
         code: "OCEAN",
         roomCount: 5,
@@ -189,6 +209,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
         tags: ["Cảng biển", "Giám sát biển", "Robot đại dương", "Năng lượng"],
       },
       {
+        key: "automation",
         name: "Tự động hóa công nghiệp và IoT",
         code: "AIOT",
         roomCount: 4,
@@ -197,6 +218,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
         tags: ["Hệ thống nhúng", "IoT", "PLC/SCADA", "Sản xuất thông minh"],
       },
       {
+        key: "cyber",
         name: "An toàn thông tin và hạ tầng số",
         code: "CYBER",
         roomCount: 1,
@@ -205,6 +227,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
         tags: ["An toàn thông tin", "Điều tra số", "Mạng", "Bảo mật đám mây"],
       },
       {
+        key: "innovation",
         name: "Đổi mới sáng tạo và thương mại hóa",
         code: "MARKET",
         roomCount: 5,
@@ -218,6 +241,7 @@ export const clustersByFloor: { floor: string; clusters: Cluster[] }[] = [
 
 export const clusters: Cluster[] = [
   {
+    key: "robotics",
     name: "Robot và hệ thống tự hành",
     code: "ROBOT",
     angle: 25,
@@ -225,6 +249,7 @@ export const clusters: Cluster[] = [
     tags: ["Robot di động", "Robot bay", "Robot dưới nước", "Hệ thống tự hành"],
   },
   {
+    key: "immersive",
     name: "Công nghệ nhập vai và trải nghiệm người dùng",
     code: "XR.HCI",
     angle: 75,
@@ -232,6 +257,7 @@ export const clusters: Cluster[] = [
     tags: ["Hologram", "VR/AR", "UX", "Tương tác"],
   },
   {
+    key: "urban",
     name: "Đô thị thông minh và hệ thống đô thị",
     code: "URBAN",
     angle: 125,
@@ -239,6 +265,7 @@ export const clusters: Cluster[] = [
     tags: ["Đô thị thông minh", "Giao thông", "Đường sắt", "Vận hành"],
   },
   {
+    key: "ocean",
     name: "Biển, ven bờ và năng lượng",
     code: "OCEAN",
     angle: 175,
@@ -246,6 +273,7 @@ export const clusters: Cluster[] = [
     tags: ["Cảng biển", "Giám sát biển", "Robot đại dương", "Năng lượng"],
   },
   {
+    key: "automation",
     name: "Tự động hóa công nghiệp và IoT",
     code: "AIOT",
     angle: 225,
@@ -253,6 +281,7 @@ export const clusters: Cluster[] = [
     tags: ["Hệ thống nhúng", "IoT", "PLC/SCADA", "Sản xuất thông minh"],
   },
   {
+    key: "cyber",
     name: "An toàn thông tin và hạ tầng số",
     code: "CYBER",
     angle: 270,
@@ -260,6 +289,7 @@ export const clusters: Cluster[] = [
     tags: ["An toàn thông tin", "Điều tra số", "Mạng", "Bảo mật đám mây"],
   },
   {
+    key: "innovation",
     name: "Đổi mới sáng tạo và thương mại hóa",
     code: "MARKET",
     angle: 305,
