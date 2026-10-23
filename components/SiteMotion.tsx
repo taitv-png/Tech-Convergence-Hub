@@ -11,6 +11,29 @@ export function SiteMotion() {
   const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (!document.querySelector(".scene-frame")) return;
+    const screen = window.matchMedia("(min-width: 1100px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)");
+    const apply = () => document.documentElement.classList.toggle("home-frames", screen.matches);
+    apply();
+    screen.addEventListener("change", apply);
+    // The pinned intro changes height after hydration. Resolve a direct chapter link
+    // once those child effects have settled, so #about lands on the frame itself.
+    let anchorFrame = requestAnimationFrame(() => {
+      anchorFrame = requestAnimationFrame(() => {
+        let id = "";
+        try { id = decodeURIComponent(window.location.hash.slice(1)); } catch { return; }
+        const target = id ? document.getElementById(id) : null;
+        if (target?.classList.contains("scene-frame")) target.scrollIntoView({ block: "start", behavior: "instant" });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(anchorFrame);
+      screen.removeEventListener("change", apply);
+      document.documentElement.classList.remove("home-frames");
+    };
+  }, [pathname]);
+
+  useEffect(() => {
     const section = document.querySelector<HTMLElement>(".explore-band");
     if (!section) return;
     const body = document.body;
@@ -109,7 +132,8 @@ export function SiteMotion() {
       if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
       // The language switch reloads into the other root layout and carries the query string.
       if (link.hasAttribute("hreflang")) return;
-      const url = new URL(link.href, window.location.href);
+      // SVG room links expose href as SVGAnimatedString rather than a string.
+      const url = new URL(link.getAttribute("href") ?? "", window.location.href);
       if (url.origin !== window.location.origin || !/^https?:$/.test(url.protocol)) return;
       if (url.pathname === window.location.pathname && url.search === window.location.search)
         return;

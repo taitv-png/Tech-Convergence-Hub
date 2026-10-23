@@ -33,7 +33,7 @@ export function TechnologyExplorer({ locale }: { locale: Locale }) {
   };
 
   return (
-    <section className="cv-tech home-section site-container" id="technology">
+    <section className="cv-tech home-section site-container">
       <div className="section-heading">
         <SectionHeading title={t.title}>
           {t.deckA(themes.length)} <span>{t.deckB}</span>

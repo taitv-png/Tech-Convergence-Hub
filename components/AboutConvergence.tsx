@@ -135,7 +135,7 @@ export function AboutConvergence({ children, locale }: { children: ReactNode; lo
   }, []);
 
   return (
-    <section className="cv-about site-container home-section" id="about">
+    <section className="cv-about site-container home-section">
       <div className="cv-about-copy">{children}</div>
       <figure className="cv-about-film" ref={figure}>
         <div className="cv-about-stage">

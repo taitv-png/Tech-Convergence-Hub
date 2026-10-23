@@ -8,7 +8,7 @@ export function OperatingModels({ locale }: { locale: Locale }) {
   const t = getDictionary(locale).models;
   const models = getModels(locale);
   return (
-    <section className="site-container home-section" id="models">
+    <section className="site-container home-section">
       <div className="section-heading">
         <SectionHeading title={t.title}>
           {t.deckA} <span>{t.deckB}</span>
