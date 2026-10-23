@@ -12,6 +12,7 @@ import { SectionHeading } from "../SectionHeading";
 import { PartnerRibbon } from "../PartnerRibbon";
 import { LabPhoto } from "../LabPhoto";
 import { OperatingModels } from "../OperatingModels";
+import { HomeFrame } from "../HomeFrame";
 import { referenceImages } from "@/data/site-images";
 import { getDictionary } from "@/lib/dictionary";
 import { floorName, localePath, type Locale } from "@/lib/i18n";
@@ -58,6 +59,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         <IntroSequence locale={locale} />
         <LogoDoor locale={locale} />
 
+        <HomeFrame id="about" color="cyan">
         <AboutConvergence locale={locale}>
           <SectionHeading title={t.about.title}>
             {t.about.deckA} <span>{t.about.deckB}</span>
@@ -85,14 +87,17 @@ export function HomeView({ locale }: { locale: Locale }) {
             </div>
           </dl>
         </AboutConvergence>
+        </HomeFrame>
 
-        <div className="tone-zone tone-light">
+        <HomeFrame id="technology" tone="light" color="orange">
           <TechnologyExplorer locale={locale} />
+        </HomeFrame>
+        <HomeFrame id="models" tone="light" color="violet">
           <OperatingModels locale={locale} />
-        </div>
+        </HomeFrame>
 
-        <div className="tone-zone tone-dark">
-          <section className="home-section ecosystem-section" id="ecosystem">
+        <HomeFrame id="ecosystem" color="violet">
+          <section className="home-section ecosystem-section">
             <div className="site-container">
               <div className="section-heading">
                 <SectionHeading title={t.clusters.title}>
@@ -121,10 +126,11 @@ export function HomeView({ locale }: { locale: Locale }) {
               </div>
             </div>
           </section>
+        </HomeFrame>
 
+        <HomeFrame id="spaces" color="green">
           <section
             className="site-container home-section cv-spaces"
-            id="spaces"
           >
             <div className="section-heading">
               <SectionHeading title={t.spaces.title}>
@@ -158,8 +164,10 @@ export function HomeView({ locale }: { locale: Locale }) {
               ))}
             </div>
           </section>
+        </HomeFrame>
 
-          <section className="explore-band" id="campus">
+        <HomeFrame id="campus" color="cyan">
+          <section className="explore-band">
             <div className="site-container explore-grid">
               <div>
                 <SectionHeading title={t.campus.title}>
@@ -184,10 +192,10 @@ export function HomeView({ locale }: { locale: Locale }) {
               <CampusPortal locale={locale} />
             </div>
           </section>
-        </div>
+        </HomeFrame>
 
-        <div className="tone-zone tone-light">
-          <section className="site-container home-section" id="news">
+        <HomeFrame id="news" tone="light" color="orange">
+          <section className="site-container home-section">
             <div className="section-heading">
               <SectionHeading title={t.newsSection.title}>
                 {t.newsSection.deckA} <span>{t.newsSection.deckB}</span>
@@ -225,7 +233,9 @@ export function HomeView({ locale }: { locale: Locale }) {
               ))}
             </div>
           </section>
+        </HomeFrame>
 
+        <HomeFrame id="partners" tone="light" color="violet">
           <PartnerRibbon locale={locale} />
 
           <section className="contact-band site-container">
@@ -238,7 +248,7 @@ export function HomeView({ locale }: { locale: Locale }) {
               {t.contact.cta} <Arrow diagonal />
             </a>
           </section>
-        </div>
+        </HomeFrame>
       </main>
       <Footer locale={locale} />
     </>

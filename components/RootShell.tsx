@@ -6,6 +6,7 @@ import "@/app/motion.css";
 import "@/app/graphic.css";
 import "@/app/intro.css";
 import "@/app/theme-dark.css";
+import "@/app/home-frames.css";
 import { SiteMotion } from "./SiteMotion";
 import { ScrollToTop } from "./ScrollToTop";
 import { ReadingPosition } from "./ReadingPosition";
