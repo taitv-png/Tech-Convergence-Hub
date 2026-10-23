@@ -241,8 +241,7 @@ export function HomeView({ locale }: { locale: Locale }) {
           <section className="contact-band site-container">
             <h2>
               {t.contact.lineA}
-              <br />
-              <span>{t.contact.lineB}</span>
+              {t.contact.lineB && <><br /><span>{t.contact.lineB}</span></>}
             </h2>
             <a className="button button-orange" href="mailto:tch@ueh.edu.vn">
               {t.contact.cta} <Arrow diagonal />

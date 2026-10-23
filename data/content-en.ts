@@ -258,7 +258,7 @@ export const clustersEn: Record<string, { name: string; desc: string; tags: stri
   immersive: {
     name: "Immersive Technology & User Experience",
     desc: "Immersive technologies, holograms, VR/AR and human-computer interaction.",
-    tags: ["Hologram", "VR/AR", "UX", "Interaction"],
+    tags: ["Holography", "VR/AR", "UX", "Interaction"],
   },
   urban: {
     name: "Smart Cities & Urban Systems",
@@ -303,7 +303,7 @@ export const newsEn = [
   {
     category: "Strategy",
     date: "2026.06",
-    title: "Tech-Convergence Hub proposal highlights UEH as a hub for technology convergence",
+    title: "Tech-Convergence Hub proposal positions UEH as a center for technology convergence",
     excerpt:
       "The hub is envisioned as strategic infrastructure connecting teaching, research, experimentation and technology transfer through a living lab approach.",
   },
@@ -353,13 +353,13 @@ export const modelsEn: Record<string, { summary: string; activities: string; out
   },
   laboratory: {
     summary: "Specialist laboratories with dedicated equipment for practical teaching and in-depth research.",
-    activities: "Practical classes, experiments, research projects.",
+    activities: "Practical classes, experiments and research projects.",
     outcomes: "Research results, publications and technical skills for learners.",
   },
   makerspace: {
     summary: "A prototyping space to assemble, build and test products before incubation and commercialisation.",
-    activities: "Build prototypes, test products, prepare demos for investors and partners.",
-    outcomes: "Prototypes, demo products and projects ready for incubation.",
+    activities: "Build prototypes, test products and prepare demonstrations for investors and partners.",
+    outcomes: "Prototypes, demonstrators and projects ready for incubation.",
   },
   "field-lab": {
     summary: "Field-based learning, research and testing in real urban and regional settings.",
