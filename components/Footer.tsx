@@ -40,16 +40,10 @@ export function Footer({ locale }: { locale: Locale }) {
               <br />
               {t.address[1]}
             </p>
-            <a href="https://iscm.ueh.edu.vn/" target="_blank" rel="noreferrer">
-              ISCM, UEH <Arrow diagonal />
-            </a>
           </div>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Tech-Convergence Hub</span>
-          <span>{t.platform}</span>
-          <Link href={to("/credits")}>{t.credits}</Link>
-          <a href="#main-content">{t.top} ↑</a>
         </div>
       </div>
     </footer>
