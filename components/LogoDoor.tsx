@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TCH_MARK, TCH_MARK_ZOOM_ORIGIN, TCH_WORDMARK } from "./tch-logo";
+import { getDictionary } from "@/lib/dictionary";
+import type { Locale } from "@/lib/i18n";
 
-// Logo transition: the TCH lockup on charcoal; the wordmark leaves, the mark centres, then
-// the mark (an opening in an SVG mask) enlarges with scroll until the warm-white tagline
-// fills the screen. No beams, traces or glow. Only this graphic scales; the header logo,
-// text and CTAs never zoom. Reversing the scroll reverses it.
+// White lockup first; warm light appears inside the mark only as it enlarges.
+// Background LED rails stay peripheral, leaving the wordmark and tagline readable.
 const PLATE = "#121110";
 const INK = "#f6f3ee";
 const LOCKUP_WIDTH = TCH_WORDMARK.offsetX + TCH_WORDMARK.width;
@@ -44,7 +44,8 @@ function frameFor(width: number, height: number, progress: number) {
   };
 }
 
-export function LogoDoor() {
+export function LogoDoor({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale).door;
   const section = useRef<HTMLElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const [size, setSize] = useState({ width: 1440, height: 560 });
@@ -56,11 +57,14 @@ export function LogoDoor() {
     const drawing = svg.current;
     if (!root || !drawing) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mark = drawing.querySelector<SVGPathElement>(".cv-door-mark");
+    const marks = drawing.querySelectorAll<SVGPathElement>(".cv-door-mark");
+    const ink = drawing.querySelector<SVGPathElement>(".cv-door-ink");
     const word = drawing.querySelector<SVGPathElement>(".cv-door-word");
     let frame = 0;
+    let displayed: number | null = null;
+    let previousTime = 0;
 
-    const render = () => {
+    const render = (time: number) => {
       frame = 0;
       const width = drawing.clientWidth;
       const height = drawing.clientHeight;
@@ -77,11 +81,19 @@ export function LogoDoor() {
         const stage = root.firstElementChild as HTMLElement;
         progress = clamp(-rect.top / Math.max(1, rect.height - stage.offsetHeight));
       }
-      const next = frameFor(width, height, progress);
-      mark?.setAttribute("transform", next.mark);
+      const delta = Math.min(64, previousTime ? time - previousTime : 16);
+      previousTime = time;
+      displayed = still || displayed === null ? progress : displayed + (progress - displayed) * (1 - Math.exp(-delta / 85));
+      if (Math.abs(progress - displayed) < 0.0001) displayed = progress;
+      const next = frameFor(width, height, displayed);
+      marks.forEach((mark) => mark.setAttribute("transform", next.mark));
       word?.setAttribute("transform", next.word);
       word?.setAttribute("opacity", next.wordOpacity.toFixed(3));
-      root.style.setProperty("--door-scene", still ? "1" : ease(at(progress, "tagline")).toFixed(4));
+      const warmth = still ? 0 : ease(span(displayed, 0.30, 0.57));
+      ink?.setAttribute("opacity", (1 - warmth).toFixed(4));
+      root.style.setProperty("--door-light", (1 - ease(span(displayed, 0.54, 0.74))).toFixed(4));
+      root.style.setProperty("--door-scene", still ? "1" : ease(at(displayed, "tagline")).toFixed(4));
+      if (displayed !== progress) frame = requestAnimationFrame(render);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(render);
@@ -127,13 +139,15 @@ export function LogoDoor() {
             </mask>
           </defs>
           <rect x="0" y="0" width={size.width} height={size.height} fill={PLATE} mask="url(#cv-door-mask)" />
+          <path className="cv-door-mark cv-door-ink" d={TCH_MARK.d} transform={initial.mark} fill={INK} fillRule="evenodd" />
           <path className="cv-door-word" d={TCH_WORDMARK.d} transform={initial.word} fill={INK} fillRule="evenodd" />
         </svg>
+        <div className="cv-door-neon" aria-hidden="true"><i /><i /><i /></div>
         <div className="cv-door-scene">
           <p>
-            Hội tụ tri thức.
+            {t.taglineA}
             <br />
-            <span>Lan tỏa giá trị.</span>
+            <span>{t.taglineB}</span>
           </p>
         </div>
       </div>

@@ -1,17 +1,21 @@
 import Image from "next/image";
 import { SectionHeading } from "./SectionHeading";
+import { getDictionary } from "@/lib/dictionary";
+import type { Locale } from "@/lib/i18n";
 
-const partners = ["ueh", "iscm", "ctd", "uii", "smd", "icdc", "3i", "kamisoft", "isc"];
+// Partners shown in the ribbon (Kamisoft removed at the user's request, 2026-10-22).
+const partners = ["ueh", "iscm", "ctd", "uii", "smd", "icdc", "3i", "isc"];
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 // One slow, continuous ribbon. Three identical groups make the loop seamless on wide
 // screens; reduced motion turns it into a static, scrollable row (app/motion.css).
-export function PartnerRibbon() {
+export function PartnerRibbon({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale).partners;
   return (
-    <section className="collaboration-section" aria-label="Mạng lưới hợp tác TCH">
+    <section className="collaboration-section" aria-label={t.label}>
       <div className="site-container collaboration-heading">
-        <SectionHeading title="Mạng lưới hợp tác">
-          Hội tụ năng lực. <span>Mở rộng kết nối.</span>
+        <SectionHeading title={t.title}>
+          {t.deckA} <span>{t.deckB}</span>
         </SectionHeading>
       </div>
       <div className="collaboration-marquee">

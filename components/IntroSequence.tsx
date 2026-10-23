@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useRef, type CSSProperties } from "react";
 import { slideModels } from "@/data/operating-models";
 import { Arrow } from "./Arrow";
+import { getDictionary } from "@/lib/dictionary";
+import { localePath, type Locale } from "@/lib/i18n";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -49,7 +51,8 @@ const ease = (value: number) => value * value * (3 - 2 * value);
 
 // The Campus E film opens the journey. On desktop it fades away over the complete
 // five-model scene in one shared stage. Smaller screens keep both scenes in normal flow.
-export function IntroSequence() {
+export function IntroSequence({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale);
   const journey = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const hero = useRef<HTMLElement>(null);
@@ -203,7 +206,7 @@ export function IntroSequence() {
         <section
           ref={film}
           className="cv-film2"
-          aria-label="Video giới thiệu Campus E"
+          aria-label={t.intro.filmLabel}
         >
           <video
             ref={video}
@@ -215,14 +218,12 @@ export function IntroSequence() {
             disablePictureInPicture
             disableRemotePlayback
             poster={`${base}/media/campus-e-poster.webp`}
-            aria-label="Video giới thiệu Campus E"
+            aria-label={t.intro.filmLabel}
           />
           <div className="cv-film2-caption site-container">
-            <p>
-              <strong>Campus E</strong>
-              <span>54 Nguyễn Văn Thủ, TP. Hồ Chí Minh</span>
-            </p>
-            <span className="cv-film2-scroll">Cuộn để khám phá TCH <Arrow /></span>
+            <span className="cv-film2-scroll">
+              {t.intro.scroll} <Arrow />
+            </span>
           </div>
         </section>
 
@@ -264,20 +265,20 @@ export function IntroSequence() {
               </p>
               <h1 id="intro-title">
                 <span>
-                  Nơi công nghệ <em>hội tụ.</em>
+                  {t.intro.headlineA} <em>{t.intro.headlineAccent}</em>
                 </span>{" "}
-                <span>Ý tưởng vươn xa.</span>
+                <span>{t.intro.headlineB}</span>
               </h1>
               <div className="cv-actions">
-                <Link className="button button-orange" href="/labs">
-                  Khám phá labs <Arrow />
+                <Link className="button button-orange" href={localePath(locale, "/labs")}>
+                  {t.common.exploreLabs} <Arrow />
                 </Link>
-                <Link className="text-link cv-on-dark" href="/explore">
-                  Tham quan Campus E <Arrow diagonal />
+                <Link className="text-link cv-on-dark" href={localePath(locale, "/explore")}>
+                  {t.nav.visit} <Arrow diagonal />
                 </Link>
               </div>
             </div>
-            <figure className="cv-hero2-scene" aria-label="Năm mô hình không gian hội tụ tại TCH">
+            <figure className="cv-hero2-scene" aria-label={t.intro.scene}>
               {slideModels.map((model) => (
                 <div
                   key={model.id}

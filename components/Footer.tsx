@@ -1,7 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "./Arrow";
-export function Footer() {
+import { getDictionary } from "@/lib/dictionary";
+import { localePath, type Locale } from "@/lib/i18n";
+
+export function Footer({ locale }: { locale: Locale }) {
+  const t = getDictionary(locale).footer;
+  const to = (path: string) => localePath(locale, path);
   return (
     <footer className="site-footer" id="contact">
       <div className="site-container">
@@ -14,26 +19,26 @@ export function Footer() {
               alt="Tech-Convergence Hub"
             />
             <p>
-              Tri thức liên ngành.
+              {t.tagline[0]}
               <br />
-              Công nghệ hội tụ. Giá trị thực tiễn.
+              {t.tagline[1]}
             </p>
           </div>
           <div>
-            <span className="eyebrow">Khám phá</span>
-            <Link href="/labs">Không gian & Labs</Link>
-            <Link href="/explore">Bản đồ & Tham quan 3D</Link>
-            <Link href="/news">Tin & hoạt động</Link>
+            <span className="eyebrow">{t.explore}</span>
+            <Link href={to("/labs")}>{t.labs}</Link>
+            <Link href={to("/explore")}>{t.map}</Link>
+            <Link href={to("/news")}>{t.news}</Link>
           </div>
           <div>
-            <span className="eyebrow">Kết nối với TCH</span>
+            <span className="eyebrow">{t.connect}</span>
             <a href="mailto:tch@ueh.edu.vn">
               tch@ueh.edu.vn <Arrow diagonal />
             </a>
             <p>
-              Campus E, UEH
+              {t.address[0]}
               <br />
-              54 Nguyễn Văn Thủ, TP. Hồ Chí Minh
+              {t.address[1]}
             </p>
             <a href="https://iscm.ueh.edu.vn/" target="_blank" rel="noreferrer">
               ISCM, UEH <Arrow diagonal />
@@ -42,9 +47,9 @@ export function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Tech-Convergence Hub</span>
-          <span>Nền tảng nghiên cứu và đổi mới mở tại UEH</span>
-          <Link href="/credits">Nguồn ảnh</Link>
-          <a href="#main-content">Về đầu trang ↑</a>
+          <span>{t.platform}</span>
+          <Link href={to("/credits")}>{t.credits}</Link>
+          <a href="#main-content">{t.top} ↑</a>
         </div>
       </div>
     </footer>

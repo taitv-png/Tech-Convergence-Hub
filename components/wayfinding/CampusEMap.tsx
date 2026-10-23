@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { floorRooms, type Room } from "./floor-rooms";
 import * as THREE from "three";
 import { ROOM_CATALOGUE, commonSpaceName } from "./room-catalogue";
+import { tr } from "./locale";
 import { createRoom104, createStudent, ROOM_ITEMS, ROOM104 } from "./room104-scene";
 import { createTeachingRoom, createHallway, type TourItem, type Portal } from "./campus-tour-scene";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -40,7 +41,7 @@ const ROOMS = FLOOR_LABELS.flatMap((_, i) => floorRooms(i));
 const PLACES: Place[] = [
   {
     id: "ENTRY",
-    label: "Cổng Nguyễn Văn Thủ · Tầng trệt",
+    label: tr("Cổng Nguyễn Văn Thủ · Tầng trệt", "Nguyen Van Thu gate · Ground floor"),
     floor: 0,
     point: [14.1, 7.2],
     type: "entry",
@@ -48,7 +49,7 @@ const PLACES: Place[] = [
 ];
 const roomGroups = FLOOR_LABELS.map((_, floor) => ({
   floor,
-  label: floor === 0 ? "Tầng trệt" : `Tầng ${floor}`,
+  label: floor === 0 ? tr("Tầng trệt", "Ground floor") : tr(`Tầng ${floor}`, `Floor ${floor}`),
   rooms: ROOMS.filter((room) => room.floor === floor).sort((a, b) => a.id.localeCompare(b.id)),
 }));
 const STARTS: Place[] = [
@@ -190,9 +191,12 @@ function routeSingle(start: Place, dest: Room): RouteData {
       floors: [dest.floor],
       paths: { [dest.floor]: floorPath(start.point, dest.door, start.floor) },
       steps: [
-        `Rời ${start.label}`,
-        `Đi theo hành lang ${FLOOR_LABELS[dest.floor]} và theo hướng mũi tên`,
-        `Dừng ngay trước cửa ${dest.id}`,
+        tr(`Rời ${start.label}`, `Leave ${start.label}`),
+        tr(
+          `Đi theo hành lang ${FLOOR_LABELS[dest.floor]} và theo hướng mũi tên`,
+          `Follow the ${FLOOR_LABELS[dest.floor]} corridor in the direction of the arrows`,
+        ),
+        tr(`Dừng ngay trước cửa ${dest.id}`, `Stop at the door of ${dest.id}`),
       ],
     };
   const liftStops = [0, 4, 5, 6],
@@ -219,12 +223,21 @@ function routeSingle(start: Place, dest: Room): RouteData {
       [dest.floor]: fromCore(mode, dest.door, dest.floor),
     },
     steps: [
-      `Từ ${start.label}, theo mũi tên trên hành lang đến ${mode === "LIFT" ? "thang máy" : `cầu thang ${mode}`}`,
+      tr(
+        `Từ ${start.label}, theo mũi tên trên hành lang đến ${mode === "LIFT" ? "thang máy" : `cầu thang ${mode}`}`,
+        `From ${start.label}, follow the corridor arrows to ${mode === "LIFT" ? "the lift" : `stair ${mode}`}`,
+      ),
       mode === "LIFT"
-        ? `Đi thang máy đến ${FLOOR_LABELS[dest.floor]}`
-        : `Theo hai vế thang và chiếu nghỉ đến ${FLOOR_LABELS[dest.floor]}`,
-      `Ra sảnh tầng ${FLOOR_LABELS[dest.floor]} và tiếp tục theo mũi tên`,
-      `Dừng ngay trước cửa ${dest.id}`,
+        ? tr(`Đi thang máy đến ${FLOOR_LABELS[dest.floor]}`, `Take the lift to ${FLOOR_LABELS[dest.floor]}`)
+        : tr(
+            `Theo hai vế thang và chiếu nghỉ đến ${FLOOR_LABELS[dest.floor]}`,
+            `Take both flights and the landing to ${FLOOR_LABELS[dest.floor]}`,
+          ),
+      tr(
+        `Ra sảnh tầng ${FLOOR_LABELS[dest.floor]} và tiếp tục theo mũi tên`,
+        `Step into the ${FLOOR_LABELS[dest.floor]} lobby and keep following the arrows`,
+      ),
+      tr(`Dừng ngay trước cửa ${dest.id}`, `Stop at the door of ${dest.id}`),
     ],
   };
 }
@@ -274,7 +287,7 @@ function labelSprite(
     x.font = '700 19px "Be Vietnam Pro", Arial';
     x.textAlign = "left";
     x.textBaseline = "middle";
-    x.fillText("PHÒNG ĐÃ CHỌN", 42, 48);
+    x.fillText(tr("PHÒNG ĐÃ CHỌN", "SELECTED ROOM"), 42, 48);
     x.font = '700 54px "Be Vietnam Pro", Arial';
     x.fillStyle = "#fff";
     x.fillText(text, 42, 108);
@@ -531,10 +544,10 @@ function buildScene(
     });
     if (f === 0) {
       for (const z of [6.65, 7.75]) addBox(g, [0.15, 0.6, 0.15], [13.18, 0.3, z], mat(0xff6b2c));
-      const gate = labelSprite("CỔNG VÀO", "pin");
+      const gate = labelSprite(tr("CỔNG VÀO", "ENTRANCE"), "pin");
       gate.position.set(13.15, 0.8, 7.2);
       g.add(gate);
-      const common = labelSprite("SẢNH CÔNG NGHỆ TƯƠNG TÁC", "pin");
+      const common = labelSprite(tr("SẢNH CÔNG NGHỆ TƯƠNG TÁC", "INTERACTIVE TECHNOLOGY LOBBY"), "pin");
       common.position.set(10.8, 0.45, 2);
       common.scale.set(3.8, 0.65, 1);
       g.add(common);
@@ -865,14 +878,14 @@ function buildScene(
     addPin(
       opts.route.paths[opts.start.floor]?.[0] ?? opts.start.point,
       opts.start.floor,
-      "BẠN ĐANG Ở ĐÂY",
+      tr("BẠN ĐANG Ở ĐÂY", "YOU ARE HERE"),
       0x5eead4,
     );
     const path = opts.route.paths[destination.floor];
     addPin(
       path?.[path.length - 1] ?? destination.door,
       destination.floor,
-      `ĐẾN · ${opts.dest}`,
+      tr(`ĐẾN · ${opts.dest}`, `TO · ${opts.dest}`),
       0xff6b2c,
     );
   }
@@ -1026,7 +1039,7 @@ function MiniPlan({ floor, dest, route }: { floor: number; dest: string; route: 
     <svg
       viewBox={floor === 0 ? "0 0 1350 730" : "0 0 1015 620"}
       className="mini-plan"
-      aria-label={`Mặt bằng ${FLOOR_LABELS[floor]}`}
+      aria-label={tr(`Mặt bằng ${FLOOR_LABELS[floor]}`, `${FLOOR_LABELS[floor]} floor plan`)}
     >
       <defs>
         <marker
@@ -1129,22 +1142,22 @@ function MiniPlan({ floor, dest, route }: { floor: number; dest: string; route: 
         </>
       )}
       <text x={25 + 6.15 * 76} y={25 + 6.35 * 75} className="facility-label">
-        WC NAM
+        {tr("WC NAM", "MEN")}
       </text>
       <text x={25 + 7.35 * 76} y={25 + 6.35 * 75} className="facility-label">
-        WC NỮ
+        {tr("WC NỮ", "WOMEN")}
       </text>
       <g className="plan-context" transform={floor === 0 ? "translate(310 70)" : undefined}>
         <rect x="875" y="25" width="115" height="570" rx="8" />
         <path d="M932 40V580" strokeDasharray="18 14" />
-        <text transform="translate(967 310) rotate(-90)">ĐƯỜNG NGUYỄN VĂN THỦ</text>
+        <text transform="translate(967 310) rotate(-90)">{tr("ĐƯỜNG NGUYỄN VĂN THỦ", "NGUYEN VAN THU STREET")}</text>
         <path d={floor === 0 ? "M810 495H875" : "M810 392H875"} className="gate-link" />
         <path
           d={floor === 0 ? "M825 473V517M849 473V517" : "M825 370V414M849 370V414"}
           className="gate-post"
         />
         <text x="840" y={floor === 0 ? 453 : 350} className="gate-caption">
-          {floor === 0 ? "CỔNG VÀO" : "CỔNG TẦNG TRỆT"}
+          {floor === 0 ? tr("CỔNG VÀO", "ENTRANCE") : tr("CỔNG TẦNG TRỆT", "GROUND FLOOR GATE")}
         </text>
         <text x="315" y="75" className="common-space">
           {commonSpaceName(floor)}
@@ -1324,7 +1337,7 @@ function RoomPreview({ room }: { room: Room }) {
   const [view, setView] = useState<"perspective" | "top" | "play">("play");
   const [furnished, setFurnished] = useState(true),
     [selected, setSelected] = useState<number | null>(null);
-  const [notice, setNotice] = useState("Bấm đồ vật để tìm hiểu"),
+  const [notice, setNotice] = useState(() => tr("Bấm đồ vật để tìm hiểu", "Select an object to learn more")),
     [reset, setReset] = useState(0);
   const [avatarType, setAvatarType] = useState<"male" | "female">("male");
   const [help, setHelp] = useState(true);
@@ -1352,7 +1365,7 @@ function RoomPreview({ room }: { room: Room }) {
     if (!connector || transit) return;
     const id = connector.kind;
     setConnector(null);
-    setTransit(id === "LIFT" ? "Thang máy đang di chuyển…" : "Đang đi qua chiếu nghỉ…");
+    setTransit(id === "LIFT" ? tr("Thang máy đang di chuyển…", "The lift is moving...") : tr("Đang đi qua chiếu nghỉ…", "Crossing the landing..."));
     transitionTimer.current = setTimeout(() => {
       setTourFloor(floor);
       setArrival(id);
@@ -1424,7 +1437,7 @@ function RoomPreview({ room }: { room: Room }) {
             portals: [
               {
                 id: "exit",
-                label: "Ra hành lang",
+                label: tr("Ra hành lang", "To the corridor"),
                 x: -ROOM104.width / 2,
                 z: -ROOM104.depth / 2 + 1.28,
                 kind: "exit" as const,
@@ -1536,7 +1549,7 @@ function RoomPreview({ room }: { room: Room }) {
         }
       });
       if (closest >= 0 && furnished) setSelected(closest);
-      else setNotice("Chạm vào đồ vật để xem thông tin");
+      else setNotice(tr("Chạm vào đồ vật để xem thông tin", "Tap an object to see details"));
     };
     const down = (e: KeyboardEvent) => {
       if (view !== "play") return;
@@ -1599,7 +1612,7 @@ function RoomPreview({ room }: { room: Room }) {
         const portal = built.portals.find((p) => p.id === hit.object.userData.portal);
         if (portal && Math.hypot(person.position.x - portal.x, person.position.z - portal.z) < 1.5)
           usePortal(portal);
-        else setNotice("Chạm sàn để đến gần cửa, sau đó chạm nút vào phòng");
+        else setNotice(tr("Chạm sàn để đến gần cửa, sau đó chạm nút vào phòng", "Tap the floor to walk to the door, then tap the button to enter"));
         return;
       }
       if (hit) {
@@ -1621,7 +1634,7 @@ function RoomPreview({ room }: { room: Room }) {
             built.depth,
           );
           setNotice(
-            path.length ? "Đang đi đến vị trí đã chọn" : "Chọn khoảng sàn trống để di chuyển",
+            path.length ? tr("Đang đi đến vị trí đã chọn", "Walking to the chosen spot") : tr("Chọn khoảng sàn trống để di chuyển", "Choose an empty spot on the floor to move"),
           );
         }
       } else setSelected(null);
@@ -1683,7 +1696,7 @@ function RoomPreview({ room }: { room: Room }) {
           if (path.length) {
             mx = path[0][0] - person.position.x;
             mz = path[0][1] - person.position.z;
-          } else setNotice("Đã đến · chạm đồ vật để khám phá");
+          } else setNotice(tr("Đã đến · chạm đồ vật để khám phá", "Arrived · tap an object to explore"));
         }
         const length = Math.hypot(mx, mz),
           before = person.position.clone();
@@ -1744,8 +1757,8 @@ function RoomPreview({ room }: { room: Room }) {
     frameId = requestAnimationFrame(tick);
     setNotice(
       view === "play"
-        ? "Chạm sàn trống để đi · Kéo để nhìn quanh · Chạm đồ vật để tìm hiểu"
-        : "Kéo một ngón để xoay · Dùng hai ngón để thu phóng và dịch chuyển",
+        ? tr("Chạm sàn trống để đi · Kéo để nhìn quanh · Chạm đồ vật để tìm hiểu", "Tap the floor to walk · Drag to look around · Tap objects to learn more")
+        : tr("Kéo một ngón để xoay · Dùng hai ngón để thu phóng và dịch chuyển", "Drag with one finger to rotate · Use two fingers to zoom and pan"),
     );
     return () => {
       cancelAnimationFrame(frameId);
@@ -1789,7 +1802,7 @@ function RoomPreview({ room }: { room: Room }) {
   return (
     <div className="room-preview">
       <div className="room-preview-tools">
-        <span>{hall ? `HÀNH LANG · ${FLOOR_LABELS[tourFloor]}` : "KHÁM PHÁ KHÔNG GIAN"}</span>
+        <span>{hall ? tr(`HÀNH LANG · ${FLOOR_LABELS[tourFloor]}`, `CORRIDOR · ${FLOOR_LABELS[tourFloor]}`) : tr("KHÁM PHÁ KHÔNG GIAN", "EXPLORE THE SPACE")}</span>
         <div>
           {(["perspective", "top", "play"] as const).map((v) => (
             <button
@@ -1798,44 +1811,44 @@ function RoomPreview({ room }: { room: Room }) {
               aria-pressed={view === v}
               onClick={() => setView(v)}
             >
-              {v === "perspective" ? "Góc 3D" : v === "top" ? "Mặt bằng" : "Tham quan"}
+              {v === "perspective" ? tr("Góc 3D", "3D view") : v === "top" ? tr("Mặt bằng", "Floor plan") : tr("Tham quan", "Walkthrough")}
             </button>
           ))}
-          <button onClick={() => setHelp(true)}>Hướng dẫn chạm</button>
+          <button onClick={() => setHelp(true)}>{tr("Hướng dẫn chạm", "Navigation help")}</button>
         </div>
       </div>
       <div className="room-options">
-        <div className="avatar-picker" aria-label="Chọn nhân vật">
-          <span>Nhân vật</span>
+        <div className="avatar-picker" aria-label={tr("Chọn nhân vật", "Choose a character")}>
+          <span>{tr("Nhân vật", "Character")}</span>
           <button
             className={avatarType === "male" ? "active" : ""}
             aria-pressed={avatarType === "male"}
             onClick={() => setAvatarType("male")}
           >
-            Nam
+            {tr("Nam", "Male")}
           </button>
           <button
             className={avatarType === "female" ? "active" : ""}
             aria-pressed={avatarType === "female"}
             onClick={() => setAvatarType("female")}
           >
-            Nữ
+            {tr("Nữ", "Female")}
           </button>
         </div>
         <button onClick={() => setFurnished((v) => !v)}>
-          {furnished ? "Ẩn nội thất" : "Hiện nội thất"}
+          {furnished ? tr("Ẩn nội thất", "Hide furniture") : tr("Hiện nội thất", "Show furniture")}
         </button>
-        <button onClick={() => setReset((v) => v + 1)}>Về cửa vào</button>
+        <button onClick={() => setReset((v) => v + 1)}>{tr("Về cửa vào", "Back to the door")}</button>
       </div>
       <div
         ref={host}
         tabIndex={0}
         role="application"
         className="room-canvas"
-        aria-label={`Khám phá ${hall ? FLOOR_LABELS[tourFloor] : room.id}: chạm sàn để đi, kéo để nhìn quanh, chạm đồ vật để tìm hiểu`}
+        aria-label={tr(`Khám phá ${hall ? FLOOR_LABELS[tourFloor] : room.id}: chạm sàn để đi, kéo để nhìn quanh, chạm đồ vật để tìm hiểu`, `Explore ${hall ? FLOOR_LABELS[tourFloor] : room.id}: tap the floor to walk, drag to look around, tap objects to learn more`)}
       />
       {view === "play" && (
-        <div className="walk-controls" aria-label="Điều khiển nhân vật">
+        <div className="walk-controls" aria-label={tr("Điều khiển nhân vật", "Character controls")}>
           {[
             ["↑", "w"],
             ["←", "a"],
@@ -1844,7 +1857,7 @@ function RoomPreview({ room }: { room: Room }) {
           ].map(([label, key]) => (
             <button
               key={key}
-              aria-label={"Đi " + label}
+              aria-label={tr("Đi ", "Move ") + label}
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId);
                 input.current.add(key);
@@ -1857,33 +1870,33 @@ function RoomPreview({ room }: { room: Room }) {
             </button>
           ))}
           <button className="jump-button" onClick={() => sceneApi.current?.jump()}>
-            Nhảy
+            {tr("Nhảy", "Jump")}
           </button>
           <button className="interact-button" onClick={() => sceneApi.current?.interact()}>
-            Tương tác
+            {tr("Tương tác", "Interact")}
           </button>
         </div>
       )}
       {selected !== null && items[selected] && furnished && (
         <div className="station-detail" role="status">
-          <button aria-label="Đóng thông tin đồ vật" onClick={() => setSelected(null)}>
+          <button aria-label={tr("Đóng thông tin đồ vật", "Close object details")} onClick={() => setSelected(null)}>
             ×
           </button>
           <small>{items[selected].name}</small>
           <h3>{items[selected].title}</h3>
           <p>{items[selected].description}</p>
           {((room.id === "E104" && [1, 3, 4, 6].includes(selected)) ||
-            (room.id !== "E104" && items[selected].action !== "Tìm hiểu")) && (
+            (room.id !== "E104" && items[selected].action !== tr("Tìm hiểu", "Learn more"))) && (
             <button
               className="object-action"
               onClick={() => {
                 sceneApi.current?.activate(selected);
                 setNotice(
                   selected === 4
-                    ? "Máy đang pha cà phê minh họa"
+                    ? tr("Máy đang pha cà phê minh họa", "The coffee machine is brewing (demo)")
                     : selected === 3
-                      ? "Đã đổi trạng thái cánh tủ"
-                      : "Đã đổi trạng thái màn hình",
+                      ? tr("Đã đổi trạng thái cánh tủ", "Cabinet doors toggled")
+                      : tr("Đã đổi trạng thái màn hình", "Screen toggled"),
                 );
               }}
             >
@@ -1892,7 +1905,7 @@ function RoomPreview({ room }: { room: Room }) {
           )}
         </div>
       )}
-      <div className="room-item-list" aria-label="Đồ vật trong phòng">
+      <div className="room-item-list" aria-label={tr("Đồ vật trong phòng", "Objects in the room")}>
         {items.map((item, i) => (
           <button
             disabled={!furnished}
@@ -1907,16 +1920,16 @@ function RoomPreview({ room }: { room: Room }) {
       </div>
       {view === "play" && near && !connector && (
         <button className="portal-hint" onClick={() => sceneApi.current?.interact()}>
-          <kbd>Chạm</kbd> {near.label}
+          <kbd>{tr("Chạm", "Tap")}</kbd> {near.label}
         </button>
       )}
       {connector && (
-        <div className="floor-picker" role="dialog" aria-label="Chọn tầng">
+        <div className="floor-picker" role="dialog" aria-label={tr("Chọn tầng", "Choose a floor")}>
           <button className="picker-close" onClick={() => setConnector(null)}>
-            Đóng
+            {tr("Đóng", "Close")}
           </button>
           <h3>{connector.label}</h3>
-          <p>Đang ở {FLOOR_LABELS[tourFloor]}</p>
+          <p>{tr(`Đang ở ${FLOOR_LABELS[tourFloor]}`, `Now on ${FLOOR_LABELS[tourFloor]}`)}</p>
           <div>
             {(connector.kind === "LIFT"
               ? [0, 4, 5, 6]
@@ -1938,18 +1951,21 @@ function RoomPreview({ room }: { room: Room }) {
       )}
       {help && (
         <div className="touch-help">
-          <strong>Khám phá tương tác</strong>
-          <p>① Chạm vào sàn trống để nhân vật đi đến đó.</p>
-          <p>② Kéo một ngón để nhìn quanh; dùng hai ngón để thu phóng.</p>
+          <strong>{tr("Khám phá tương tác", "Interactive tour")}</strong>
+          <p>{tr("① Chạm vào sàn trống để nhân vật đi đến đó.", "① Tap an empty spot on the floor and the character walks there.")}</p>
+          <p>{tr("② Kéo một ngón để nhìn quanh; dùng hai ngón để thu phóng.", "② Drag with one finger to look around; use two fingers to zoom.")}</p>
           <p>
-            ③ Chạm đồ vật để tìm hiểu. Đến gần cửa rồi chạm nút hiện trên màn hình để sang phòng.
+            {tr(
+              "③ Chạm đồ vật để tìm hiểu. Đến gần cửa rồi chạm nút hiện trên màn hình để sang phòng.",
+              "③ Tap objects to learn more. Walk to a door, then tap the button on screen to change rooms.",
+            )}
           </p>
-          <button onClick={() => setHelp(false)}>Đã hiểu · Bắt đầu tham quan</button>
+          <button onClick={() => setHelp(false)}>{tr("Đã hiểu · Bắt đầu tham quan", "Got it · Start the tour")}</button>
         </div>
       )}
       <div className="room-preview-caption">
         {notice}
-        <span>{avatarType === "female" ? "Sinh viên nữ UEH" : "Sinh viên nam UEH"}</span>
+        <span>{avatarType === "female" ? tr("Sinh viên nữ UEH", "UEH student (female)") : tr("Sinh viên nam UEH", "UEH student (male)")}</span>
       </div>
     </div>
   );
@@ -1958,29 +1974,29 @@ function RoomRenderGallery({ id }: { id: string }) {
   const photos =
     id === "E102"
       ? [
-          { file: "102", label: "Toàn cảnh phòng" },
-          { file: "106", label: "Khu trình chiếu" },
-          { file: "109", label: "Khu hậu kỳ" },
+          { file: "102", label: tr("Toàn cảnh phòng", "Room overview") },
+          { file: "106", label: tr("Khu trình chiếu", "Presentation area") },
+          { file: "109", label: tr("Khu hậu kỳ", "Post-production area") },
         ]
       : id === "E401"
         ? [
-            { file: "144", label: "Toàn cảnh phòng" },
-            { file: "148", label: "Xe đạp tương tác" },
-            { file: "153_1", label: "Khu máy tính" },
+            { file: "144", label: tr("Toàn cảnh phòng", "Room overview") },
+            { file: "148", label: tr("Xe đạp tương tác", "Interactive bicycle") },
+            { file: "153_1", label: tr("Khu máy tính", "Computer area") },
           ]
         : [
-            { file: "134", label: "Toàn cảnh phòng" },
-            { file: "137", label: "Khu bàn học" },
-            { file: "139", label: "Khu làm việc" },
+            { file: "134", label: tr("Toàn cảnh phòng", "Room overview") },
+            { file: "137", label: tr("Khu bàn học", "Study area") },
+            { file: "139", label: tr("Khu làm việc", "Work area") },
           ];
   const [active, setActive] = useState(0);
   const photo = photos[active];
   return (
-    <div className="room-render-gallery" aria-label={"Ảnh thiết kế phòng " + id}>
+    <div className="room-render-gallery" aria-label={tr("Ảnh thiết kế phòng ", "Design images, room ") + id}>
       <figure>
         <img
           src={`${(process.env.NEXT_PUBLIC_BASE_PATH ?? "") + "/"}rooms/${id.toLowerCase()}/${photo.file}.jpg`}
-          alt={photo.label + " — phòng " + id}
+          alt={photo.label + tr(" — phòng ", ", room ") + id}
           width={960}
           height={540}
           loading="lazy"
@@ -1996,7 +2012,7 @@ function RoomRenderGallery({ id }: { id: string }) {
         {photos.map((item, i) => (
           <button
             key={item.file}
-            aria-label={"Xem " + item.label.toLowerCase()}
+            aria-label={tr("Xem ", "View ") + item.label.toLowerCase()}
             aria-pressed={active === i}
             onClick={() => setActive(i)}
           >
@@ -2042,7 +2058,7 @@ function RoomPicker({
   };
   return (
     <div className="room-selector">
-      <span>{start ? "Vị trí hiện tại" : "Phòng cần đến"}</span>
+      <span>{start ? tr("Vị trí hiện tại", "Starting point") : tr("Phòng cần đến", "Destination")}</span>
       <button
         ref={trigger}
         className="select-room"
@@ -2055,22 +2071,22 @@ function RoomPicker({
         {chosen
           ? chosen.id + " · " + roomGroups[chosen.floor].label
           : value === "ENTRY"
-            ? "Cổng Nguyễn Văn Thủ · Tầng trệt"
+            ? tr("Cổng Nguyễn Văn Thủ · Tầng trệt", "Nguyen Van Thu gate · Ground floor")
             : start
-              ? "Chọn vị trí bắt đầu"
-              : "Chọn tầng và phòng"}{" "}
+              ? tr("Chọn vị trí bắt đầu", "Choose a starting point")
+              : tr("Chọn tầng và phòng", "Choose a floor and room")}{" "}
         <ChevronRight />
       </button>
       {open && (
         <dialog ref={dialog} className="room-picker-dialog" onCancel={close}>
           <header>
             <div>
-              <small>CHỌN TẦNG → CHỌN PHÒNG</small>
-              <h2>{start ? "Bạn đang ở đâu?" : "Bạn muốn đến phòng nào?"}</h2>
+              <small>{tr("CHỌN TẦNG → CHỌN PHÒNG", "CHOOSE FLOOR → CHOOSE ROOM")}</small>
+              <h2>{start ? tr("Bạn đang ở đâu?", "Where are you?") : tr("Bạn muốn đến phòng nào?", "Which room are you going to?")}</h2>
             </div>
-            <button onClick={close}>Đóng ×</button>
+            <button onClick={close}>{tr("Đóng", "Close")} ×</button>
           </header>
-          <nav aria-label="Chọn tầng">
+          <nav aria-label={tr("Chọn tầng", "Choose a floor")}>
             {roomGroups.map((g) => (
               <button
                 key={g.floor}
@@ -2085,8 +2101,8 @@ function RoomPicker({
           <div className="picker-rooms">
             {start && floor === 0 && (
               <button onClick={() => choose("ENTRY")}>
-                <b>Lối vào</b>
-                <span>Cổng Nguyễn Văn Thủ</span>
+                <b>{tr("Lối vào", "Entrance")}</b>
+                <span>{tr("Cổng Nguyễn Văn Thủ", "Nguyen Van Thu gate")}</span>
               </button>
             )}
             {roomGroups[floor].rooms.map((r) => (
@@ -2122,22 +2138,22 @@ function RoomDetail({
       ref={dialog}
       className="room-detail-dialog"
       onCancel={onClose}
-      aria-label="Thông tin phòng"
+      aria-label={tr("Thông tin phòng", "Room details")}
     >
       <header>
         <button className="journey-back nav-emphasis" onClick={onClose}>
-          ← Trở về điều hướng
+          ← {tr("Trở về điều hướng", "Back to directions")}
         </button>
         <strong>
           {room.id} · {roomGroups[room.floor].label}
         </strong>
         <div>
           <button aria-pressed={tab === "info"} onClick={() => setTab("info")}>
-            Thông tin
+            {tr("Thông tin", "Details")}
           </button>
           {["E104", "E102", "E401"].includes(room.id) && (
             <button aria-pressed={tab === "photos"} onClick={() => setTab("photos")}>
-              Ảnh thiết kế
+              {tr("Ảnh thiết kế", "Design images")}
             </button>
           )}
         </div>
@@ -2150,25 +2166,26 @@ function RoomDetail({
           <section>
             <small>{commonSpaceName(room.floor)}</small>
             <h2>{room.name}</h2>
-            <h3>Chức năng & hoạt động nghiên cứu</h3>
+            <h3>{tr("Chức năng & hoạt động nghiên cứu", "Purpose & research activities")}</h3>
             <p>{ROOM_CATALOGUE[room.id]?.description}</p>
-            <h3>Tiếp cận</h3>
+            <h3>{tr("Tiếp cận", "Access")}</h3>
             <p>
               {room.floor === 7
-                ? "Tầng 7 chỉ có cầu thang bộ CT1"
-                : "Theo tuyến đường đến cửa phòng tại " + roomGroups[room.floor].label}
+                ? tr("Tầng 7 chỉ có cầu thang bộ CT1", "Floor 7 is accessible only via staircase CT1")
+                : tr("Theo tuyến đường đến cửa phòng tại ", "Follow the route to the room door on ") +
+                  roomGroups[room.floor].label}
             </p>
-            <h3>Nội thất & thiết bị minh họa</h3>
+            <h3>{tr("Nội thất & thiết bị minh họa", "Illustrative furniture & equipment")}</h3>
             <p>
               {room.id === "E104"
-                ? "Bàn học đôi · màn hình di động · máy tính · kệ trưng bày · tủ hồ sơ · quầy cà phê"
+                ? tr("Bàn học đôi · màn hình di động · máy tính · kệ trưng bày · tủ hồ sơ · quầy cà phê", "Double desks · mobile screen · computers · display shelves · file cabinet · coffee bar")
                 : room.id === "E102"
-                  ? "Bàn học · màn hình di động · vách lưới · kệ học liệu"
+                  ? tr("Bàn học · màn hình di động · vách lưới · kệ học liệu", "Desks · mobile screen · mesh wall · learning material shelves")
                   : room.id === "E401"
-                    ? "Bàn học · máy tính · xe đạp · bàn mô hình"
-                    : "Bàn ghế học tập · bảng trắng · bàn giáo viên"}
+                    ? tr("Bàn học · máy tính · xe đạp · bàn mô hình", "Desks · computers · bicycle · model table")
+                    : tr("Bàn ghế học tập · bảng trắng · bàn giáo viên", "Desks and chairs · whiteboard · teacher's desk")}
             </p>
-            <p>Nội thất 3D là bố trí minh họa không gian.</p>
+            <p>{tr("Nội thất 3D là bố trí minh họa không gian.", "The 3D furniture is an illustrative layout.")}</p>
           </section>
         </div>
       ) : (
@@ -2248,11 +2265,11 @@ export default function CampusEMap() {
           height={60}
         />
         <div>
-          <span>Chỉ đường trong tòa nhà</span>
-          <b>Cơ sở E · UEH</b>
+          <span>{tr("Chỉ đường trong tòa nhà", "Indoor directions")}</span>
+          <b>{tr("Cơ sở E · UEH", "Campus E · UEH")}</b>
         </div>
         <div className="status">
-          <i /> Đang hoạt động
+          <i /> {tr("Đang hoạt động", "Live")}
         </div>
       </header>
       {!tourId && (
@@ -2261,7 +2278,7 @@ export default function CampusEMap() {
           <section className="workspace">
             <aside className="panel controls-panel">
               <div className="panel-title">
-                <LocateFixed /> Hành trình của bạn
+                <LocateFixed /> {tr("Hành trình của bạn", "Your journey")}
               </div>
               <RoomPicker
                 start
@@ -2282,7 +2299,7 @@ export default function CampusEMap() {
               />
               <button className="journey-back nav-emphasis reset-journey" onClick={resetJourney}>
                 <RotateCcw aria-hidden="true" />
-                <span>Đặt lại hành trình</span>
+                <span>{tr("Đặt lại hành trình", "Reset journey")}</span>
               </button>
               {destId && (
                 <div
@@ -2296,21 +2313,21 @@ export default function CampusEMap() {
                 >
                   <span>{FLOOR_LABELS[dest.floor]}</span>
                   <div>
-                    <small>PHÒNG ĐÃ CHỌN</small>
+                    <small>{tr("PHÒNG ĐÃ CHỌN", "SELECTED ROOM")}</small>
                     <strong>{dest.id}</strong>
                     <p className="room-card-name">{dest.name}</p>
                   </div>
                 </div>
               )}
               <div className="legend">
-                <b>CHÚ THÍCH</b>
+                <b>{tr("CHÚ THÍCH", "LEGEND")}</b>
                 <span>
                   <i className="lab" />
-                  Phòng LAB
+                  {tr("Phòng LAB", "Lab")}
                 </span>
                 <span>
                   <i className="class" />
-                  Phòng học
+                  {tr("Phòng học", "Classroom")}
                 </span>
                 <span>
                   <i className="stair" />
@@ -2318,19 +2335,19 @@ export default function CampusEMap() {
                 </span>
                 <span>
                   <i className="lift" />
-                  Thang máy
+                  {tr("Thang máy", "Lift")}
                 </span>
                 <span>
                   <i className="wc" />
-                  WC Nam / Nữ
+                  {tr("WC Nam / Nữ", "WC men / women")}
                 </span>
                 <span>
                   <i className="selected" />
-                  Điểm đến
+                  {tr("Điểm đến", "Destination")}
                 </span>
                 <span>
                   <i className="route" />
-                  Tuyến đường di chuyển
+                  {tr("Tuyến đường di chuyển", "Route")}
                 </span>
               </div>
             </aside>
@@ -2344,7 +2361,7 @@ export default function CampusEMap() {
                   }}
                 >
                   <Building2 />
-                  Toàn bộ tòa nhà
+                  {tr("Toàn bộ tòa nhà", "Whole building")}
                 </button>
                 <button
                   className={!showAll && oneFloor === null ? "active" : ""}
@@ -2354,10 +2371,10 @@ export default function CampusEMap() {
                   }}
                 >
                   <Route />
-                  Tầng của tuyến
+                  {tr("Tầng của tuyến", "Route floors")}
                 </button>
                 <span>
-                  <Rotate3D /> Một ngón: dịch chuyển · Hai ngón: xoay / thu phóng
+                  <Rotate3D /> {tr("Một ngón: dịch chuyển · Hai ngón: xoay / thu phóng", "One finger: pan · Two fingers: rotate / zoom")}
                 </span>
               </div>
               <div ref={host} className="three-host" />
@@ -2378,7 +2395,7 @@ export default function CampusEMap() {
             </div>
             <aside className="panel route-panel">
               <div className="panel-title">
-                <Route /> Chỉ đường
+                <Route /> {tr("Chỉ đường", "Directions")}
               </div>
               {hasRoute ? (
                 <>
@@ -2388,16 +2405,16 @@ export default function CampusEMap() {
                     {dest.id}
                   </h2>
                   <div className="destination-summary">
-                    <small>PHÒNG ĐẾN · {dest.id}</small>
+                    <small>{tr("PHÒNG ĐẾN", "DESTINATION")} · {dest.id}</small>
                     <h3>{dest.name}</h3>
                   </div>
                   <div className="route-mode">
                     <Navigation />
                     {route.mode === "LIFT"
-                      ? "THANG MÁY"
+                      ? tr("THANG MÁY", "LIFT")
                       : route.mode === "WALK"
-                        ? "CÙNG TẦNG"
-                        : `CẦU THANG ${route.mode}`}
+                        ? tr("CÙNG TẦNG", "SAME FLOOR")
+                        : tr(`CẦU THANG ${route.mode}`, `STAIR ${route.mode}`)}
                   </div>
                   <ol>
                     {route.steps.map((s, i) => (
@@ -2410,39 +2427,41 @@ export default function CampusEMap() {
                 </>
               ) : (
                 <div className="destination-summary">
-                  <h3>Khám phá Campus E</h3>
+                  <h3>{tr("Khám phá Campus E", "Explore Campus E")}</h3>
                   <p>
-                    Chọn vị trí hiện tại và phòng cần đến để tìm đường. Chạm phòng trên mô hình để
-                    chọn; mở thông tin hoặc tham quan bằng các nút bên phải.
+                    {tr(
+                      "Chọn vị trí hiện tại và phòng cần đến để tìm đường. Chạm phòng trên mô hình để chọn; mở thông tin hoặc tham quan bằng các nút bên phải.",
+                      "Choose where you are and the room you need to find the way. Tap a room on the model to select it; open details or the tour with the buttons on the right.",
+                    )}
                   </p>
                 </div>
               )}
             </aside>
-            <aside className="panel floor-plan-panel" aria-label="Mặt bằng tầng">
+            <aside className="panel floor-plan-panel" aria-label={tr("Mặt bằng tầng", "Floor plan")}>
               <button className="tour-launch" disabled={!destId} onClick={() => setTourId(destId)}>
                 <Rotate3D />
-                <strong>Tham quan 3D</strong>
+                <strong>{tr("Tham quan 3D", "3D tour")}</strong>
                 <span>
-                  {destId ? dest.id + " · Khám phá không gian →" : "Chọn phòng để bắt đầu"}
+                  {destId ? dest.id + tr(" · Khám phá không gian →", " · Explore the space →") : tr("Chọn phòng để bắt đầu", "Choose a room to start")}
                 </span>
               </button>
               {destId ? (
                 <>
                   <div className="mini-head">
-                    <Map /> Mặt bằng · {FLOOR_LABELS[dest.floor]}
+                    <Map /> {tr("Mặt bằng", "Floor plan")} · {FLOOR_LABELS[dest.floor]}
                   </div>
                   <button className="journey-back" onClick={() => setDetailId(dest.id)}>
-                    Mở mặt bằng & thông tin phòng ↗
+                    {tr("Mở mặt bằng & thông tin phòng", "Open plan & room details")} ↗
                   </button>
                   <MiniPlan floor={dest.floor} dest={dest.id} route={route} />
                 </>
               ) : (
                 <>
                   <div className="panel-title">
-                    <Map /> Mặt bằng
+                    <Map /> {tr("Mặt bằng", "Floor plan")}
                   </div>
                   <p className="plan-placeholder">
-                    Chọn nơi cần đến để xem mặt bằng và thông tin phòng.
+                    {tr("Chọn nơi cần đến để xem mặt bằng và thông tin phòng.", "Choose a destination to see the floor plan and room details.")}
                   </p>
                 </>
               )}
@@ -2455,12 +2474,12 @@ export default function CampusEMap() {
           <header>
             <button className="journey-back nav-emphasis tour-back" onClick={() => setTourId(null)}>
               <ArrowLeft aria-hidden="true" />
-              <span>TRỞ VỀ ĐIỀU HƯỚNG</span>
+              <span>{tr("TRỞ VỀ ĐIỀU HƯỚNG", "BACK TO DIRECTIONS")}</span>
             </button>
             <strong>
               {tourId} · {ROOMS.find((r) => r.id === tourId)!.name}
             </strong>
-            <span>THAM QUAN 3D</span>
+            <span>{tr("THAM QUAN 3D", "3D TOUR")}</span>
           </header>
           <RoomPreview room={ROOMS.find((r) => r.id === tourId)!} />
         </section>
@@ -2473,8 +2492,11 @@ export default function CampusEMap() {
         />
       )}
       <footer>
-        <Footprints /> Tuyến chỉ mang tính định hướng; không thay thế sơ đồ thoát hiểm hoặc chỉ dẫn
-        an toàn tại công trình.
+        <Footprints />{" "}
+        {tr(
+          "Tuyến chỉ mang tính định hướng; không thay thế sơ đồ thoát hiểm hoặc chỉ dẫn an toàn tại công trình.",
+          "Routes are for orientation only; they do not replace the building's evacuation plans or safety signs.",
+        )}
       </footer>
     </div>
   );

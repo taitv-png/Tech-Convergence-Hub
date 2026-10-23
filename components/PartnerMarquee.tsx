@@ -11,7 +11,6 @@ const partners = [
   { name: "SMD", src: "/logos/smd.png", width: 240, height: 90 },
   { name: "ICDC", src: "/logos/icdc.png", width: 240, height: 90 },
   { name: "3I", src: "/logos/3i.png", width: 240, height: 90 },
-  { name: "Kamisoft", src: "/logos/kamisoft.png", width: 240, height: 90 },
   { name: "ISC", src: "/logos/isc.png", width: 240, height: 90 },
 ];
 
@@ -19,8 +18,8 @@ export function PartnerMarquee() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const firstRow = partners.slice(0, 5);
-  const secondRow = partners.slice(5);
+  const firstRow = partners.slice(0, 4);
+  const secondRow = partners.slice(4);
 
   const repeatedFirstRow = [...firstRow, ...firstRow, ...firstRow];
   const repeatedSecondRow = [...secondRow, ...secondRow, ...secondRow];
@@ -50,7 +49,7 @@ export function PartnerMarquee() {
           <div className="partner-track">
             {repeatedFirstRow.map((partner, index) => (
               <div
-                className={`partner-logo ${partner.name === "3I" ? "partner-logo-3i" : ""} ${partner.name === "Kamisoft" ? "partner-logo-kamisoft" : ""}`}
+                className={`partner-logo ${partner.name === "3I" ? "partner-logo-3i" : ""}`}
                 key={`${partner.name}-row1-${index}`}
               >
                 <Image
@@ -68,7 +67,7 @@ export function PartnerMarquee() {
           <div className="partner-track partner-track-reverse">
             {repeatedSecondRow.map((partner, index) => (
               <div
-                className={`partner-logo ${partner.name === "3I" ? "partner-logo-3i" : ""} ${partner.name === "Kamisoft" ? "partner-logo-kamisoft" : ""}`}
+                className={`partner-logo ${partner.name === "3I" ? "partner-logo-3i" : ""}`}
                 key={`${partner.name}-row2-${index}`}
               >
                 <Image
@@ -85,4 +84,3 @@ export function PartnerMarquee() {
     </section>
   );
 }
-

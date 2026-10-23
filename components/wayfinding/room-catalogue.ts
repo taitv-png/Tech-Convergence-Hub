@@ -1,6 +1,7 @@
+import { mapIsEnglish, tr } from "./locale";
 // Vietnamese display copy consolidated from TONGHOP-LABS (6).docx.
 // Descriptions summarize functions, not a claim that proposed equipment exists.
-export const ROOM_CATALOGUE: Record<string, { name: string; description: string }> = {
+const ROOM_CATALOGUE_VI: Record<string, { name: string; description: string }> = {
   E002: {
     name: "Phòng kỹ thuật sản xuất và lưu trữ dữ liệu Hologram",
     description:
@@ -127,9 +128,123 @@ export const ROOM_CATALOGUE: Record<string, { name: string; description: string 
       "Kết hợp phòng họp, hội thảo và trao đổi chuyên môn với khu phục vụ cà phê, đồ ăn nhẹ và đặt món thông minh.",
   },
 };
+// English copy for the same rooms (names follow the approved English room signs).
+const ROOM_CATALOGUE_EN: Record<string, { name: string; description: string }> = {
+  E002: {
+    name: "Hologram Printing Lab",
+    description:
+      "Hologram production and storage of holographic print data, with hands-on training in a room with controlled lighting, temperature and vibration.",
+  },
+  E001: {
+    name: "Precision Mechanics & Equipment Lab",
+    description:
+      "Develops products, engineering prototypes, drive systems and mechanical assemblies that demand high precision, reliability and integration.",
+  },
+  E103: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
+  E102: {
+    name: "Immersive Technology Exhibition & Post Production Room",
+    description:
+      "Exhibits holographic works and supports post-production; studies user behaviour, emotion and performance through physiological measurements, motion tracking and interactive devices.",
+  },
+  E104: {
+    name: "Immersive Technology Convergence Center",
+    description:
+      "Research and practice in imaging, simulation and digital interaction, and hologram post-production.",
+  },
+  E101: {
+    name: "Human-Centered AI Innovation Lab",
+    description:
+      "Researches and develops human-centred AI applications that support new products, services and operating processes.",
+  },
+  E203: {
+    name: "Architectural & Urban Physics Lab",
+    description:
+      "Researches, measures and simulates acoustics, light, temperature, wind and rain for green, energy-efficient architecture and sustainable planning.",
+  },
+  E202: {
+    name: "Guest Researchers & Visiting Scholars",
+    description: "A shared research workspace for Vietnamese and international researchers in the UEH ecosystem.",
+  },
+  E204: {
+    name: "Smart City Lab",
+    description:
+      "Combines AI, the Internet of Things, digital twins and digital maps to manage and analyse urban data, and studies smart solutions for safety, traffic and infrastructure.",
+  },
+  E201: {
+    name: "META - Digital Twin Lab",
+    description:
+      "Develops monitoring sensors, simulation and forecasting of building and city operations, for research, teaching and technology transfer.",
+  },
+  E303: {
+    name: "Automated Vehicles & Systems Lab",
+    description:
+      "Research and teaching on mobile robots and autonomous vehicles: control algorithms, computer vision and sensor integration in a test environment.",
+  },
+  E302: {
+    name: "Mobile Robot Lab & Ocean Robotics Lab",
+    description:
+      "Research, teaching and testing of drones and autonomous or remotely operated underwater vehicles, with positioning, remote sensing and communication in marine settings.",
+  },
+  E304: {
+    name: "MPS Station Center",
+    description: "Space and equipment for hands-on mechatronics, factory automation and industrial production lines.",
+  },
+  E301: {
+    name: "Embedded & IoT System Lab and Process Control & Industrial Communication Network Lab",
+    description:
+      "Power electronics, microcontrollers, embedded systems and the Internet of Things, with process control, industrial networks and monitoring.",
+  },
+  "E402+E403": {
+    name: "AI & Big Data Lab and Edge & Physical AI Lab",
+    description:
+      "AI and big data research; sensors, embedded systems, robots, computer vision and real-time control for intelligent systems in the physical world.",
+  },
+  E404: {
+    name: "Ocean Monitoring, Ocean Physics & Ocean Renewable Energy Labs",
+    description:
+      "Marine data monitoring and analysis for marine and coastal spatial planning; ocean physics, coastal dynamics and ocean renewable energy.",
+  },
+  E401: {
+    name: "Smart Seaport Logistics & Terminal Operations Lab and Smart Mobility Lab - Rail Systems Lab",
+    description:
+      "Port logistics, transport operations and railway systems, combining simulation, real data and digital platforms for training, management and policy.",
+  },
+  E503: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
+  E502: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
+  E504: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
+  E501: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
+  "E602+E603": {
+    name: "Information Security Lab",
+    description:
+      "Hands-on security training with attack and defence simulation on an isolated network; supports research, projects and short courses.",
+  },
+  E604: {
+    name: "Circular Economy Lab",
+    description:
+      "Open research space to assemble and test start-up products; demonstrates circular treatment of organic waste with sensors and AI for environmental monitoring.",
+  },
+  E601: {
+    name: "ISC Open Lab",
+    description:
+      "ISC workspace and business management; advice on copyright, ownership and commercialisation of the centre's research products.",
+  },
+  E702: {
+    name: "Open Lab & Prototyping Area / Digital Library",
+    description:
+      "Flexible incubation, prototyping and digital library access; supports project demos, investor connections and commercialisation of research.",
+  },
+  E701: {
+    name: "Meeting Station & Café",
+    description: "Meeting and seminar rooms with a café, light food and smart ordering.",
+  },
+};
+
+// Localized on first use in the browser; on the server (link building) only the keys matter.
+export const ROOM_CATALOGUE = mapIsEnglish() ? ROOM_CATALOGUE_EN : ROOM_CATALOGUE_VI;
+
 export const commonSpaceName = (floor: number) =>
   floor === 0
-    ? "Sảnh công nghệ tương tác"
+    ? tr("Sảnh công nghệ tương tác", "Interactive technology lobby")
     : floor === 7
-      ? "Sảnh đổi mới sáng tạo"
-      : `Sảnh chung tầng ${floor}`;
+      ? tr("Sảnh đổi mới sáng tạo", "Innovation lobby")
+      : tr(`Sảnh chung tầng ${floor}`, `Floor ${floor} common lobby`);
