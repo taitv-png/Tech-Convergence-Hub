@@ -152,7 +152,7 @@ const en = {
     deckB: "Building new connections.",
     label: "TCH collaboration network",
   },
-  contact: { lineA: "A new idea?", lineB: "Start with a conversation.", cta: "Talk to TCH" },
+  contact: { lineA: "Got a new idea?", lineB: "", cta: "Start a conversation" },
   labsPage: {
     eyebrow: "Spaces & Labs · Campus E",
     titleA: "Find a lab.",

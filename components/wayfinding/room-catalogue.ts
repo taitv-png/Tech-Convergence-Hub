@@ -231,7 +231,7 @@ const ROOM_CATALOGUE_EN: Record<string, { name: string; description: string }> =
   E702: {
     name: "Open Lab & Prototyping Area / Digital Library",
     description:
-      "Flexible incubation, prototyping and digital library access; supports project demos, investor connections and commercialisation of research.",
+      "Flexible incubation, prototyping and digital library access; supports project demonstrations, investor connections and commercialisation of research.",
   },
   E701: {
     name: "Meeting Station & Café",
