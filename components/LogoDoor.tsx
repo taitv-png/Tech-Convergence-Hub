@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { TCH_MARK, TCH_MARK_ZOOM_ORIGIN, TCH_WORDMARK } from "./tch-logo";
 import { getDictionary } from "@/lib/dictionary";
 import type { Locale } from "@/lib/i18n";
+import { TechnologyLight } from "./TechnologyLight";
 
 // White lockup first; warm light appears inside the mark only as it enlarges.
 // Background LED rails stay peripheral, leaving the wordmark and tagline readable.
@@ -142,7 +143,7 @@ export function LogoDoor({ locale }: { locale: Locale }) {
           <path className="cv-door-mark cv-door-ink" d={TCH_MARK.d} transform={initial.mark} fill={INK} fillRule="evenodd" />
           <path className="cv-door-word" d={TCH_WORDMARK.d} transform={initial.word} fill={INK} fillRule="evenodd" />
         </svg>
-        <div className="cv-door-neon" aria-hidden="true"><i /><i /><i /></div>
+        <TechnologyLight className="cv-door-light-field" />
         <div className="cv-door-scene">
           <p>
             {t.taglineA}

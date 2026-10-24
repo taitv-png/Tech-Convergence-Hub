@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 // Each chapter owns a complete viewport. Coloured light ties it to the opening scene.
 export function HomeFrame({ id, tone = "dark", color, children }: {
-  id: string;
+  id?: string;
   tone?: "dark" | "light";
   color: "cyan" | "orange" | "violet" | "green";
   children: ReactNode;
