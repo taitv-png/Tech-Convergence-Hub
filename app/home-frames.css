@@ -7,6 +7,20 @@ html.home-frames .cv-intro-flow,
 html.home-frames .cv-door,
 html.home-frames .scene-frame { scroll-snap-align: start; }
 html.home-frames .scene-frame { scroll-margin-top: 0; }
+/* About holds the stage while the next chapter arrives from the right. */
+.chapter-rail { position: relative; }
+.chapter-anchor { position: absolute; top: 0; left: 0; width: 1px; height: 1px; scroll-margin-top: var(--header-height); pointer-events: none; }
+.chapter-anchor-next { top: 50%; }
+html.home-frames .chapter-anchor { scroll-margin-top: 0; }
+.chapter-rail.is-horizontal { height: calc(260svh - var(--header-height)); }
+.chapter-rail.is-horizontal .chapter-stage { position: sticky; top: var(--header-height); height: calc(100svh - var(--header-height)); overflow: clip; }
+.chapter-rail.is-horizontal .chapter-track { display: flex; height: 100%; transform: translate3d(calc(var(--chapter-progress, 0) * -100%), 0, 0); }
+.chapter-rail.is-horizontal .chapter-panel { flex: 0 0 100%; min-width: 0; height: 100%; }
+.chapter-rail.is-horizontal .scene-frame { height: 100%; min-block-size: 0; }
+.chapter-rail.is-horizontal .scene-content { animation: none; }
+html.home-frames .chapter-rail .scene-frame { scroll-snap-align: none; }
+html.home-frames .chapter-rail { scroll-snap-align: none; }
+.chapter-rail.is-horizontal .chapter-panel:last-child { box-shadow: -30px 0 60px #0003; }
 .scene-frame {
   --scene-rgb: 255 133 72;
   position: relative;

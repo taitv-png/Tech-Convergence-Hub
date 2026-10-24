@@ -13,6 +13,7 @@ import { PartnerRibbon } from "../PartnerRibbon";
 import { LabPhoto } from "../LabPhoto";
 import { OperatingModels } from "../OperatingModels";
 import { HomeFrame } from "../HomeFrame";
+import { HorizontalChapters } from "../HorizontalChapters";
 import { referenceImages } from "@/data/site-images";
 import { getDictionary } from "@/lib/dictionary";
 import { floorName, localePath, type Locale } from "@/lib/i18n";
@@ -59,7 +60,12 @@ export function HomeView({ locale }: { locale: Locale }) {
         <IntroSequence locale={locale} />
         <LogoDoor locale={locale} />
 
-        <HomeFrame id="about" color="cyan">
+        <HorizontalChapters next={
+          <HomeFrame tone="light" color="orange">
+            <TechnologyExplorer locale={locale} />
+          </HomeFrame>
+        }>
+        <HomeFrame color="cyan">
         <AboutConvergence locale={locale}>
           <SectionHeading title={t.about.title}>
             {t.about.deckA} <span>{t.about.deckB}</span>
@@ -89,9 +95,7 @@ export function HomeView({ locale }: { locale: Locale }) {
         </AboutConvergence>
         </HomeFrame>
 
-        <HomeFrame id="technology" tone="light" color="orange">
-          <TechnologyExplorer locale={locale} />
-        </HomeFrame>
+        </HorizontalChapters>
         <HomeFrame id="models" tone="light" color="violet">
           <OperatingModels locale={locale} />
         </HomeFrame>
