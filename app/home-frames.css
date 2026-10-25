@@ -7,20 +7,24 @@ html.home-frames .cv-intro-flow,
 html.home-frames .cv-door,
 html.home-frames .scene-frame { scroll-snap-align: start; }
 html.home-frames .scene-frame { scroll-margin-top: 0; }
-/* About holds the stage while the next chapter arrives from the right. */
+/* Each pair holds one stage; the second pair travels in the opposite direction. */
 .chapter-rail { position: relative; }
 .chapter-anchor { position: absolute; top: 0; left: 0; width: 1px; height: 1px; scroll-margin-top: var(--header-height); pointer-events: none; }
 .chapter-anchor-next { top: 50%; }
 html.home-frames .chapter-anchor { scroll-margin-top: 0; }
 .chapter-rail.is-horizontal { height: calc(260svh - var(--header-height)); }
 .chapter-rail.is-horizontal .chapter-stage { position: sticky; top: var(--header-height); height: calc(100svh - var(--header-height)); overflow: clip; }
-.chapter-rail.is-horizontal .chapter-track { display: flex; height: 100%; transform: translate3d(calc(var(--chapter-progress, 0) * -100%), 0, 0); }
+.chapter-rail.is-horizontal .chapter-track { display: flex; height: 100%; transform: translate3d(calc(var(--chapter-progress, 0) * -100%), 0, 0); will-change: transform; }
 .chapter-rail.is-horizontal .chapter-panel { flex: 0 0 100%; min-width: 0; height: 100%; }
+.chapter-rail.is-horizontal.chapter-towards-right .chapter-track { transform: translate3d(calc((var(--chapter-progress, 0) - 1) * 100%), 0, 0); }
+.chapter-rail.is-horizontal.chapter-towards-right .chapter-panel:first-child { order: 2; }
+.chapter-rail.is-horizontal.chapter-towards-right .chapter-panel:last-child { order: 1; }
 .chapter-rail.is-horizontal .scene-frame { height: 100%; min-block-size: 0; }
 .chapter-rail.is-horizontal .scene-content { animation: none; }
 html.home-frames .chapter-rail .scene-frame { scroll-snap-align: none; }
 html.home-frames .chapter-rail { scroll-snap-align: none; }
 .chapter-rail.is-horizontal .chapter-panel:last-child { box-shadow: -30px 0 60px #0003; }
+.chapter-rail.is-horizontal.chapter-towards-right .chapter-panel:last-child { box-shadow: 30px 0 60px #0003; }
 .scene-frame {
   --scene-rgb: 255 133 72;
   position: relative;
@@ -106,8 +110,20 @@ html.home-frames .chapter-rail { scroll-snap-align: none; }
 .scene-frame .scroll-reveal { opacity: 1; transform: none; transition: none; }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) and (min-width: 1100px) and (min-height: 700px) {
-    .scene-content { animation: scene-arrive linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
-    @keyframes scene-arrive { from { opacity: .2; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .scene-frame { view-timeline: --chapter block; }
+    .scene-content { animation: scene-arrive linear both; animation-timeline: --chapter; animation-range: entry 0% entry 100%; }
+    .scene-motion-focus .scene-content { animation-name: scene-focus; transform-origin: 50% 50%; }
+    .scene-motion-split .scene-content { animation: none; }
+    .scene-motion-split .explore-grid > div {
+      animation: scene-from-left linear both;
+      animation-timeline: --chapter;
+      animation-range: entry 0% entry 100%;
+    }
+    .scene-motion-split .explore-grid > div:last-child { animation-name: scene-from-right; }
+    @keyframes scene-arrive { from { opacity: .25; transform: translateY(36px); } 75%, to { opacity: 1; transform: translateY(0); } }
+    @keyframes scene-focus { from { opacity: .2; transform: scale(.965); } 85%, to { opacity: 1; transform: scale(1); } }
+    @keyframes scene-from-left { from { opacity: .2; transform: translateX(-48px); } 85%, to { opacity: 1; transform: translateX(0); } }
+    @keyframes scene-from-right { from { opacity: .2; transform: translateX(48px); } 85%, to { opacity: 1; transform: translateX(0); } }
   }
 }
 
