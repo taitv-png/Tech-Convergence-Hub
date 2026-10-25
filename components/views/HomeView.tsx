@@ -96,11 +96,8 @@ export function HomeView({ locale }: { locale: Locale }) {
         </HomeFrame>
 
         </HorizontalChapters>
-        <HomeFrame id="models" tone="light" color="violet">
-          <OperatingModels locale={locale} />
-        </HomeFrame>
-
-        <HomeFrame id="ecosystem" color="violet">
+        <HorizontalChapters firstId="models" nextId="ecosystem" direction="right" next={
+        <HomeFrame color="violet">
           <section className="home-section ecosystem-section">
             <div className="site-container">
               <div className="section-heading">
@@ -131,8 +128,13 @@ export function HomeView({ locale }: { locale: Locale }) {
             </div>
           </section>
         </HomeFrame>
+        }>
+          <HomeFrame tone="light" color="violet">
+            <OperatingModels locale={locale} />
+          </HomeFrame>
+        </HorizontalChapters>
 
-        <HomeFrame id="spaces" color="green">
+        <HomeFrame id="spaces" color="green" motion="focus">
           <section
             className="site-container home-section cv-spaces"
           >
@@ -170,7 +172,7 @@ export function HomeView({ locale }: { locale: Locale }) {
           </section>
         </HomeFrame>
 
-        <HomeFrame id="campus" color="cyan">
+        <HomeFrame id="campus" color="cyan" motion="split">
           <section className="explore-band">
             <div className="site-container explore-grid">
               <div>

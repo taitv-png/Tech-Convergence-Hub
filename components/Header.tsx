@@ -83,8 +83,10 @@ export function Header({ locale }: { locale: Locale }) {
   // locale has its own root layout, so this is a full page load.
   const switchLanguage = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    rememberReadingPosition(base + otherHref);
-    window.location.assign(base + otherHref + window.location.search + window.location.hash);
+    const chapterSaved = rememberReadingPosition(base + otherHref);
+    // A native hash jump would reset a sideways chapter to its start. Restore that hash
+    // with the reading position once the other locale has mounted instead.
+    window.location.assign(base + otherHref + window.location.search + (chapterSaved ? "" : window.location.hash));
   };
 
   return (
