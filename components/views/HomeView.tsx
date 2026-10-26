@@ -11,6 +11,7 @@ import { CampusPortal } from "../CampusPortal";
 import { SectionHeading } from "../SectionHeading";
 import { PartnerRibbon } from "../PartnerRibbon";
 import { LabPhoto } from "../LabPhoto";
+import { RoomName } from "../RoomName";
 import { OperatingModels } from "../OperatingModels";
 import { HomeFrame } from "../HomeFrame";
 import { HorizontalChapters } from "../HorizontalChapters";
@@ -165,7 +166,7 @@ export function HomeView({ locale }: { locale: Locale }) {
                       {lab.room} · {floorName(locale, lab.floor)}
                     </span>
                   </span>
-                  <h3>{lab.name}</h3>
+                  <h3><RoomName name={lab.name} /></h3>
                 </Link>
               ))}
             </div>

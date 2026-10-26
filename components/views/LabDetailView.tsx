@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Arrow } from "../Arrow";
 import { Footer } from "../Footer";
 import { Header } from "../Header";
+import { RoomName } from "../RoomName";
 import { LabPhoto, LabPhotoCredit } from "../LabPhoto";
 import { labs } from "@/data/labs";
 import { floorRole, getLab, getLabs } from "@/lib/content";
@@ -48,7 +49,7 @@ export function LabDetailView({ locale, slug }: { locale: Locale; slug: string }
               <p className="eyebrow">
                 <span className="orange-dot" /> {lab.room} · {floorName(locale, lab.floor).toUpperCase()}
               </p>
-              <h1>{lab.name}</h1>
+              <h1><RoomName name={lab.name} /></h1>
               <p className="cv-detail-lede">{lab.desc}</p>
               <dl className="cv-facts">
                 <div>

@@ -7,6 +7,7 @@ import { floorName, localePath, normalizeSearch, type Locale } from "@/lib/i18n"
 import { getExplorerHref } from "@/lib/explorer-link";
 import { Arrow } from "./Arrow";
 import { LabPhoto } from "./LabPhoto";
+import { RoomName } from "./RoomName";
 
 type Filters = { q: string; floor: string; theme: string; cluster: string };
 const empty: Filters = { q: "", floor: "", theme: "", cluster: "" };
@@ -178,7 +179,7 @@ export function LabDirectory({ locale }: { locale: Locale }) {
                   <span>{lab.room}</span>
                   <span>{floorName(locale, lab.floor)}</span>
                 </p>
-                <h3>{lab.name}</h3>
+                <h3><RoomName name={lab.name} /></h3>
                 <p className="lab-card-desc">{lab.desc}</p>
               </Link>
               <div className="lab-card-actions">

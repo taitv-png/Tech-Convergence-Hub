@@ -98,6 +98,6 @@ export function floorRooms(floor: number): Room[] {
         : floor < 7 && (id.endsWith("02") || id.includes("+"))
           ? [doors[i], [5.38, 4.6]]
           : [doors[i]],
-    kind: floor === 5 || id.endsWith("03") ? "class" : "lab",
+    kind: id === "E502" || id === "E503" ? "lab" : floor === 5 || id.endsWith("03") ? "class" : "lab",
   }));
 }

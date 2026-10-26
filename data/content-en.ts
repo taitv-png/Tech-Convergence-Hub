@@ -1,7 +1,7 @@
 // English content for the data in labs.ts, technology-themes.ts and operating-models.ts.
 // Keyed by the stable ids (lab.id, cluster key, theme id, model id); labs.ts stays the
 // Vietnamese source. Lab names follow the approved English room signs
-// (D:/TCH/outputs/lab_signs/lab_names_current.json, 2026-10-14) where a sign exists.
+// (D:/TCH/outputs/lab_signs/lab_names_current.json), confirmed on 2026-10-26.
 
 export type LabTextEn = { name: string; desc: string; tech: string[]; apps: string[] };
 
@@ -31,7 +31,7 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Exhibitions", "Post-production"],
   },
   "immersive-technology-center": {
-    name: "Immersive Technology Convergence Center",
+    name: "Immersive Technology Convergence Center | Human Experience Lab",
     desc: "Research and hands-on work in imaging, simulation and digital interaction, alongside hologram post-production.",
     tech: ["Interaction tracking devices", "Behavioural data recording systems", "Simulation platform", "Presentation equipment"],
     apps: ["Research", "User experience evaluation"],
@@ -49,13 +49,13 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Green architecture", "Sustainable planning", "Energy efficiency"],
   },
   "research-lab": {
-    name: "Guest Researchers & Visiting Scholars",
+    name: "Guest Researchers and Visiting Scholars",
     desc: "A shared research space for experts from Vietnam and abroad.",
     tech: ["Research space", "Team workspace", "Academic connections", "Research support systems"],
     apps: ["International collaboration", "Interdisciplinary research", "Co-creation projects"],
   },
   "smart-city-lab": {
-    name: "Smart City Lab",
+    name: "Smart City Lab | Urban Sense Lab",
     desc: "Focuses on AIoT, digital twins and urban data management to solve real problems in safety, traffic and smart urban infrastructure.",
     tech: ["AIoT", "Digital twin", "GIS platform", "Urban data analytics"],
     apps: ["Research", "Urban analysis and forecasting"],
@@ -118,13 +118,13 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Embedded systems research", "Industrial networking training"],
   },
   "edge-physical-ai-lab": {
-    name: "Edge & Physical AI Lab",
+    name: "AI and Big Data Lab",
     desc: "Brings together AI, sensors, actuators, embedded systems, robotics, IoT, computer vision and real-time control to build intelligent systems that work in the physical world.",
     tech: ["Edge AI", "Computer vision", "Real-time sensors", "Edge inference platform"],
     apps: ["Intelligent systems for the physical world", "Edge AI research"],
   },
   "ai-big-data-lab": {
-    name: "AI & Big Data Lab",
+    name: "AI and Big Data Lab",
     desc: "Leading applied research on AI and big data for economics and business, supporting international research publications, technology transfer and advanced professional training.",
     tech: ["Data processing cluster", "Data warehouse", "GPU workstations", "Machine learning platform"],
     apps: ["AI and big data", "Advanced data analytics"],
@@ -141,7 +141,7 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Ocean monitoring", "Marine spatial planning"],
   },
   "ocean-physics-lab": {
-    name: "Ocean Physics & Coastal Dynamics Lab",
+    name: "Ocean Physics & Coastal Dynamics Laboratory",
     desc: "Research and simulation of ocean physical processes, supported by oscillation and fluid viscosity measurements. Hands-on training in fluid mechanics and coastal dynamics provides a foundation for marine engineering and energy research.",
     tech: ["Basic measuring instruments", "Oscillation measurement system", "Fluid viscosity measurement system", "Bridge circuit measurement system"],
     apps: ["Ocean monitoring", "Simulation"],
@@ -169,25 +169,25 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Smart logistics", "Port operations"],
   },
   "smart-mobility-lab": {
-    name: "Smart Mobility Lab",
+    name: "Smart Mobility Lab - Rail Systems Lab",
     desc: "A research lab and living lab for urban transport, road safety and data-driven sustainable development. It combines simulation, real data and digital platforms to support evidence-based planning and policy.",
     tech: ["Simulation and VR/AR systems", "AI traffic cameras", "GPS trackers", "Traffic simulation table"],
     apps: ["Smart mobility", "Simulation"],
   },
   "rail-systems-lab": {
-    name: "Rail Systems Lab",
+    name: "Smart Mobility Lab - Rail Systems Lab",
     desc: "Research and training in railway operations, maintenance and basic certification for students and technicians, based on operating, incident and safety scenarios in a simulated environment.",
     tech: ["High-performance workstations", "Control room displays", "Railway system model", "Multi-modal operations simulation desk"],
     apps: ["Railway operations training", "Simulation"],
   },
   "classroom-e503": {
-    name: "Classroom",
+    name: "Advanced Initiative of Science and Technology Lab",
     desc: "Teaching room for 30 to 40 people.",
     tech: ["Projector", "Sound system", "Interactive whiteboard", "Wi-Fi"],
     apps: ["Teaching"],
   },
   "classroom-e502": {
-    name: "Classroom",
+    name: "Advanced Initiative of Science and Technology Lab",
     desc: "Teaching room for 30 to 40 people.",
     tech: ["Projector", "Sound system", "Interactive whiteboard", "Wi-Fi"],
     apps: ["Teaching"],
@@ -229,7 +229,7 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Business support", "Advisory", "Commercialisation"],
   },
   "open-lab-prototyping-library": {
-    name: "Open Lab, Prototyping Area & Digital Library",
+    name: "Open Lab & Prototyping Area | Digital Library",
     desc: "An incubation space for projects preparing to meet investors, with a digital library.",
     tech: ["Prototyping area", "Digital library", "Pitch space", "Presentation infrastructure"],
     apps: ["Incubation", "Library"],

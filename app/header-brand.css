@@ -1,0 +1,4 @@
+/* Remove the inline image's baseline gap so the logo centres in its flex row. */
+.site-header .brand-image {
+  display: block;
+}

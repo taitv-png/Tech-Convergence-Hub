@@ -5,6 +5,7 @@ import { floorRooms, type Room } from "./floor-rooms";
 import * as THREE from "three";
 import { ROOM_CATALOGUE, commonSpaceName } from "./room-catalogue";
 import { tr } from "./locale";
+import { RoomName } from "../RoomName";
 import { createStudent, ROOM_ITEMS } from "./room104-scene";
 import { createHallway, type TourItem, type Portal } from "./campus-tour-scene";
 import { createRoomTour } from "./room-tour";
@@ -2108,7 +2109,7 @@ function RoomPicker({
             {roomGroups[floor].rooms.map((r) => (
               <button key={r.id} onClick={() => choose(start ? "ROOM-" + r.id : r.id)}>
                 <b>{r.id}</b>
-                <span>{r.name}</span>
+                <span><RoomName name={r.name} /></span>
               </button>
             ))}
           </div>
@@ -2166,7 +2167,7 @@ function RoomDetail({
           </div>
           <section>
             <small>{commonSpaceName(room.floor)}</small>
-            <h2>{room.name}</h2>
+            <h2><RoomName name={room.name} /></h2>
             <h3>{tr("Chức năng & hoạt động nghiên cứu", "Purpose & research activities")}</h3>
             <p>{ROOM_CATALOGUE[room.id]?.description}</p>
             <h3>{tr("Tiếp cận", "Access")}</h3>
@@ -2321,7 +2322,7 @@ export default function CampusEMap() {
                   <div>
                     <small>{tr("PHÒNG ĐÃ CHỌN", "SELECTED ROOM")}</small>
                     <strong>{dest.id}</strong>
-                    <p className="room-card-name">{dest.name}</p>
+                    <p className="room-card-name"><RoomName name={dest.name} /></p>
                   </div>
                 </div>
               )}
@@ -2412,7 +2413,7 @@ export default function CampusEMap() {
                   </h2>
                   <div className="destination-summary">
                     <small>{tr("PHÒNG ĐẾN", "DESTINATION")} · {dest.id}</small>
-                    <h3>{dest.name}</h3>
+                    <h3><RoomName name={dest.name} /></h3>
                   </div>
                   <div className="route-mode">
                     <Navigation />
@@ -2483,7 +2484,7 @@ export default function CampusEMap() {
               <span>{tr("TRỞ VỀ ĐIỀU HƯỚNG", "BACK TO DIRECTIONS")}</span>
             </button>
             <strong>
-              {tourId} · {ROOMS.find((r) => r.id === tourId)!.name}
+              {tourId} · <RoomName name={ROOMS.find((r) => r.id === tourId)!.name} />
             </strong>
             <span>{tr("THAM QUAN 3D", "3D TOUR")}</span>
           </header>

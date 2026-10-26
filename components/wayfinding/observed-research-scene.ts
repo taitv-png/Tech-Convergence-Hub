@@ -10,8 +10,8 @@ export const isObservedResearchRoom = (id: string) => ['E302', 'E303', 'E304'].i
 // are visual approximations; these models are not an equipment inventory.
 export const RESEARCH_ROOM_SURVEYS = {
   E302: { source: 'IMG_1391, IMG_1394, IMG_1396, IMG_1397', type: 'flight-arena', doors: 2 },
-  E303: { source: 'IMG_5053–IMG_5066', type: 'automation-training', doors: 1 },
-  E304: { source: 'IMG_5040–IMG_5051', type: 'mobile-robot-road', doors: 1 },
+  E303: { source: 'IMG_5040–IMG_5051', type: 'mobile-robot-road', doors: 1 },
+  E304: { source: 'IMG_5053–IMG_5066', type: 'automation-training', doors: 1 },
 } as const;
 
 function drawingTexture(width: number, height: number, draw: (context: CanvasRenderingContext2D) => void) {
@@ -22,7 +22,7 @@ function drawingTexture(width: number, height: number, draw: (context: CanvasRen
   return texture;
 }
 
-function roomKit(scene: THREE.Scene) {
+function roomKit(scene: THREE.Object3D) {
   const mat = (color: number, opacity = 1, roughness = .72) => new THREE.MeshStandardMaterial({ color, roughness, transparent: opacity < 1, opacity, depthWrite: opacity === 1 });
   const white = mat(0xf1f0e8), black = mat(0x172027), steel = mat(0x8b989e, 1, .38), blue = mat(0x537d99), warm = mat(0x9b6140);
   const boxGeometry = new THREE.BoxGeometry(1, 1, 1), cylinderGeometry = new THREE.CylinderGeometry(1, 1, 1, 12), sphereGeometry = new THREE.SphereGeometry(1, 12, 8);
@@ -45,17 +45,43 @@ function roomKit(scene: THREE.Scene) {
 }
 
 export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, furnished: boolean) {
-  const { width: w, depth: d } = roomSize(room), height = 3.05, kit = roomKit(scene);
+  const { width, depth } = roomSize(room), height = 3.05;
+  // The user reassigned the two surveyed interiors; the physical room envelope
+  // and all floor-plan door coordinates stay with their original room IDs.
+  const layout = ({ E303: 'road', E304: 'automation' } as Record<string, string>)[room.id] ?? 'arena';
+  const turn = layout === 'road' ? -Math.PI / 2 : layout === 'automation' ? Math.PI / 2 : 0;
+  const w = turn ? depth : width, d = turn ? width : depth;
+  const furniture = new THREE.Group(); furniture.rotation.y = turn; scene.add(furniture);
+  const cosine = Math.cos(turn), sine = Math.sin(turn);
+  const toWorld = (x: number, z: number) => ({ x: x * cosine + z * sine, z: z * cosine - x * sine });
+  const toLocal = (x: number, z: number) => ({ x: x * cosine - z * sine, z: x * sine + z * cosine });
+  const physicalSide = (side: WallSide): WallSide => {
+    const normals = { north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] } as const;
+    const normal = toWorld(normals[side][0], normals[side][1]);
+    return Math.abs(normal.x) > .5 ? normal.x < 0 ? 'west' : 'east' : normal.z < 0 ? 'north' : 'south';
+  };
+  const physicalOpening = (opening: RoomOpening): RoomOpening => {
+    const vertical = opening.side === 'east' || opening.side === 'west';
+    const fixed = opening.side === 'north' ? -d / 2 : opening.side === 'south' ? d / 2 : opening.side === 'west' ? -w / 2 : w / 2;
+    const ends = [opening.from, opening.to].map(at => vertical ? toWorld(fixed, at) : toWorld(at, fixed));
+    const side = physicalSide(opening.side), values = ends.map(point => side === 'east' || side === 'west' ? point.z : point.x);
+    return { ...opening, side, from: Math.min(...values), to: Math.max(...values) };
+  };
+  const kit = roomKit(furniture);
   const { mat, white, black, steel, blue, warm, wood, box, cylinder, ball, bar } = kit;
   const obstacles: RoomObstacle[] = [], interactables: THREE.Object3D[] = [], items: TourItem[] = [], groups: THREE.Group[] = [];
-  const obstacle = (x: number, z: number, width: number, depth: number) => obstacles.push({ x, z, w: width, d: depth });
-  const floor = box(w, .12, d, 0, -.06, 0, mat(room.id === 'E302' ? 0x8f9291 : 0xe2e0d6)); floor.userData.walkable = true;
+  const obstacle = (x: number, z: number, width: number, depth: number) => {
+    const point = toWorld(x, z);
+    obstacles.push({ ...point, w: Math.abs(cosine) * width + Math.abs(sine) * depth, d: Math.abs(sine) * width + Math.abs(cosine) * depth });
+  };
+  const floor = box(width, .12, depth, 0, -.06, 0, mat(room.id === 'E302' ? 0x8f9291 : 0xe2e0d6), scene); floor.userData.walkable = true;
   if (room.id !== 'E302') {
     const grout = mat(0xbcbdb4);
-    for (let x = -w / 2 + .6; x < w / 2; x += .6) box(.006, .002, d, x, .002, 0, grout);
-    for (let z = -d / 2 + .6; z < d / 2; z += .6) box(w, .002, .006, 0, .002, z, grout);
+    for (let x = -width / 2 + .6; x < width / 2; x += .6) box(.006, .002, depth, x, .002, 0, grout, scene);
+    for (let z = -depth / 2 + .6; z < depth / 2; z += .6) box(width, .002, .006, 0, .002, z, grout, scene);
   }
-  const localDoors = (room.doors ?? [room.door]).map(door => roomEntry({ ...room, door }));
+  const worldDoors = (room.doors ?? [room.door]).map(door => roomEntry({ ...room, door }));
+  const localDoors = worldDoors.map(entry => toLocal(entry.x, entry.z));
   const openings: RoomOpening[] = doorOpenings(localDoors, w, d);
   const window = (side: RoomOpening['side'], from: number, to: number, bottom = .87) => openings.push({ side, from, to, bottom, top: 2.4, kind: 'window' });
   if (room.id === 'E302') {
@@ -63,7 +89,7 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     const center = northDoor?.x ?? 0;
     if (center - .95 > -w / 2 + .4) window('north', -w / 2 + .38, center - .85);
     if (center + .95 < w / 2 - .4) window('north', center + .85, w / 2 - .38);
-  } else if (room.id === 'E303') {
+  } else if (layout === 'automation') {
     const center = localDoors[0]?.x ?? -.4;
     window('north', Math.max(center + .90, .55), w / 2 - .25);
   } else {
@@ -72,11 +98,12 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     // A narrow curtained bay sits beside the board, rather than behind it.
     window('east', -d / 2 + .30, -d / 2 + 1.55, .08);
   }
-  const architecture = createRoomArchitecture(scene, { width: w, depth: d, height, openings, namePrefix: `observed-${room.id.toLowerCase()}` });
+  const architectureOpenings = openings.map(physicalOpening);
+  const architecture = createRoomArchitecture(scene, { width, depth, height, openings: architectureOpenings, namePrefix: `observed-${room.id.toLowerCase()}` });
   const wallMounted: { side: WallSide; material: THREE.MeshStandardMaterial; base: number }[] = [];
   const mountedMaterial = (original: THREE.MeshStandardMaterial, side: WallSide) => {
     const material = original.clone(); material.transparent = true; material.depthWrite = false; material.forceSinglePass = true;
-    wallMounted.push({ side, material, base: original.opacity }); return material;
+    wallMounted.push({ side: physicalSide(side), material, base: original.opacity }); return material;
   };
   const mountedBox = (a: number, b: number, c: number, x: number, y: number, z: number, material: THREE.MeshStandardMaterial, side: WallSide, parent: THREE.Object3D) => {
     const object = box(a, b, c, x, y, z, mountedMaterial(material, side), parent);
@@ -86,10 +113,11 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     object.renderOrder = 8; object.castShadow = object.receiveShadow = false; return object;
   };
   const add = (name: string, x: number, z: number, title: string, description: string, action = tr("Tìm hiểu", "Learn more")) => {
-    const index = items.length, group = new THREE.Group(); group.userData.station = index; group.name = `${room.id}-station-${index}`; group.visible = furnished; scene.add(group);
-    items.push({ name, x, z, title, description, action }); groups.push(group); if (furnished) interactables.push(group); return group;
+    const index = items.length, group = new THREE.Group(); group.userData.station = index; group.name = `${room.id}-station-${index}`; group.visible = furnished; furniture.add(group);
+    const point = toWorld(x, z);
+    items.push({ name, ...point, title, description, action }); groups.push(group); if (furnished) interactables.push(group); return group;
   };
-  const overhead = new THREE.Group(); overhead.visible = furnished; scene.add(overhead);
+  const overhead = new THREE.Group(); overhead.visible = furnished; furniture.add(overhead);
   const screens: THREE.MeshStandardMaterial[] = [], moving: THREE.Object3D[] = [], active = new Set<number>();
   const monitor = (x: number, z: number, parent: THREE.Object3D, rotation = 0, y = 1.08, width = .54) => {
     const group = new THREE.Group(); group.position.set(x, 0, z); group.rotation.y = rotation; parent.add(group);
@@ -123,16 +151,16 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     cylinder(.012, .16, -.11, .30, -.12, steel, group); obstacle(x, z, .40, .48); return group;
   };
 
-  if (furnished && room.id === 'E303') {
+  if (furnished && layout === 'automation') {
     const benches = add(tr("Bàn máy tính thực hành", "Training computer desks"), .2, -.3, tr("Hai dãy bàn gỗ · máy tính thực hành", "Two banks of wood computer desks"), tr("Hai dãy bàn dài chia khoang, màn hình đen và ghế màu kem xen xanh lá. Số chỗ và khoảng cách được ước lượng từ ảnh hiện trạng.", "Two long divided desk banks with black monitors and cream and green chairs. Seating and spacing are estimated from the site photos."), tr("Bật / tắt màn hình", "Screen on / off"));
     const training = add(tr("Hệ thống tự động hóa", "Automation training system"), -w / 2 + .65, -1.5, tr("Cụm robot và mô-đun thực hành", "Robot and training modules"), tr("Thiết bị thực hành cơ điện tử có vỏ máy trắng, tủ che khung nhôm, mô-đun cơ khí và đường khí nén. Hình học mô tả hình dáng quan sát được, không khẳng định cấu hình máy.", "Mechatronics training equipment with a white base, an aluminum-framed enclosure, mechanical modules and pneumatic lines. The model represents visible shapes; it does not specify the machine configuration."), tr("Chạy / dừng mô phỏng", "Start / stop simulation"));
     const storage = add(tr("Tủ thiết bị", "Equipment cabinet"), -w / 2 + .55, 2.6, tr("Tủ gỗ cao · cánh kính", "Tall wood cabinet with glass doors"), tr("Tủ gỗ màu nâu với bốn cánh kính, các tầng chứa hộp linh kiện và học cụ, đặt cạnh cụm máy ở đầu phòng.", "A brown wood cabinet with four glass doors and shelves of component boxes and teaching materials, beside the training equipment."));
     const teaching = add(tr("Bảng & bàn giảng viên", "Whiteboard and instructor desk"), -.8, d / 2 - .8, tr("Bảng trắng · máy chiếu · bàn trắng", "Whiteboard, projector and white desk"), tr("Khu hướng dẫn ở đầu phòng, gồm bảng trắng, màn cuốn, bàn máy tính trắng và ghế xoay đen.", "The teaching area has a whiteboard, roller screen, white computer desk and black swivel chair."), tr("Bật / tắt trình chiếu", "Projection on / off"));
-    const benchX = [-.25, 1.65], first = -d / 2 + 2.15, pitch = 1.12;
+    const benchX = [-.25, Math.min(1.65, w / 2 - .99)], first = -d / 2 + 2.15, pitch = Math.min(1.12, (d - 4.2) / 6);
     for (const [bank, x] of benchX.entries()) {
-      box(.66, .045, 6.72, x, .755, first + 2.8, wood, benches); box(.035, .71, 6.72, x - .30, .37, first + 2.8, wood, benches); obstacle(x, first + 2.8, .68, 6.72);
+      box(.66, .045, 6 * pitch, x, .755, first + 2.5 * pitch, wood, benches); box(.035, .71, 6 * pitch, x - .30, .37, first + 2.5 * pitch, wood, benches); obstacle(x, first + 2.5 * pitch, .68, 6 * pitch);
       for (let i = 0; i < 6; i++) {
-        const z = first + i * pitch; box(.65, .70, .025, x, .37, z - .55, wood, benches); box(.65, .045, .025, x, .80, z - .55, black, benches);
+        const z = first + i * pitch; box(.65, .70, .025, x, .37, z - pitch / 2, wood, benches); box(.65, .045, .025, x, .80, z - pitch / 2, black, benches);
         monitor(x - .08, z, benches, Math.PI / 2); chair(x + .64, z, benches, -Math.PI / 2, false, (i + bank) % 5 === 1);
       }
     }
@@ -192,7 +220,7 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     for (let i = 0; i < 2; i++) box(.48, .34, .43, w / 2 - .4, .18 + i * .34, d / 2 - .6, mat(0xb89c76), seats); obstacle(w / 2 - .4, d / 2 - .6, .52, .47);
   }
 
-  if (furnished && room.id === 'E304') {
+  if (furnished && layout === 'road') {
     const trackGroup = add(tr("Sa bàn đường thử", "Road-test layout"), .1, 0, tr("Thảm đường thử robot di động", "Mobile-robot road mat"), tr("Thảm đen trải gần hết sàn, có làn đường cong, vạch đứt, chỗ đỗ, vạch sang đường và vùng đánh dấu xanh theo ảnh. Đây là mặt sàn có thể đi trên.", "A black mat covers most of the floor, with curved lanes, dashed markings, parking bays, crossings and a green marked area based on the photos. You can walk across this floor."));
     const vehicles = add(tr("Dãy robot di động", "Parked mobile robots"), .7, -d / 2 + .65, tr("Robot bánh xe · mô-đun cảm biến", "Wheeled robots and sensor modules"), tr("Các robot thử nghiệm nhiều kích thước xếp dọc mép thảm, có bánh xe, mặt mạch và cảm biến. Số lượng và tỷ lệ được ước lượng từ ảnh.", "Test robots of different sizes line the edge of the mat, with wheels, circuit boards and sensors. Their number and proportions are estimated from the photos."), tr("Chạy / dừng robot", "Start / stop robots"));
     const teaching = add(tr("Bàn điều khiển & bảng", "Control desk and whiteboard"), w / 2 - 1.0, -d / 2 + .8, tr("Bàn máy tính trắng · bảng trắng", "White computer desk and whiteboard"), tr("Bàn điều khiển có máy tính, ghế xoay đen và tủ thấp, cạnh bảng trắng và màn cuốn.", "A computer control desk, black swivel chair and low cabinet beside the whiteboard and roller screen."), tr("Bật / tắt màn hình", "Screen on / off"));
@@ -227,8 +255,8 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
   if (furnished) {
     const led = mat(0xfff9e8, .18); led.emissive.set(0xfff5da); led.emissiveIntensity = .2;
     for (let x = -w / 2 + 1; x < w / 2; x += 1.8) for (let z = -d / 2 + 1.3; z < d / 2; z += 2.0) { const light = box(.60, .025, .60, x, 2.96, z, led, overhead); light.castShadow = light.receiveShadow = false; }
-    const projector = box(.32, .13, .24, 0, 2.64, room.id === 'E304' ? 0 : 1.1, white, overhead); projector.castShadow = false;
-    box(.04, .28, .04, 0, 2.84, room.id === 'E304' ? 0 : 1.1, steel, overhead);
+    const projector = box(.32, .13, .24, 0, 2.64, layout === 'road' ? 0 : 1.1, white, overhead); projector.castShadow = false;
+    box(.04, .28, .04, 0, 2.84, layout === 'road' ? 0 : 1.1, steel, overhead);
     for (const z of [-d / 2 + 1.6, d / 2 - 1.2]) {
       for (const x of [-w / 2 + .16, w / 2 - .16]) { box(.23, .29, 1.0, x, 2.56, z, white, overhead); box(.02, .04, .88, x + (x < 0 ? .13 : -.13), 2.46, z, steel, overhead); }
     }
@@ -240,26 +268,26 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
   }
   // A small projected patch changes state on teaching interaction without adding
   // fabricated real screen content or implying a connected physical device.
-  const projection = new THREE.Group(); projection.visible = false; groups[room.id === 'E303' ? 3 : room.id === 'E304' ? 2 : 1]?.add(projection);
-  if (furnished && room.id === 'E303') mountedBox(1.65, .76, .012, -.15, 1.68, d / 2 - .13, mat(0x9bc4c6), 'south', projection);
+  const projection = new THREE.Group(); projection.visible = false; groups[layout === 'automation' ? 3 : layout === 'road' ? 2 : 1]?.add(projection);
+  if (furnished && layout === 'automation') mountedBox(1.65, .76, .012, -.15, 1.68, d / 2 - .13, mat(0x9bc4c6), 'south', projection);
   const selection = new THREE.BoxHelper(new THREE.Object3D(), 0xf17b38); selection.visible = false; scene.add(selection);
   let selected = -1;
-  const portals: Portal[] = localDoors.map((entry, index) => ({ id: `exit-${index}`, label: tr("Ra hành lang", "To the corridor"), x: entry.x, z: entry.z, kind: 'exit' }));
-  scene.userData.observedRoomSurvey = { ...RESEARCH_ROOM_SURVEYS[room.id as keyof typeof RESEARCH_ROOM_SURVEYS], openings, estimates: true };
+  const portals: Portal[] = worldDoors.map((entry, index) => ({ id: `exit-${index}`, label: tr("Ra hành lang", "To the corridor"), x: entry.x, z: entry.z, kind: 'exit' }));
+  scene.userData.observedRoomSurvey = { ...RESEARCH_ROOM_SURVEYS[room.id as keyof typeof RESEARCH_ROOM_SURVEYS], openings: architectureOpenings, estimates: true };
   return {
-    floor, obstacles, interactables, items, width: w, depth: d, start: roomEntry(room).start, portals,
+    floor, obstacles, interactables, items, width, depth, start: roomEntry(room).start, portals,
     highlight: (index: number) => { selected = index; selection.visible = furnished && index >= 0 && index < groups.length; if (selection.visible) selection.setFromObject(groups[index]); },
     activate: (index: number) => {
       if (active.has(index)) active.delete(index); else active.add(index);
       screens.forEach(screen => { screen.color.set(active.size ? 0x216d7c : 0x111a20); screen.emissiveIntensity = active.size ? .55 : .025; });
-      projection.visible = furnished && room.id === 'E303' && active.has(3);
+      projection.visible = furnished && layout === 'automation' && active.has(3);
     },
     update: (time: number, dt: number, camera: THREE.Camera, top: boolean) => {
       const settling = architecture.update(camera, top, dt); overhead.visible = furnished && !top;
       for (const entry of wallMounted) entry.material.opacity = THREE.MathUtils.lerp(entry.base, Math.min(entry.base, .10), architecture.walls.find(wall => wall.side === entry.side)?.fade ?? 0);
       const animating = furnished && (room.id === 'E302' ? active.has(0) || active.has(2) : active.has(1));
       moving.forEach((object, index) => {
-        if (room.id === 'E303') object.rotation.y = animating ? Math.sin(time * .0008) * .7 : 0;
+        if (layout === 'automation') object.rotation.y = animating ? Math.sin(time * .0008) * .7 : 0;
         else if (room.id === 'E302') { object.position.y = .15 + (animating ? .25 + Math.sin(time * .0012 + index) * .06 : 0); object.rotation.y = animating ? Math.sin(time * .0005 + index) * .4 : 0; }
         else object.rotation.y = Math.PI / 4 + (animating ? Math.sin(time * .001) * .5 : 0);
       });

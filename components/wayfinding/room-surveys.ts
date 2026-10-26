@@ -38,14 +38,14 @@ export const ROOM_SURVEYS: Record<string, RoomSurvey> = {
     photos: [1391, 1394, 1396, 1397].map(number => ({ file: `IMG_${number}`, label: tr(`Khu thử nghiệm lưới · ảnh ${number}`, `Netted test arena: photo ${number}`) })),
   },
   E303: {
-    folder: 'survey-e303', sourceLabel: tr("Ảnh hiện trạng phòng E303", "E303 site photos"),
-    summary: tr("Hai dãy bàn máy tính · tủ kính thiết bị · cụm thực hành tự động hóa · bàn giảng viên và bảng", "Two computer-desk banks, glass-front equipment cabinet, automation training system, instructor desk and whiteboard"),
-    photos: series(5053, 5066),
-  },
-  E304: {
-    folder: 'survey-e304', sourceLabel: tr("Ảnh hiện trạng phòng E304", "E304 site photos"),
+    folder: 'survey-e304', sourceLabel: tr("Ảnh hiện trạng phòng E303", "E303 site photos"),
     summary: tr("Sa bàn đường giao thông trên sàn · dãy robot xe bánh · bàn máy tính điều khiển · bảng và máy chiếu", "Floor road layout, wheeled robots, computer control desk, whiteboard and projector"),
     photos: series(5040, 5051),
+  },
+  E304: {
+    folder: 'survey-e303', sourceLabel: tr("Ảnh hiện trạng phòng E304", "E304 site photos"),
+    summary: tr("Hai dãy bàn máy tính · tủ kính thiết bị · cụm thực hành tự động hóa · bàn giảng viên và bảng", "Two computer-desk banks, glass-front equipment cabinet, automation training system, instructor desk and whiteboard"),
+    photos: series(5053, 5066),
   },
 };
 

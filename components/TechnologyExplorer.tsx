@@ -8,6 +8,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { floorName, localePath, type Locale } from "@/lib/i18n";
 import { Arrow } from "./Arrow";
 import { SectionHeading } from "./SectionHeading";
+import { RoomName } from "./RoomName";
 
 // The heading sits in its own row above the picker, so selecting a direction never moves it.
 // The result area reserves the height of the largest theme to keep the page below steady.
@@ -71,7 +72,7 @@ export function TechnologyExplorer({ locale }: { locale: Locale }) {
             {matchingLabs.map((lab) => (
               <li key={lab.id}>
                 <Link href={localePath(locale, "/labs/" + lab.id)}>
-                  <strong>{lab.name}</strong>
+                  <strong><RoomName name={lab.name} /></strong>
                   <span>
                     {lab.room} · {floorName(locale, lab.floor)}
                   </span>

@@ -39,6 +39,7 @@ function compile(relativeFile) {
 }
 const { createRoomTour } = await import(compile('components/wayfinding/room-tour.ts'));
 const { floorRooms } = await import(compile('components/wayfinding/floor-rooms.ts'));
+const { ROOM_SURVEYS } = await import(compile('components/wayfinding/room-surveys.ts'));
 const rooms = Array.from({ length: 8 }, (_, floor) => floorRooms(floor)).flat();
 const near = (a, b, tolerance = .006) => Math.abs(a - b) < tolerance;
 const horizontal = vector => vector.clone().setY(0);
@@ -215,6 +216,11 @@ const results = [], failures = [];
 for (const room of rooms) {
   const scene = new THREE.Scene();
   try {
+    if (room.id === 'E303' || room.id === 'E304') {
+      const survey = ROOM_SURVEYS[room.id], first = room.id === 'E303' ? 5040 : 5053, last = room.id === 'E303' ? 5051 : 5066;
+      assert.deepEqual(survey.photos.map(photo => photo.file), Array.from({ length: last - first + 1 }, (_, index) => `IMG_${first + index}`), `${room.id}: gallery must follow the swapped interior`);
+      for (const photo of survey.photos) assert.ok(fs.existsSync(path.join(root, 'public/rooms', survey.folder, `${photo.file}.jpg`)), `${room.id}: attached survey photo is missing: ${photo.file}`);
+    }
     createRoomTour(scene, room, true);
     const parts = measure(scene), seats = chairs(parts), label = room.id;
     let displayCount = 0;
@@ -246,7 +252,7 @@ for (const room of rooms) {
       rejectReversedPart(parts, selected.back, selected.center.clone().setY(selected.back.center.y), () => {
         const altered = measure(scene); verifyTableSeats(altered, chairs(altered), label, room.id === 'E201' ? 12 : 17, { sideSeatingStation: room.id === 'E201' ? 1 : undefined });
       }, `${label} backwards table chair`);
-    } else if (room.id === 'E303') {
+    } else if (room.id === 'E304') {
       assert.equal(seats.length, 13, `${label}: twelve student seats and one instructor`);
       const checked = verifyComputers(parts, seats, label, 14, { elevated: 1 }); displayCount = checked.displays.length;
       assert.equal(checked.usedSeats.size, 13, `${label}: distinct student/instructor seats`);
@@ -257,7 +263,7 @@ for (const room of rooms) {
       const arena = parts.filter(part => part.material.map && part.center.y < .04 && part.wide > 3).sort((a, b) => b.wide * b.thin - a.wide * a.thin)[0];
       assert.ok(arena, `${label}: measured arena surface`);
       verifyAudience(seats.filter(seat => !checked.usedSeats.has(seat)), arena.center, label);
-    } else if (room.id === 'E304') {
+    } else if (room.id === 'E303') {
       assert.equal(seats.length, 3, `${label}: operator and two waiting seats`);
       const checked = verifyComputers(parts, seats, label, 1); displayCount = checked.displays.length;
       const road = parts.filter(part => part.material.map && part.center.y < .04 && part.wide > 3).sort((a, b) => b.wide * b.thin - a.wide * a.thin)[0];

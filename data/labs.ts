@@ -115,9 +115,10 @@ const realLabImages: Record<string, string> = {
 };
 
 const buildLabVisual = (item: Pick<Lab, "id" | "code" | "room" | "floor" | "cluster">): LabVisual => {
-  const cardImage = `/lab-images/lab-card-${item.id}.jpg`;
-  const detailImage = `/lab-images/lab-detail-${item.id}.jpg`;
   const realImage = realLabImages[item.id];
+  const newlyListedLab = item.id === "classroom-e502" || item.id === "classroom-e503";
+  const cardImage = newlyListedLab && realImage ? realImage : `/lab-images/lab-card-${item.id}.jpg`;
+  const detailImage = newlyListedLab && realImage ? realImage : `/lab-images/lab-detail-${item.id}.jpg`;
   return {
     cardImage,
     detailImage,
@@ -347,7 +348,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "immersive-technology-center",
     code: "ImmersiveCore",
-    name: "Trung tâm Hội tụ Công nghệ tương tác đa chiều",
+    name: "Immersive Technology Convergence Center | Human Experience Lab",
     room: "E104",
     floor: "1",
     cluster: "Công nghệ nhập vai và trải nghiệm người dùng",
@@ -380,7 +381,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "research-lab",
     code: "ResearchHub",
-    name: "Phòng nghiên cứu chuyên gia",
+    name: "Guest Researchers and Visiting Scholars",
     room: "E202",
     floor: "2",
     cluster: "Đổi mới sáng tạo và thương mại hóa",
@@ -391,7 +392,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "smart-city-lab",
     code: "SmartCity",
-    name: "Phòng nghiên cứu đô thị thông minh",
+    name: "Smart City Lab | Urban Sense Lab",
     room: "E204",
     floor: "2",
     cluster: "Đô thị thông minh và hệ thống đô thị",
@@ -413,8 +414,8 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "automated-vehicles-lab",
     code: "AutoVehicle",
-    name: "Phòng thí nghiệm các phương tiện tự động hóa",
-    room: "E303",
+    name: "Automated Vehicles & Systems Lab",
+    room: "E304",
     floor: "3",
     cluster: "Robot và hệ thống tự hành",
     desc: "Nghiên cứu và giảng dạy về robot di động, xe tự hành, phát triển thuật toán điều khiển.",
@@ -446,8 +447,8 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "industrial-production-line-lab",
     code: "MPSLine",
-    name: "Phòng thực hành dây chuyền sản xuất công nghiệp",
-    room: "E304",
+    name: "MPS Station Center",
+    room: "E303",
     floor: "3",
     cluster: "Tự động hóa công nghiệp và IoT",
     desc: "Cung cấp không gian và thiết bị thực hành cho cơ điện tử và tự động hóa nhà máy.",
@@ -479,7 +480,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "edge-physical-ai-lab",
     code: "EdgeAI",
-    name: "Phòng thí nghiệm trí tuệ nhân tạo biên-vật lý",
+    name: "AI and Big Data Lab",
     room: "E402, E403",
     floor: "4",
     cluster: "Đổi mới sáng tạo và thương mại hóa",
@@ -490,7 +491,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "ai-big-data-lab",
     code: "AIBigData",
-    name: "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo và dữ liệu lớn",
+    name: "AI and Big Data Lab",
     room: "E402, E403",
     floor: "4",
     cluster: "Đổi mới sáng tạo và thương mại hóa",
@@ -501,7 +502,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "ocean-monitoring-planning-energy-lab",
     code: "OceanPlanning",
-    name: "Phòng thí nghiệm Dữ liệu – Quy hoạch – Giám sát Hệ thống Biển và Vùng Bờ",
+    name: "Ocean Monitoring & Spatial Planning Lab",
     room: "E404",
     floor: "4",
     cluster: "Biển, ven bờ và năng lượng",
@@ -512,7 +513,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "ocean-physics-lab",
     code: "OceanPhysics",
-    name: "Phòng thí nghiệm vật lý đại dương",
+    name: "Ocean Physics & Coastal Dynamics Laboratory",
     room: "E404",
     floor: "4",
     cluster: "Biển, ven bờ và năng lượng",
@@ -523,7 +524,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "ocean-renewable-energy-lab",
     code: "ORE",
-    name: "Phòng thí nghiệm năng lượng tái tạo đại dương",
+    name: "Ocean Renewable Energy Lab",
     room: "E404",
     floor: "4",
     cluster: "Biển, ven bờ và năng lượng",
@@ -534,7 +535,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "smart-port-mobility-rail-lab",
     code: "PortMoveRail",
-    name: "Phòng thí nghiệm logistics cảng biển thông minh",
+    name: "Smart Seaport Logistics & Terminal Operations Lab",
     room: "E401",
     floor: "4",
     cluster: "Đô thị thông minh và hệ thống đô thị",
@@ -545,7 +546,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "smart-mobility-lab",
     code: "SmartMobility",
-    name: "Phòng thí nghiệm di chuyển thông minh",
+    name: "Smart Mobility Lab - Rail Systems Lab",
     room: "E401",
     floor: "4",
     cluster: "Đô thị thông minh và hệ thống đô thị",
@@ -556,7 +557,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "rail-systems-lab",
     code: "RailSystems",
-    name: "Phòng thí nghiệm hệ thống đường sắt",
+    name: "Smart Mobility Lab - Rail Systems Lab",
     room: "E401",
     floor: "4",
     cluster: "Đô thị thông minh và hệ thống đô thị",
@@ -567,7 +568,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "classroom-e503",
     code: "ClassE503",
-    name: "Phòng học",
+    name: "Advanced Initiative of Science and Technology Lab",
     room: "E503",
     floor: "5",
     cluster: "Đổi mới sáng tạo và thương mại hóa",
@@ -578,7 +579,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "classroom-e502",
     code: "ClassE502",
-    name: "Phòng học",
+    name: "Advanced Initiative of Science and Technology Lab",
     room: "E502",
     floor: "5",
     cluster: "Đổi mới sáng tạo và thương mại hóa",
@@ -655,7 +656,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "open-lab-prototyping-library",
     code: "OpenHub",
-    name: "Không gian mở, khu tạo mẫu và thư viện số",
+    name: "Open Lab & Prototyping Area | Digital Library",
     room: "E702",
     floor: "7",
     cluster: "Đổi mới sáng tạo và thương mại hóa",
@@ -686,8 +687,10 @@ export const allSpaces: Lab[] = [
     apps: ["Không gian làm việc", "Hội thảo"],
   }),
 ];
-// The site lists laboratories and lab spaces only; classrooms ("Phòng học") are left out.
-export const labs: Lab[] = allSpaces.filter((space) => !space.id.startsWith("classroom-"));
+// Keep stable URLs for E502/E503, now a lab space, while excluding actual classrooms.
+export const labs: Lab[] = allSpaces.filter((space) =>
+  !space.id.startsWith("classroom-") || space.id === "classroom-e502" || space.id === "classroom-e503",
+);
 
 
 assertUniqueLabVisuals(labs);

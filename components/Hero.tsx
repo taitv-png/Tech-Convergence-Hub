@@ -19,7 +19,7 @@ const systems = [
     name: "Immersive Tech",
     description: "Hologram, AR, VR và trải nghiệm tương tác phục vụ đào tạo, nghiên cứu và trình diễn.",
     tags: ["AR / VR", "Hologram", "Experience"],
-    labs: ["Hologram Printing Lab", "Immersive Technology Convergence", "Immersive Technology Center"],
+    labs: ["Hologram Printing Lab", "Immersive Technology Convergence Center | Human Experience Lab"],
   },
   {
     id: "logistics",
@@ -35,7 +35,7 @@ const systems = [
     name: "Ocean Tech",
     description: "Quan trắc biển, dữ liệu không gian và mô phỏng động lực học vùng bờ cho phát triển bền vững.",
     tags: ["Monitoring", "Spatial data", "Coastal systems"],
-    labs: ["Ocean Monitoring & Spatial Planning Lab", "Ocean Physics & Coastal Dynamics Lab", "Spatial Analytics & Planning Lab"],
+    labs: ["Ocean Monitoring & Spatial Planning Lab", "Ocean Physics & Coastal Dynamics Laboratory", "Spatial Analytics & Planning Lab"],
   },
   {
     id: "ai",
@@ -43,7 +43,7 @@ const systems = [
     name: "Artificial Intelligence",
     description: "Kết nối Physical AI, dữ liệu lớn và các mô hình thông minh cho những bài toán thực tế.",
     tags: ["Physical AI", "Big data", "Intelligence"],
-    labs: ["Edge–Physical AI Lab", "AI & Big Data Lab"],
+    labs: ["AI and Big Data Lab"],
   },
   {
     id: "mobility",
@@ -51,7 +51,7 @@ const systems = [
     name: "Mobility",
     description: "Kết nối phương tiện tự hành, đường sắt và dữ liệu di chuyển cho đô thị linh hoạt hơn.",
     tags: ["Smart mobility", "Rail systems", "Autonomous vehicles"],
-    labs: ["Smart Mobility Lab", "Rail Systems Lab", "Automated Vehicles & Systems Lab"],
+    labs: ["Smart Mobility Lab - Rail Systems Lab", "Automated Vehicles & Systems Lab"],
   },
   {
     id: "robotics",
@@ -67,7 +67,7 @@ const systems = [
     name: "Smart City",
     description: "Biến dữ liệu đô thị thành mô hình, mô phỏng và quyết định thiết kế có thể kiểm chứng.",
     tags: ["Urban data", "Digital twin", "Urban design"],
-    labs: ["Smart City Lab", "Data-Driven Urban Design Lab", "META – Digital Twin Lab"],
+    labs: ["Smart City Lab | Urban Sense Lab", "Data-Driven Urban Design Lab", "META – Digital Twin Lab"],
   },
   {
     id: "energy",

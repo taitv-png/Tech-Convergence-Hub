@@ -1,0 +1,61 @@
+/* Confirmed room names: only the explicit " | " separator starts a new line. */
+.tch-room-name {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  container-type: inline-size;
+  white-space: normal;
+}
+
+.tch-room-name__line {
+  display: block;
+}
+
+.tch-room-name__line--single {
+  font-size: min(1em, 4.6cqi);
+  letter-spacing: normal;
+  white-space: nowrap;
+}
+
+.campus-preview-detail > div:has(.tch-room-name) {
+  flex: 1;
+  min-width: 0;
+}
+
+.wayfinding-scope .app-shell .tour-screen > header:has(.tch-room-name) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  height: auto;
+  min-height: 76px;
+  align-items: center;
+  gap: 12px;
+  padding-block: 10px;
+}
+
+.wayfinding-scope .app-shell .tour-screen > header:has(.tch-room-name) > strong {
+  position: static;
+  left: auto;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  transform: none;
+}
+
+@media (max-width: 700px) {
+  .wayfinding-scope .app-shell .tour-screen > header:has(.tch-room-name) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .wayfinding-scope .app-shell .tour-screen > header:has(.tch-room-name) > strong {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Inline-size containment needs an explicit share of each flex row. */
+.wayfinding-scope .app-shell .room-card > div:has(.tch-room-name),
+.wayfinding-scope .picker-rooms button > span:has(.tch-room-name),
+.cv-lab-rows a > strong:has(.tch-room-name) {
+  flex: 1;
+  min-width: 0;
+}
