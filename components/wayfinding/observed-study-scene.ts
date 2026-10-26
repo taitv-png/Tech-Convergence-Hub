@@ -70,6 +70,7 @@ export function createObservedStudyRoom(scene: THREE.Scene, room: TourRoom, furn
     obstacle(x, z, a, c);
   };
   const chair = (x: number, z: number, rotation: number, parent: THREE.Object3D, color: THREE.Material = cream, office = false) => {
+    // The backrest is at local +Z, so an unrotated chair faces -Z.
     const group = new THREE.Group(); group.position.set(x, 0, z); group.rotation.y = rotation; parent.add(group);
     box(.44, .065, .43, 0, .46, 0, office ? black : color, group);
     box(.46, office ? .48 : .30, .045, 0, office ? .76 : .68, .20, office ? black : color, group);
@@ -124,7 +125,7 @@ export function createObservedStudyRoom(scene: THREE.Scene, room: TourRoom, furn
     if (furnished) {
       table(.42, -3.45, 1.13, 1.93, meeting, darkTop, true);
       for (const z of [-3.96, -2.96]) { chair(-.52, z, -Math.PI / 2, meeting, black, true); chair(1.35, z, Math.PI / 2, meeting, black, true); }
-      table(-w / 2 + .45, -3.5, .58, 1.85, meeting, darkTop, true); chair(-w / 2 + .45, -4.77, 0, meeting, black, true);
+      table(-w / 2 + .45, -3.5, .58, 1.85, meeting, darkTop, true); chair(-w / 2 + .45, -4.77, Math.PI, meeting, black, true);
       table(.18, 1.22, 1.86, .55, teaching); table(.18, 2.85, 1.86, .55, teaching);
       table(1.42, 2.03, .55, 2.18, teaching);
       for (const [index, x] of [-.52, .18, .88].entries()) {
@@ -174,10 +175,10 @@ export function createObservedStudyRoom(scene: THREE.Scene, room: TourRoom, furn
         box(.95, .69, .025, shelfX, .43, -2.70, oak, benches); obstacle(shelfX, -2.48, .95, .44);
       }
       table(0, -.10, 2.03, 1.00, meeting, oak, true);
-      for (const [index, x] of [-.67, 0, .67].entries()) { chair(x, -.94, 0, meeting, index % 2 ? cream : lime); chair(x, .75, Math.PI, meeting, cream); }
+      for (const [index, x] of [-.67, 0, .67].entries()) { chair(x, -.94, Math.PI, meeting, index % 2 ? cream : lime); chair(x, .75, 0, meeting, cream); }
       table(-.16, 3.15, 1.30, 2.65, conference, darkTop, true);
       for (const z of [2.40, 3.75]) { chair(-1.20, z, -Math.PI / 2, conference, black, true); chair(.89, z, Math.PI / 2, conference, black, true); }
-      chair(-.16, 4.93, Math.PI, conference, black, true);
+      chair(-.16, 4.93, 0, conference, black, true);
       table(w / 2 - .58, 3.50, .66, 1.78, work, white);
       monitor(w / 2 - .58, 3.18, work, -Math.PI / 2); monitor(w / 2 - .58, 3.96, work, -Math.PI / 2);
       chair(w / 2 - 1.30, 3.25, -Math.PI / 2, work, black, true); chair(w / 2 - 1.30, 4.03, -Math.PI / 2, work, black, true);

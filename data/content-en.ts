@@ -205,13 +205,13 @@ export const labsEn: Record<string, LabTextEn> = {
     apps: ["Teaching"],
   },
   "security-lab": {
-    name: "Information Security Lab",
+    name: "Cyber Security Lab",
     desc: "Specialist, hands-on information security training that helps students build a portfolio of practical work.",
     tech: ["Security workstations", "Attack simulation environment", "Network equipment", "Lab servers"],
     apps: ["Information security practice"],
   },
   "security-lab-extra": {
-    name: "Information Security Lab",
+    name: "Cyber Security Lab",
     desc: "Specialist, hands-on information security training that helps students build a portfolio of practical work.",
     tech: ["Security workstations", "Attack simulation environment", "Network equipment", "Lab servers"],
     apps: ["Information security practice"],

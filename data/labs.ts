@@ -611,7 +611,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "security-lab",
     code: "CyberRange",
-    name: "Phòng thí nghiệm an toàn thông tin",
+    name: "Cyber Security Lab",
     room: "E602",
     floor: "6",
     cluster: "An toàn thông tin và hạ tầng số",
@@ -622,7 +622,7 @@ export const allSpaces: Lab[] = [
   taoLab({
     id: "security-lab-extra",
     code: "CyberRange2",
-    name: "Phòng thí nghiệm an toàn thông tin",
+    name: "Cyber Security Lab",
     room: "E603",
     floor: "6",
     cluster: "An toàn thông tin và hạ tầng số",

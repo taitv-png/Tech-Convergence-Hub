@@ -80,7 +80,7 @@ export function createComputerLabRoom(scene: THREE.Scene, room: TourRoom, furnis
   };
   const north = add(tr("Dãy máy sát cửa sổ", "Window-side computers"), .1, -2.95, tr("Bàn máy tính · dãy 5 chỗ", "Computer desks: five-place bank"), tr("Dãy bàn gỗ có viền đen, màn hình lưng bạc, bàn phím và chuột. Bố trí các hàng được ước lượng từ ảnh hiện trạng.", "Wood desks with black edging, silver-backed monitors, keyboards and mice. Row placement is estimated from site photos."), tr("Bật / tắt màn hình", "Screen on / off"));
   const middle = add(tr("Dãy máy giữa", "Central computer bank"), .1, 1.1, tr("Bàn máy tính · dãy 3 chỗ", "Computer desks: three-place bank"), tr("Cụm máy giữa phòng, hai bên có lối đi và cột kết cấu. Ghế nhựa màu kem xen xanh lá và cam theo ảnh hiện trạng.", "The central computer bank has aisles and structural columns on either side. Cream chairs are mixed with green and orange chairs as shown in the site photos."), tr("Bật / tắt màn hình", "Screen on / off"));
-  const south = add(tr("Dãy máy sát tường", "Wall-side computers"), .1, 4.08, tr("Bàn máy tính · dãy 2 chỗ", "Computer desks: two-place bank"), tr("Cụm bàn hai chỗ bên tường đặc, tất cả màn hình hướng về bảng trắng ở đầu phòng.", "Two-place desk banks beside the solid wall. All screens face the whiteboard at the front of the room."), tr("Bật / tắt màn hình", "Screen on / off"));
+  const south = add(tr("Dãy máy sát tường", "Wall-side computers"), .1, 4.08, tr("Bàn máy tính · dãy 2 chỗ", "Computer desks: two-place bank"), tr("Cụm bàn hai chỗ bên tường đặc, ghế ngồi hướng về bảng trắng và mặt màn hình quay về phía người dùng.", "Two-place desk banks beside the solid wall. Seats face the whiteboard, with screen fronts facing the users."), tr("Bật / tắt màn hình", "Screen on / off"));
   const teacher = add(tr("Bàn giảng viên", "Instructor desk"), -w / 2 + 1, d / 2 - 1.12, tr("Bàn trắng · ghế xoay đen", "White desk and black swivel chair"), tr("Bàn giảng viên ở góc đầu phòng phía tường đặc, có máy tính và ghế xoay tựa lưới.", "An instructor desk in the front corner beside the solid wall, with a computer and a mesh-back swivel chair."), tr("Bật / tắt máy giảng viên", "Instructor screen on / off"));
   const board = add(tr("Bảng & trình chiếu", "Whiteboard and projection"), -w / 2 + .35, 0, tr("Bảng trắng dài · màn chiếu cuốn", "Long whiteboard and roller screen"), tr("Bảng trắng trên tường đầu phòng. Máy chiếu treo trần và hộp màn chiếu cuốn dựng theo ảnh; nút bật chỉ minh họa trình chiếu.", "A whiteboard on the front wall, with a ceiling projector and roller-screen housing rebuilt from the photos. The button shows a sample projection."), tr("Bật / tắt trình chiếu", "Projection on / off"));
   const openings = add(tr("Cửa & cửa sổ", "Doors and windows"), w / 2 - 1, -d / 2 + .5, tr("Ba lối vào · ba cụm cửa sổ", "Three entrances and three window bays"), tr("Hai cửa trên dãy vách kính, một cửa trên tường cuối phòng phía cầu thang. Các khung kính màu sẫm có dải mờ ngang như ảnh hiện trạng.", "Two entrances along the glazed wall and a third on the rear wall beside the stairs. Dark frames and frosted horizontal bands follow the site photos."));
@@ -93,17 +93,18 @@ export function createComputerLabRoom(scene: THREE.Scene, room: TourRoom, furnis
   const screenMaterial = (bank: number) => { const m = mat(0x101a20, .28); m.emissive.set(0x18778c); m.emissiveIntensity = .025; screens[bank].push(m); return m; };
   const bankScreen = [screenMaterial(0), screenMaterial(1), screenMaterial(2), screenMaterial(3)];
   const monitor = (x: number, z: number, g: THREE.Group, bank: number, teacherMonitor = false) => {
-    // Back to +X, viewing surface toward -X, matching every supplied photo.
+    // Students sit on +X; the instructor sits on -X of the desk.
+    const front = teacherMonitor ? -1 : 1;
     ibox(.052, .39, .62, x, 1.10, z, silver, g);
-    ibox(.014, .36, .59, x - .032, 1.10, z, black, g);
-    ibox(.009, .323, .555, x - .041, 1.108, z, bankScreen[bank], g);
-    ibox(.065, .17, .055, x + .035, .87, z, silver, g);
-    ibox(.25, .018, .29, x - .035, .785, z, silver, g);
-    ibox(.14, .018, .43, x + .29, .786, z - .045, black, g);
-    ibox(.027, .025, .058, x + .27, .79, z + .25, black, g);
+    ibox(.014, .36, .59, x + front * .032, 1.10, z, black, g);
+    ibox(.009, .323, .555, x + front * .041, 1.108, z, bankScreen[bank], g);
+    ibox(.065, .17, .055, x - front * .035, .87, z, silver, g);
+    ibox(.25, .018, .29, x + front * .035, .785, z, silver, g);
+    ibox(.14, .018, .43, x + front * .29, .786, z - .045, black, g);
+    ibox(.027, .025, .058, x + front * .27, .79, z + .25, black, g);
     // Key rows and a visible cable bundle are geometry, not photo textures.
-    for (const dx of [-.04, 0, .04]) ibox(.012, .003, .36, x + .29 + dx, .797, z - .045, silver, g);
-    ibox(.018, .085, .02, x + .07, .81, z + .05, cable, g, 0, -.36);
+    for (const dx of [-.04, 0, .04]) ibox(.012, .003, .36, x + front * (.29 + dx), .797, z - .045, silver, g);
+    ibox(.018, .085, .02, x - front * .07, .81, z + .05, cable, g, 0, front * .36);
     if (teacherMonitor) ibox(.22, .47, .13, x + .1, .4, z + .56, charcoal, g);
   };
   const roundedRectangle = (width: number, height: number, radius: number) => {

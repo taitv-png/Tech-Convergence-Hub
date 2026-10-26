@@ -133,7 +133,7 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
       box(.66, .045, 6.72, x, .755, first + 2.8, wood, benches); box(.035, .71, 6.72, x - .30, .37, first + 2.8, wood, benches); obstacle(x, first + 2.8, .68, 6.72);
       for (let i = 0; i < 6; i++) {
         const z = first + i * pitch; box(.65, .70, .025, x, .37, z - .55, wood, benches); box(.65, .045, .025, x, .80, z - .55, black, benches);
-        monitor(x - .08, z, benches, -Math.PI / 2); chair(x + .64, z, benches, Math.PI / 2, false, (i + bank) % 5 === 1);
+        monitor(x - .08, z, benches, Math.PI / 2); chair(x + .64, z, benches, -Math.PI / 2, false, (i + bank) % 5 === 1);
       }
     }
     const mx = -w / 2 + .64, mz = -1.55;
@@ -154,7 +154,7 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     for (let door = 0; door < 4; door++) { const z = sz - .75 + door * .5; box(.025, 1.87, .43, sx + .375, 1.32, z, glass, storage); box(.035, 1.98, .04, sx + .39, 1.30, z - .235, warm, storage); box(.03, .14, .025, sx + .42, 1.20, z + .16, steel, storage); }
     for (const y of [.2, .7, 1.2, 1.7, 2.18]) { box(.68, .035, 2.00, sx + .015, y, sz, warm, storage); for (let i = 0; i < 6; i++) box(.38, .15, .16, sx + .08, y + .10, sz - .8 + i * .31, i % 2 ? blue : steel, storage); }
     mountedBox(3.5, 1.18, .045, -.1, 1.63, d / 2 - .08, black, 'south', teaching); mountedBox(3.42, 1.10, .015, -.1, 1.63, d / 2 - .11, white, 'south', teaching);
-    mountedBox(2.55, .12, .13, -.25, 2.51, d / 2 - .13, white, 'south', teaching); teacherDesk(-.95, d / 2 - .9, teaching, Math.PI); chair(-.95, d / 2 - .32, teaching, 0, true);
+    mountedBox(2.55, .12, .13, -.25, 2.51, d / 2 - .13, white, 'south', teaching); teacherDesk(-.95, d / 2 - .9, teaching); chair(-.95, d / 2 - .32, teaching, Math.PI, true);
   }
 
   if (furnished && room.id === 'E302') {
@@ -186,9 +186,9 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     drone(cx - .8, cz + .3); drone(cx + .8, cz - .9);
     for (const [i, x] of [cx - 1.1, cx, cx + 1.1].entries()) { const vehicle = robot(x, cz - ad / 2 + .65, robots, 0x242b30); cylinder(.025, .9, x, .75, cz - ad / 2 + .65, steel, robots); box(.24, .09, .12, x, 1.23, cz - ad / 2 + .65, black, robots); vehicle.rotation.y = i * .08; }
     const tx = -w / 2 + 1.0, tz = d / 2 - 1.85; box(1.7, .045, .65, tx, .755, tz, black, consoleGroup); for (const dx of [-.72, .72]) box(.04, .72, .58, tx + dx, .37, tz, steel, consoleGroup); obstacle(tx, tz, 1.75, .68);
-    for (const dx of [-.54, 0, .54]) monitor(tx + dx, tz, consoleGroup, 0, 1.11, .50); chair(tx, tz + .62, consoleGroup, 0, true);
+    for (const dx of [-.54, 0, .54]) monitor(tx + dx, tz, consoleGroup, 0, 1.11, .50); chair(tx, tz + .62, consoleGroup, Math.PI, true);
     box(.23, .06, .18, tx + .55, .81, tz + .18, steel, consoleGroup); for (const dx of [-.06, .06]) cylinder(.018, .035, tx + .55 + dx, .86, tz + .18, black, consoleGroup);
-    for (let i = 0; i < 4; i++) chair(-.55 + i * .60, d / 2 - .40, seats, 0, true);
+    for (let i = 0; i < 4; i++) chair(-.55 + i * .60, d / 2 - .40, seats, Math.PI, true);
     for (let i = 0; i < 2; i++) box(.48, .34, .43, w / 2 - .4, .18 + i * .34, d / 2 - .6, mat(0xb89c76), seats); obstacle(w / 2 - .4, d / 2 - .6, .52, .47);
   }
 
@@ -216,7 +216,7 @@ export function createObservedResearchRoom(scene: THREE.Scene, room: TourRoom, f
     for (let i = 0; i < 9; i++) robot(-tw / 2 + .45 + i * .53, -td / 2 + .06, vehicles, colors[i % colors.length], Math.PI);
     const demonstration = robot(.2, .35, vehicles, 0xd5d2bf, Math.PI / 4); moving.push(demonstration);
     for (const [x, z] of [[-1.5, -.4], [1.8, .8], [-.9, 1.2]]) { cylinder(.025, .36, x, .22, z, black, trackGroup); cylinder(.10, .012, x, .045, z, white, trackGroup); const sign = cylinder(.07, .012, x, .43, z, blue, trackGroup); sign.rotation.x = Math.PI / 2; }
-    const tx = w / 2 - 1.25, tz = -d / 2 + .65; teacherDesk(tx, tz, teaching); chair(tx - .6, tz + .65, teaching, -.6, true);
+    const tx = w / 2 - 1.25, tz = -d / 2 + .65; teacherDesk(tx, tz, teaching); chair(tx - .6, tz + .65, teaching, Math.atan2(.45, -.67), true);
     box(.50, .70, .48, tx + .45, .35, tz + .63, steel, teaching); obstacle(tx + .45, tz + .63, .54, .52);
     mountedBox(.045, 1.12, 2.35, w / 2 - .07, 1.58, .65, black, 'east', teaching); mountedBox(.015, 1.04, 2.27, w / 2 - .10, 1.58, .65, white, 'east', teaching); mountedBox(.15, .12, 2.55, w / 2 - .12, 2.46, .65, white, 'east', teaching);
     // Vertical blind leaves on the far glazing, kept thin for cutaway clarity.

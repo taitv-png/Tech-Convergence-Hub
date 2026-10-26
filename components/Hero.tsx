@@ -91,7 +91,7 @@ const systems = [
     name: "Cyber Security",
     description: "Thực hành bảo vệ dữ liệu, hạ tầng số và các hệ thống kết nối của campus thông minh.",
     tags: ["Cybersecurity", "Digital infrastructure", "Resilience"],
-    labs: ["Cybersecurity Lab"],
+    labs: ["Cyber Security Lab"],
   },
   {
     id: "ux",

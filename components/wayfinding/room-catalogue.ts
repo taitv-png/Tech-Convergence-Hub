@@ -103,7 +103,7 @@ const ROOM_CATALOGUE_VI: Record<string, { name: string; description: string }> =
     description: "Không gian đào tạo 30–40 chỗ ngồi, phục vụ các hoạt động giảng dạy và học tập.",
   },
   "E602+E603": {
-    name: "Phòng thực hành An toàn thông tin",
+    name: "Cyber Security Lab",
     description:
       "Đào tạo thực hành an toàn thông tin, mô phỏng tấn công và phòng thủ trong môi trường mạng cách ly; hỗ trợ nghiên cứu, dự án chuyên ngành và các khóa đào tạo ngắn hạn.",
   },
@@ -214,7 +214,7 @@ const ROOM_CATALOGUE_EN: Record<string, { name: string; description: string }> =
   E504: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
   E501: { name: "Classroom", description: "Teaching space for 30 to 40 people." },
   "E602+E603": {
-    name: "Information Security Lab",
+    name: "Cyber Security Lab",
     description:
       "Hands-on security training with attack and defence simulation on an isolated network; supports research, projects and short courses.",
   },
