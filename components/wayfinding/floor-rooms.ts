@@ -93,7 +93,11 @@ export function floorRooms(floor: number): Room[] {
     box: boxes[i] as Room["box"],
     door: doors[i],
     doors:
-      floor < 7 && (id.endsWith("02") || id.includes("+")) ? [doors[i], [5.38, 4.6]] : [doors[i]],
+      id === "E402+E403" || id === "E602+E603"
+        ? [doors[i], [1.3, 2.62], [5.38, 4.6]]
+        : floor < 7 && (id.endsWith("02") || id.includes("+"))
+          ? [doors[i], [5.38, 4.6]]
+          : [doors[i]],
     kind: floor === 5 || id.endsWith("03") ? "class" : "lab",
   }));
 }

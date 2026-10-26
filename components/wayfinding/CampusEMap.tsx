@@ -5,8 +5,10 @@ import { floorRooms, type Room } from "./floor-rooms";
 import * as THREE from "three";
 import { ROOM_CATALOGUE, commonSpaceName } from "./room-catalogue";
 import { tr } from "./locale";
-import { createRoom104, createStudent, ROOM_ITEMS, ROOM104 } from "./room104-scene";
-import { createTeachingRoom, createHallway, type TourItem, type Portal } from "./campus-tour-scene";
+import { createStudent, ROOM_ITEMS } from "./room104-scene";
+import { createHallway, type TourItem, type Portal } from "./campus-tour-scene";
+import { createRoomTour } from "./room-tour";
+import { ROOM_SURVEYS, hasRoomSurvey } from "./room-surveys";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import {
   ArrowLeft,
@@ -1428,23 +1430,7 @@ function RoomPreview({ room }: { room: Room }) {
     controls.update();
     const built = hall
       ? createHallway(scene, floorRooms(tourFloor), tourFloor, arrival)
-      : room.id === "E104"
-        ? {
-            ...createRoom104(scene, furnished, "render"),
-            items: ROOM_ITEMS,
-            width: ROOM104.width,
-            depth: ROOM104.depth,
-            portals: [
-              {
-                id: "exit",
-                label: tr("Ra hành lang", "To the corridor"),
-                x: -ROOM104.width / 2,
-                z: -ROOM104.depth / 2 + 1.28,
-                kind: "exit" as const,
-              },
-            ],
-          }
-        : createTeachingRoom(scene, room, furnished);
+      : createRoomTour(scene, room, furnished);
     const interactionHints = built.interactables
       .filter((object) => Number.isInteger(object.userData.station))
       .map((object, index) => {
@@ -1496,6 +1482,7 @@ function RoomPreview({ room }: { room: Room }) {
     person.position.copy(built.start);
     person.rotation.y = Math.PI / 2;
     let dirty = true,
+      sceneSettling = true,
       animateUntil = 0;
     const invalidate = () => {
       dirty = true;
@@ -1652,6 +1639,13 @@ function RoomPreview({ room }: { room: Room }) {
       renderer.setSize(r.width, r.height);
       camera.aspect = r.width / r.height;
       camera.updateProjectionMatrix();
+      if (view === "top") {
+        const fit = Math.max(built.depth, built.width / camera.aspect) /
+          (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+        camera.position.set(0, 0.6 + fit * 1.16, 0.01);
+        controls.target.set(0, 0.6, 0);
+        controls.update();
+      }
       dirty = true;
     });
     resize.observe(el);
@@ -1667,7 +1661,8 @@ function RoomPreview({ room }: { room: Room }) {
       const dt = Math.min((time - last) / 1000, 0.034);
       last = time;
       if (!visible || document.hidden) return;
-      if (view !== "play" && !hall && !dirty && time > animateUntil) return;
+      controls.update();
+      if (view !== "play" && !hall && !dirty && !sceneSettling && time > animateUntil) return;
       let mx = 0,
         mz = 0,
         moving = false;
@@ -1750,7 +1745,7 @@ function RoomPreview({ room }: { room: Room }) {
           0.18 + (Math.sin(time * 0.004 + i * 1.3) + 1) * 0.12;
       });
       avatar.update(dt, moving, walkTime);
-      built.update(time, dt, camera, view === "top");
+      sceneSettling = Boolean(built.update(time, dt, camera, view === "top"));
       renderer.render(scene, camera);
       dirty = false;
     };
@@ -1892,7 +1887,9 @@ function RoomPreview({ room }: { room: Room }) {
               onClick={() => {
                 sceneApi.current?.activate(selected);
                 setNotice(
-                  selected === 4
+                  hasRoomSurvey(room.id)
+                    ? tr("Đã đổi trạng thái trình diễn của thiết bị", "Equipment demo toggled")
+                    : selected === 4
                     ? tr("Máy đang pha cà phê minh họa", "The coffee machine is brewing (demo)")
                     : selected === 3
                       ? tr("Đã đổi trạng thái cánh tủ", "Cabinet doors toggled")
@@ -1971,7 +1968,8 @@ function RoomPreview({ room }: { room: Room }) {
   );
 }
 function RoomRenderGallery({ id }: { id: string }) {
-  const photos =
+  const survey = ROOM_SURVEYS[id];
+  const photos = survey?.photos ?? (
     id === "E102"
       ? [
           { file: "102", label: tr("Toàn cảnh phòng", "Room overview") },
@@ -1988,17 +1986,18 @@ function RoomRenderGallery({ id }: { id: string }) {
             { file: "134", label: tr("Toàn cảnh phòng", "Room overview") },
             { file: "137", label: tr("Khu bàn học", "Study area") },
             { file: "139", label: tr("Khu làm việc", "Work area") },
-          ];
+          ]);
   const [active, setActive] = useState(0);
   const photo = photos[active];
+  const photoPath = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/rooms/${survey?.folder ?? id.toLowerCase()}/`;
   return (
-    <div className="room-render-gallery" aria-label={tr("Ảnh thiết kế phòng ", "Design images, room ") + id}>
+    <div className="room-render-gallery" aria-label={survey?.sourceLabel ?? (tr("Ảnh thiết kế phòng ", "Design images, room ") + id)}>
       <figure>
         <img
-          src={`${(process.env.NEXT_PUBLIC_BASE_PATH ?? "") + "/"}rooms/${id.toLowerCase()}/${photo.file}.jpg`}
-          alt={photo.label + tr(" — phòng ", ", room ") + id}
-          width={960}
-          height={540}
+          src={`${photoPath}${photo.file}.jpg`}
+          alt={photo.label + ", " + (survey?.sourceLabel ?? (tr("Phòng ", "Room ") + id))}
+          width={1600}
+          height={900}
           loading="lazy"
         />
         <figcaption>
@@ -2008,16 +2007,17 @@ function RoomRenderGallery({ id }: { id: string }) {
           </span>
         </figcaption>
       </figure>
-      <div className="render-thumbnails">
+      <div className="render-thumbnails" style={survey ? { overflowY: "auto" } : undefined}>
         {photos.map((item, i) => (
           <button
             key={item.file}
+            style={survey ? { flexShrink: 0 } : undefined}
             aria-label={tr("Xem ", "View ") + item.label.toLowerCase()}
             aria-pressed={active === i}
             onClick={() => setActive(i)}
           >
             <img
-              src={`${(process.env.NEXT_PUBLIC_BASE_PATH ?? "") + "/"}rooms/${id.toLowerCase()}/${item.file}.jpg`}
+              src={`${photoPath}${item.file}.jpg`}
               alt=""
               width={960}
               height={540}
@@ -2127,6 +2127,7 @@ function RoomDetail({
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const survey = ROOM_SURVEYS[room.id];
   const [tab, setTab] = useState<"info" | "photos">("info");
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
@@ -2151,9 +2152,9 @@ function RoomDetail({
           <button aria-pressed={tab === "info"} onClick={() => setTab("info")}>
             {tr("Thông tin", "Details")}
           </button>
-          {["E104", "E102", "E401"].includes(room.id) && (
+          {(survey || ["E104", "E102", "E401"].includes(room.id)) && (
             <button aria-pressed={tab === "photos"} onClick={() => setTab("photos")}>
-              {tr("Ảnh thiết kế", "Design images")}
+              {survey ? tr("Ảnh hiện trạng", "Current room photos") : tr("Ảnh thiết kế", "Design images")}
             </button>
           )}
         </div>
@@ -2172,20 +2173,25 @@ function RoomDetail({
             <p>
               {room.floor === 7
                 ? tr("Tầng 7 chỉ có cầu thang bộ CT1", "Floor 7 is accessible only via staircase CT1")
-                : tr("Theo tuyến đường đến cửa phòng tại ", "Follow the route to the room door on ") +
-                  roomGroups[room.floor].label}
+                : room.id === "E402+E403" || room.id === "E602+E603"
+                  ? tr("Ba cửa tiếp cận: hai cửa trên dãy tường kính và một cửa phía cầu thang.", "Three entrances: two on the glazed wall and one on the stair-side wall.")
+                  : tr("Theo tuyến đường đến cửa phòng tại ", "Follow the route to the room door on ") +
+                    roomGroups[room.floor].label}
             </p>
-            <h3>{tr("Nội thất & thiết bị minh họa", "Illustrative furniture & equipment")}</h3>
+            <h3>{survey ? tr("Nội thất hiện hữu theo ảnh", "Existing furniture from room photos") : tr("Nội thất & thiết bị minh họa", "Illustrative furniture & equipment")}</h3>
             <p>
-              {room.id === "E104"
+              {survey?.summary ?? (room.id === "E104"
                 ? tr("Bàn học đôi · màn hình di động · máy tính · kệ trưng bày · tủ hồ sơ · quầy cà phê", "Double desks · mobile screen · computers · display shelves · file cabinet · coffee bar")
                 : room.id === "E102"
                   ? tr("Bàn học · màn hình di động · vách lưới · kệ học liệu", "Desks · mobile screen · mesh wall · learning material shelves")
                   : room.id === "E401"
                     ? tr("Bàn học · máy tính · xe đạp · bàn mô hình", "Desks · computers · bicycle · model table")
-                    : tr("Bàn ghế học tập · bảng trắng · bàn giáo viên", "Desks and chairs · whiteboard · teacher's desk")}
+                    : tr("Bàn ghế học tập · bảng trắng · bàn giáo viên", "Desks and chairs · whiteboard · teacher's desk"))}
             </p>
-            <p>{tr("Nội thất 3D là bố trí minh họa không gian.", "The 3D furniture is an illustrative layout.")}</p>
+            <p>{survey
+              ? tr(`Tái dựng từ ${survey.photos.length} ảnh hiện trạng do bạn cung cấp; kích thước và một số chi tiết được ước lượng từ ảnh.`, `Reconstructed from ${survey.photos.length} supplied room photos. Dimensions and some details are visual estimates.`)
+              : tr("Nội thất 3D là bố trí minh họa không gian.", "The 3D furniture is an illustrative layout.")}</p>
+            {survey?.note && <p>{survey.note}</p>}
           </section>
         </div>
       ) : (
