@@ -224,7 +224,23 @@ for (const room of rooms) {
     createRoomTour(scene, room, true);
     const parts = measure(scene), seats = chairs(parts), label = room.id;
     let displayCount = 0;
-    if (['E402+E403', 'E602+E603'].includes(room.id)) {
+    if (room.id === 'E002') {
+      assert.equal(seats.length, 9, `${label}: eight discussion chairs and one control chair`);
+      const at = index => parts.filter(part => part.station.userData.station === index);
+      const discussionSeats = seats.filter(seat => seat.station.userData.station === 0);
+      verifyTableSeats(at(0), discussionSeats, label, 8);
+      const operatorSeats = seats.filter(seat => seat.station.userData.station === 4);
+      const checked = verifyComputers(at(4), operatorSeats, label, 1);
+      assert.equal(checked.usedSeats.size, 1, `${label}: control chair reaches its screen`);
+      const displaySamples = screens(at(1));
+      assert.equal(displaySamples.length, 3, `${label}: three optical display samples`);
+      displaySamples.forEach(sample => assert.ok(sample.forward.z > .99, `${label}: samples face the discussion area`));
+      const mobileScreen = screens(at(2), .9, 1.1);
+      assert.equal(mobileScreen.length, 1, `${label}: one large mobile screen`);
+      const centroid = discussionSeats.reduce((sum, seat) => sum.add(seat.center), new THREE.Vector3()).divideScalar(8);
+      assert.ok(mobileScreen[0].forward.dot(direction(mobileScreen[0].center, centroid)) > .85, `${label}: screen front faces the tables`);
+      displayCount = checked.displays.length + displaySamples.length + mobileScreen.length;
+    } else if (['E402+E403', 'E602+E603'].includes(room.id)) {
       assert.equal(seats.length, 51, `${label}: 50 students and one instructor`);
       const checked = verifyComputers(parts, seats, label, 51); displayCount = checked.displays.length;
       assert.equal(checked.usedSeats.size, 51, `${label}: each computer has its own chair`);

@@ -236,6 +236,7 @@ for (const survey of Object.values(ROOM_SURVEYS)) for (const photo of survey.pho
  const relative = `public/rooms/${survey.folder}/${photo.file}.jpg`;
  assert.ok(fs.existsSync(path.join(root,relative)), `Missing survey photo ${relative}`); photos.add(relative);
 }
-assert.equal(photos.size,66);
+assert.equal(photos.size,76);
+assert.equal(ROOM_SURVEYS.E002.photos.length,10);
 assert.equal(ROOM_SURVEYS.E302.photos.length,4);
 console.log(`PASS ${photos.size} survey assets; E302 excludes the misfiled photo`);

@@ -5,8 +5,10 @@ import { createTeachingRoom, type TourRoom } from './campus-tour-scene';
 import { createComputerLabRoom, isInstalledComputerLab } from './computer-lab-scene';
 import { createObservedStudyRoom, isObservedStudyRoom } from './observed-study-scene';
 import { createObservedResearchRoom, isObservedResearchRoom } from './observed-research-scene';
+import { createHologramLab } from './hologram-lab-scene';
 
 export function createRoomTour(scene: THREE.Scene, room: TourRoom, furnished: boolean) {
+  if (room.id === 'E002') return createHologramLab(scene, room, furnished);
   if (room.id === 'E104') return {
     ...createRoom104(scene, furnished, 'render'), items: ROOM_ITEMS, width: ROOM104.width, depth: ROOM104.depth,
     portals: [{ id: 'exit', label: tr("Ra hành lang", "To the corridor"), x: -ROOM104.width / 2, z: -ROOM104.depth / 2 + 1.28, kind: 'exit' as const }],

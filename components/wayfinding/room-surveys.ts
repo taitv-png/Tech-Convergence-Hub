@@ -20,6 +20,16 @@ const computers: RoomSurvey = {
 };
 
 export const ROOM_SURVEYS: Record<string, RoomSurvey> = {
+  E002: {
+    folder: 'survey-e002', sourceLabel: tr('Ảnh hiện trạng phòng E002', 'E002 site photos'),
+    summary: tr('Bàn trao đổi 8 chỗ, màn hình di động, vách lưới trưng bày hologram, buồng thiết bị khung nhôm, bàn điều khiển và sàn gạch hoa', 'Eight-place discussion tables, a mobile screen, hologram display partitions, an aluminium equipment enclosure, a control desk and patterned floor tiles'),
+    photos: [
+      { file: 'IMG_5023', label: tr('Toàn cảnh bàn và khu trưng bày', 'Overview of the tables and display area') },
+      { file: 'IMG_5024', label: tr('Cửa phòng và các ô kính', 'Room entrance and glazed panels') },
+      ...series(5015, 5022),
+    ],
+    note: tr('Bố trí và kích thước là ước lượng từ 10 ảnh hiện trạng; cửa vào giữ đúng tọa độ trên mặt bằng ứng dụng.', 'Placement and dimensions are estimates from ten site photos; the entrance retains its position on the app floor plan.'),
+  },
   'E402+E403': computers,
   'E602+E603': computers,
   E201: {
