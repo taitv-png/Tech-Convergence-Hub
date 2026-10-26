@@ -53,8 +53,8 @@ export function createHologramLab(scene: THREE.Scene, room: TourRoom, furnished:
   const entry = entries[0];
   // The corridor glazing and the far-end windows are visible in 5017/5023/5024.
   openings.push(
-    { side: 'east', from: -d / 2 + .30, to: entry.z - .87, bottom: .78, top: 2.57, kind: 'window' },
-    { side: 'east', from: entry.z + .87, to: .35, bottom: .78, top: 2.57, kind: 'window' },
+    { side: 'east', from: -d / 2 + .30, to: entry.z - .87, bottom: .10, top: 2.57, kind: 'window' },
+    { side: 'east', from: entry.z + .87, to: .35, bottom: .10, top: 2.57, kind: 'window' },
     { side: 'north', from: -w / 2 + .36, to: -.10, bottom: .84, top: 2.36, kind: 'window' },
     { side: 'north', from: .10, to: w / 2 - .36, bottom: .84, top: 2.36, kind: 'window' },
   );
